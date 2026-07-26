@@ -1,6 +1,8 @@
 ---
 import type { Tool } from "../../types/tool";
 import { getCategoryById } from "../../data/categories";
+import { defaultLocale, localizedPath, type Locale } from "../../i18n/config";
+import { getMessages } from "../../i18n/messages";
 import AdPlaceholder from "../common/AdPlaceholder.astro";
 import Breadcrumbs from "../common/Breadcrumbs.astro";
 import Container from "../common/Container.astro";
@@ -11,25 +13,32 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 interface Props {
   tool: Tool;
   relatedTools?: Tool[];
+  locale?: Locale;
 }
 
-const { tool, relatedTools = [] } = Astro.props;
-const category = getCategoryById(tool.categoryId);
+const { tool, relatedTools = [], locale = defaultLocale } = Astro.props;
+const { toolPage } = getMessages(locale);
+const category = getCategoryById(tool.categoryId, locale);
 ---
 
-<BaseLayout title={tool.name} description={tool.description} path={`/tools/${tool.slug}`}>
+<BaseLayout
+  title={tool.name}
+  description={tool.description}
+  path={localizedPath(`/tools/${tool.slug}`, locale)}
+  locale={locale}
+>
   <main class="flex-1">
     <Container class="py-8 md:py-10">
       <Breadcrumbs
         items={[
-          { label: "Home", href: "/" },
-          { label: "All Tools", href: "/tools" },
+          { label: toolPage.breadcrumbHome, href: localizedPath("/", locale) },
+          { label: toolPage.breadcrumbAllTools, href: localizedPath("/tools", locale) },
           { label: tool.name }
         ]}
       />
 
       <section class="mt-8 max-w-4xl">
-        <p class="text-sm font-semibold uppercase text-brand-teal">{category?.name ?? "Tool"}</p>
+        <p class="text-sm font-semibold uppercase text-brand-teal">{category?.name ?? toolPage.fallbackCategory}</p>
         <h1 class="mt-3 text-3xl font-semibold text-ink md:text-4xl">{tool.name}</h1>
         <p class="mt-4 text-lg leading-8 text-slate-600">{tool.description}</p>
       </section>
@@ -48,7 +57,7 @@ const category = getCategoryById(tool.categoryId);
         </article>
         <aside class="space-y-6">
           <div class="rounded-md border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 class="text-lg font-semibold text-ink">FAQ</h2>
+            <h2 class="text-lg font-semibold text-ink">{toolPage.faq}</h2>
             <div class="mt-4 space-y-4 text-sm leading-6 text-slate-600">
               <slot name="faq" />
             </div>
@@ -60,11 +69,11 @@ const category = getCategoryById(tool.categoryId);
         relatedTools.length > 0 && (
           <section class="mt-12">
             <SectionTitle
-              title="Related tools"
-              description="Tools in the same category that are planned or ready to use."
+              title={toolPage.relatedTitle}
+              description={toolPage.relatedDescription}
             />
             <div class="mt-6">
-              <ToolGrid tools={relatedTools} />
+              <ToolGrid tools={relatedTools} locale={locale} />
             </div>
           </section>
         )

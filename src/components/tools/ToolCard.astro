@@ -1,14 +1,18 @@
 ---
 import { getCategoryById } from "../../data/categories";
+import { defaultLocale, localizedPath, type Locale } from "../../i18n/config";
+import { getMessages } from "../../i18n/messages";
 import type { Tool } from "../../types/tool";
 import { withBasePath } from "../../utils/seo";
 
 interface Props {
   tool: Tool;
+  locale?: Locale;
 }
 
-const { tool } = Astro.props;
-const category = getCategoryById(tool.categoryId);
+const { tool, locale = defaultLocale } = Astro.props;
+const category = getCategoryById(tool.categoryId, locale);
+const { common } = getMessages(locale);
 const isActive = tool.status === "active";
 ---
 
@@ -26,7 +30,7 @@ const isActive = tool.status === "active";
       {tool.icon ?? tool.name.slice(0, 2).toUpperCase()}
     </span>
     <span class="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
-      {category?.name ?? "General"}
+      {category?.name ?? common.general}
     </span>
   </div>
 
@@ -38,14 +42,14 @@ const isActive = tool.status === "active";
       {
         isActive ? (
           <a
-            href={withBasePath(`/tools/${tool.slug}`)}
+            href={withBasePath(localizedPath(`/tools/${tool.slug}`, locale))}
             class="inline-flex items-center rounded-md bg-brand-teal px-3 py-2 text-sm font-semibold text-white hover:bg-teal-800"
           >
-            Open tool
+            {common.openTool}
           </a>
         ) : (
           <span class="inline-flex items-center rounded-md border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-500">
-            Planned
+            {common.planned}
           </span>
         )
       }

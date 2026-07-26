@@ -1,0 +1,63 @@
+---
+import AdPlaceholder from "../common/AdPlaceholder.astro";
+import Container from "../common/Container.astro";
+import SectionTitle from "../common/SectionTitle.astro";
+import ToolGrid from "../tools/ToolGrid.astro";
+import ToolSearch from "../tools/ToolSearch.astro";
+import { getCategories } from "../../data/categories";
+import { getActiveTools, getTools } from "../../data/tools";
+import { defaultLocale, localizedPath, type Locale } from "../../i18n/config";
+import { getMessages } from "../../i18n/messages";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const { toolsIndex } = getMessages(locale);
+const categories = getCategories(locale);
+const tools = getTools(locale);
+const activeTools = getActiveTools(locale);
+---
+
+<BaseLayout
+  title={toolsIndex.title}
+  description={toolsIndex.description}
+  path={localizedPath("/tools", locale)}
+  locale={locale}
+>
+  <main class="flex-1">
+    <Container class="py-10 md:py-14">
+      <section class="max-w-4xl">
+        <p class="text-sm font-semibold uppercase text-brand-teal">{toolsIndex.eyebrow}</p>
+        <h1 class="mt-3 text-3xl font-semibold text-ink md:text-4xl">{toolsIndex.heading}</h1>
+        <p class="mt-4 text-lg leading-8 text-slate-600">
+          {toolsIndex.lead}
+        </p>
+      </section>
+
+      <AdPlaceholder label="Development ad placeholder above all tools" />
+
+      <section class="mt-8">
+        <ToolSearch categories={categories} locale={locale}>
+          <ToolGrid tools={tools} locale={locale} />
+        </ToolSearch>
+      </section>
+
+      <AdPlaceholder label="Development ad placeholder between all tools list" />
+
+      <section class="mt-12">
+        <SectionTitle
+          title={toolsIndex.availableTitle}
+          description={toolsIndex.availableDescription}
+        />
+        <div class="mt-6">
+          <ToolGrid tools={activeTools} locale={locale} />
+        </div>
+      </section>
+
+      <AdPlaceholder label="Development ad placeholder before footer" />
+    </Container>
+  </main>
+</BaseLayout>

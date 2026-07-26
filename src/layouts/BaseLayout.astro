@@ -2,6 +2,8 @@
 import Footer from "../components/layout/Footer.astro";
 import Header from "../components/layout/Header.astro";
 import SEO from "../components/seo/SEO.astro";
+import { defaultLocale, getAlternateLinks, localeDetails, stripLocaleFromPath, type Locale } from "../i18n/config";
+import { resolveAlternateLinks, withBasePath } from "../utils/seo";
 import "../styles/global.css";
 
 interface Props {
@@ -10,32 +12,47 @@ interface Props {
   path?: string;
   image?: string;
   robots?: string;
+  locale?: Locale;
   type?: "website" | "article";
 }
 
-const { title, description, path = Astro.url.pathname, image, robots, type } = Astro.props;
+const {
+  title,
+  description,
+  path = Astro.url.pathname,
+  image,
+  robots,
+  locale = defaultLocale,
+  type
+} = Astro.props;
+const logicalPath = stripLocaleFromPath(path);
+const alternates = resolveAlternateLinks(getAlternateLinks(logicalPath));
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={localeDetails[locale].htmlLang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href={withBasePath("/favicon.svg")} />
+    <link rel="apple-touch-icon" href={withBasePath("/logo-mark.svg")} />
     <SEO
       title={title}
       description={description}
       path={path}
       image={image}
       robots={robots}
+      locale={locale}
+      alternates={alternates}
       type={type}
     />
   </head>
   <body class="min-h-screen antialiased">
     <div class="flex min-h-screen flex-col">
-      <Header />
+      <Header locale={locale} />
       <slot />
-      <Footer />
+      <Footer locale={locale} />
     </div>
   </body>
 </html>

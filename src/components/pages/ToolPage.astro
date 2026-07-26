@@ -1,0 +1,83 @@
+---
+import ToolLayout from "../layout/ToolLayout.astro";
+import Base64EncoderDecoderTool from "../tools/base64-encoder-decoder/Base64EncoderDecoderTool.astro";
+import CaseConverterTool from "../tools/case-converter/CaseConverterTool.astro";
+import CharacterCounterTool from "../tools/character-counter/CharacterCounterTool.astro";
+import ColorConverterTool from "../tools/color-converter/ColorConverterTool.astro";
+import JsonFormatterTool from "../tools/json-formatter/JsonFormatterTool.astro";
+import LoremIpsumGeneratorTool from "../tools/lorem-ipsum-generator/LoremIpsumGeneratorTool.astro";
+import PasswordGeneratorTool from "../tools/password-generator/PasswordGeneratorTool.astro";
+import PercentageCalculatorTool from "../tools/percentage-calculator/PercentageCalculatorTool.astro";
+import QrCodeGeneratorTool from "../tools/qr-code-generator/QrCodeGeneratorTool.astro";
+import TimestampConverterTool from "../tools/timestamp-converter/TimestampConverterTool.astro";
+import UrlEncoderDecoderTool from "../tools/url-encoder-decoder/UrlEncoderDecoderTool.astro";
+import UuidGeneratorTool from "../tools/uuid-generator/UuidGeneratorTool.astro";
+import WordCounterTool from "../tools/word-counter/WordCounterTool.astro";
+import { getRelatedTools } from "../../data/tools";
+import { getToolContent } from "../../data/toolContent";
+import { defaultLocale, type Locale } from "../../i18n/config";
+import { getMessages } from "../../i18n/messages";
+import type { Tool } from "../../types/tool";
+
+interface Props {
+  tool: Tool;
+  locale?: Locale;
+}
+
+const toolComponents = {
+  "word-counter": WordCounterTool,
+  "character-counter": CharacterCounterTool,
+  "case-converter": CaseConverterTool,
+  "lorem-ipsum-generator": LoremIpsumGeneratorTool,
+  "qr-code-generator": QrCodeGeneratorTool,
+  "password-generator": PasswordGeneratorTool,
+  "uuid-generator": UuidGeneratorTool,
+  "json-formatter": JsonFormatterTool,
+  "base64-encoder-decoder": Base64EncoderDecoderTool,
+  "url-encoder-decoder": UrlEncoderDecoderTool,
+  "timestamp-converter": TimestampConverterTool,
+  "color-converter": ColorConverterTool,
+  "percentage-calculator": PercentageCalculatorTool
+};
+
+const { tool, locale = defaultLocale } = Astro.props;
+const ToolComponent = toolComponents[tool.slug as keyof typeof toolComponents];
+const content = getToolContent(tool.slug, locale);
+const { toolPage } = getMessages(locale);
+
+if (!ToolComponent || !content) {
+  throw new Error(`Tool page configuration is missing for ${tool.slug}.`);
+}
+
+const relatedTools = getRelatedTools(tool, locale);
+const whatIsHeading = toolPage.whatIs.replace("{tool}", tool.name);
+---
+
+<ToolLayout tool={tool} relatedTools={relatedTools} locale={locale}>
+  <ToolComponent slot="tool" locale={locale} />
+
+  <Fragment slot="content">
+    <h2>{whatIsHeading}</h2>
+    <p>{content.intro}</p>
+
+    <h2>{toolPage.howToUse}</h2>
+    <p>{content.howToUse}</p>
+
+    <h2>{toolPage.howItWorks}</h2>
+    <p>{content.howItWorks}</p>
+
+    <h2>{toolPage.privacy}</h2>
+    <p>{content.privacy}</p>
+  </Fragment>
+
+  <Fragment slot="faq">
+    {
+      content.faqs.map((item) => (
+        <section>
+          <h3 class="font-semibold text-ink">{item.question}</h3>
+          <p class="mt-1">{item.answer}</p>
+        </section>
+      ))
+    }
+  </Fragment>
+</ToolLayout>

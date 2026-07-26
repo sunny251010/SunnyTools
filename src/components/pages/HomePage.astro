@@ -1,0 +1,101 @@
+---
+import AdPlaceholder from "../common/AdPlaceholder.astro";
+import Container from "../common/Container.astro";
+import SectionTitle from "../common/SectionTitle.astro";
+import ToolCategoryList from "../tools/ToolCategoryList.astro";
+import ToolGrid from "../tools/ToolGrid.astro";
+import { getCategories } from "../../data/categories";
+import { getActiveTools, getPopularTools, getTools } from "../../data/tools";
+import { defaultLocale, localizedPath, type Locale } from "../../i18n/config";
+import { getMessages } from "../../i18n/messages";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { withBasePath } from "../../utils/seo";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const { common, home } = getMessages(locale);
+const tools = getTools(locale);
+const activeTools = getActiveTools(locale);
+const popularPreview = getPopularTools(locale).slice(0, 6);
+const categories = getCategories(locale);
+---
+
+<BaseLayout title={home.title} description={home.description} path={localizedPath("/", locale)} locale={locale}>
+  <main class="flex-1">
+    <section class="border-b border-slate-200 bg-white">
+      <Container class="py-14 md:py-20">
+        <div class="max-w-4xl">
+          <p class="text-sm font-semibold uppercase text-brand-teal">{home.eyebrow}</p>
+          <h1 class="mt-4 text-4xl font-semibold text-ink md:text-5xl">
+            {home.heading}
+          </h1>
+          <p class="mt-5 max-w-2xl text-lg leading-8 text-slate-600">
+            {home.lead}
+          </p>
+
+          <form action={withBasePath(localizedPath("/tools", locale))} method="get" class="mt-8 grid gap-3 sm:grid-cols-[1fr_auto]">
+            <label class="sr-only" for="home-tool-search">{common.searchTools}</label>
+            <input
+              id="home-tool-search"
+              name="q"
+              type="search"
+              placeholder={common.homeSearchPlaceholder}
+              class="h-12 rounded-md border border-slate-300 bg-slate-50 px-4 text-base text-ink shadow-sm focus:border-brand-teal focus:bg-white"
+            />
+            <button
+              type="submit"
+              class="rounded-md bg-brand-teal px-5 py-3 text-sm font-semibold text-white hover:bg-teal-800"
+            >
+              {common.searchTools}
+            </button>
+          </form>
+
+          <div class="mt-6 flex flex-wrap gap-3 text-sm font-medium text-slate-600">
+            <a class="rounded-md border border-slate-200 bg-white px-3 py-2 hover:text-brand-teal" href={withBasePath(localizedPath("/tools", locale))}>
+              {common.browseAllTools}
+            </a>
+            <span class="rounded-md bg-teal-50 px-3 py-2 text-brand-teal">
+              {activeTools.length} {common.activeNow}
+            </span>
+            <span class="rounded-md bg-amber-50 px-3 py-2 text-brand-gold">
+              {tools.length} {common.totalTools}
+            </span>
+          </div>
+        </div>
+      </Container>
+    </section>
+
+    <Container class="py-10">
+      <AdPlaceholder label="Development ad placeholder after hero" />
+
+      <section class="mt-10">
+        <SectionTitle
+          eyebrow={home.popularEyebrow}
+          title={home.popularTitle}
+          description={home.popularDescription}
+        />
+        <div class="mt-6">
+          <ToolGrid tools={popularPreview} locale={locale} />
+        </div>
+      </section>
+
+      <AdPlaceholder label="Development ad placeholder between tool sections" />
+
+      <section class="mt-12">
+        <SectionTitle
+          eyebrow={home.categoriesEyebrow}
+          title={home.categoriesTitle}
+          description={home.categoriesDescription}
+        />
+        <div class="mt-6">
+          <ToolCategoryList categories={categories} tools={tools} locale={locale} />
+        </div>
+      </section>
+
+      <AdPlaceholder label="Development ad placeholder before footer" />
+    </Container>
+  </main>
+</BaseLayout>

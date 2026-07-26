@@ -1,0 +1,23 @@
+---
+import ToolPage from "../../../components/pages/ToolPage.astro";
+import { getActiveTools } from "../../../data/tools";
+import { isLocale, nonDefaultLocales, type Locale } from "../../../i18n/config";
+import type { Tool } from "../../../types/tool";
+
+export function getStaticPaths() {
+  return nonDefaultLocales.flatMap((locale) =>
+    getActiveTools(locale).map((tool) => ({
+      params: { locale, slug: tool.slug },
+      props: { tool, locale }
+    }))
+  );
+}
+
+const { tool, locale } = Astro.props as { tool: Tool; locale: Locale };
+
+if (!isLocale(locale)) {
+  throw new Error(`Unsupported locale: ${locale}`);
+}
+---
+
+<ToolPage tool={tool} locale={locale} />

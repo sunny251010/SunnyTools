@@ -1,29 +1,39 @@
 ---
+import { defaultLocale, type Locale } from "../../../i18n/config";
+import { getMessages } from "../../../i18n/messages";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const copy = getMessages(locale).toolUi;
+
 const stats = [
-  ["characters", "Characters"],
-  ["noSpaces", "Without spaces"],
-  ["words", "Words"],
-  ["lines", "Lines"],
-  ["remaining", "Remaining"],
-  ["usage", "Limit used"]
+  ["characters", copy.wordCounter.characters],
+  ["noSpaces", copy.characterCounter.withoutSpaces],
+  ["words", copy.wordCounter.words],
+  ["lines", copy.characterCounter.lines],
+  ["remaining", copy.characterCounter.remaining],
+  ["usage", copy.characterCounter.usage]
 ];
 ---
 
-<div class="space-y-5" data-character-counter>
+<div class="space-y-5" data-character-counter data-no-limit={copy.characterCounter.noLimit}>
   <div class="grid gap-4 lg:grid-cols-[1fr_180px]">
     <div>
       <label for="character-counter-input" class="mb-2 block text-sm font-semibold text-ink">
-        Text input
+        {copy.shared.textInput}
       </label>
       <textarea
         id="character-counter-input"
         class="min-h-72 w-full rounded-md border border-slate-300 bg-slate-50 p-4 text-base leading-7 text-ink shadow-inner focus:border-brand-teal focus:bg-white"
-        placeholder="Type or paste text"
+        placeholder={copy.characterCounter.placeholder}
         data-character-input></textarea>
     </div>
     <div>
       <label for="character-limit" class="mb-2 block text-sm font-semibold text-ink">
-        Character limit
+        {copy.characterCounter.characterLimit}
       </label>
       <input
         id="character-limit"
@@ -52,6 +62,7 @@ const stats = [
   const root = document.querySelector<HTMLElement>("[data-character-counter]");
   const input = root?.querySelector<HTMLTextAreaElement>("[data-character-input]");
   const limitInput = root?.querySelector<HTMLInputElement>("[data-character-limit]");
+  const noLimit = root?.dataset.noLimit ?? "No limit";
 
   const setValue = (key: string, value: string): void => {
     const target = root?.querySelector<HTMLElement>(`[data-character-stat="${key}"]`);
@@ -71,8 +82,8 @@ const stats = [
     setValue("noSpaces", String(text.replace(/\s/g, "").length));
     setValue("words", String(words));
     setValue("lines", String(lines));
-    setValue("remaining", limit > 0 ? String(limit - text.length) : "No limit");
-    setValue("usage", limit > 0 ? `${usage}%` : "No limit");
+    setValue("remaining", limit > 0 ? String(limit - text.length) : noLimit);
+    setValue("usage", limit > 0 ? `${usage}%` : noLimit);
   };
 
   input?.addEventListener("input", update);

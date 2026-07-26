@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192" role="img" aria-labelledby="title desc">
+  <title id="title">SunnyTools mark</title>
+  <desc id="desc">A compact sun, wrench, and gear mark.</desc>
+  <defs>
+    <linearGradient id="sun" x1="55" y1="35" x2="140" y2="140" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffe95b" />
+      <stop offset="0.5" stop-color="#ffc400" />
+      <stop offset="1" stop-color="#ff9800" />
+    </linearGradient>
+    <linearGradient id="gear" x1="45" y1="100" x2="155" y2="162" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0b3d78" />
+      <stop offset="1" stop-color="#062553" />
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="42" fill="#ffffff" />
+  <path d="M86 119c23 10 48 8 70-5l11 17-16 14 7 19-28 8-10-20c-18 3-37 0-53-8l-18 13-20-20 15-18c-11-13-18-30-18-49h26c1 19 14 35 34 49Z" fill="url(#gear)" />
+  <path d="M37 78h26" stroke="#ffad00" stroke-width="14" stroke-linecap="round" />
+  <path d="M70 42 50 22" stroke="#ffad00" stroke-width="14" stroke-linecap="round" />
+  <path d="M108 33V10" stroke="#ffc400" stroke-width="14" stroke-linecap="round" />
+  <path d="M76 60c12-26 43-39 73-30-18 35-49 66-91 63-4-12 0-24 18-33Z" fill="url(#sun)" />
+  <path d="M96 49c11-8 24-11 36-12-5 16-18 29-37 34-6 1-11 2-16 2 2-10 8-18 17-24Z" fill="#fff8a6" opacity="0.74" />
+  <path d="M148 29c14-7 29-5 41 2l-31 29 6 27c21 3 40-6 53-23 4 21-11 42-33 49-9 3-19 3-28 0-26 27-66 34-103 16 35 6 69-7 87-34 8-12 7-21 3-32-5-12-2-24 5-34Z" fill="url(#sun)" />
+</svg>

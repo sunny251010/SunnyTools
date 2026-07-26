@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="sun" x1="19" y1="12" x2="49" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffe95b" />
+      <stop offset="0.55" stop-color="#ffc400" />
+      <stop offset="1" stop-color="#ff9800" />
+    </linearGradient>
+    <linearGradient id="gear" x1="15" y1="36" x2="56" y2="60" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0b3d78" />
+      <stop offset="1" stop-color="#062553" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#fff" />
+  <path d="M29 41c8 4 17 3 25-1l4 6-6 5 3 7-10 3-4-7c-7 1-13 0-19-3l-6 5-7-7 5-6c-4-5-6-11-6-18h9c0 7 5 13 12 16Z" fill="url(#gear)" />
+  <path d="M13 27h9" stroke="#ffad00" stroke-width="5" stroke-linecap="round" />
+  <path d="M25 14 18 7" stroke="#ffad00" stroke-width="5" stroke-linecap="round" />
+  <path d="M38 11V3" stroke="#ffc400" stroke-width="5" stroke-linecap="round" />
+  <path d="M27 21c4-10 16-14 27-11-7 13-18 24-34 23-1-5 0-9 7-12Z" fill="url(#sun)" />
+  <path d="M52 11c5-3 11-2 15 1L56 23l2 10c8 1 15-2 20-8 2 8-4 16-12 19-4 1-7 1-11 0-9 10-24 13-38 6 13 2 25-3 32-13 3-4 3-8 1-12-2-5-1-9 2-14Z" fill="url(#sun)" />
+</svg>

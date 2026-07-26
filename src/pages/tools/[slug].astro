@@ -1,83 +1,17 @@
 ---
-import ToolLayout from "../../components/layout/ToolLayout.astro";
-import Base64EncoderDecoderTool from "../../components/tools/base64-encoder-decoder/Base64EncoderDecoderTool.astro";
-import CaseConverterTool from "../../components/tools/case-converter/CaseConverterTool.astro";
-import CharacterCounterTool from "../../components/tools/character-counter/CharacterCounterTool.astro";
-import ColorConverterTool from "../../components/tools/color-converter/ColorConverterTool.astro";
-import JsonFormatterTool from "../../components/tools/json-formatter/JsonFormatterTool.astro";
-import LoremIpsumGeneratorTool from "../../components/tools/lorem-ipsum-generator/LoremIpsumGeneratorTool.astro";
-import PasswordGeneratorTool from "../../components/tools/password-generator/PasswordGeneratorTool.astro";
-import PercentageCalculatorTool from "../../components/tools/percentage-calculator/PercentageCalculatorTool.astro";
-import QrCodeGeneratorTool from "../../components/tools/qr-code-generator/QrCodeGeneratorTool.astro";
-import TimestampConverterTool from "../../components/tools/timestamp-converter/TimestampConverterTool.astro";
-import UrlEncoderDecoderTool from "../../components/tools/url-encoder-decoder/UrlEncoderDecoderTool.astro";
-import UuidGeneratorTool from "../../components/tools/uuid-generator/UuidGeneratorTool.astro";
-import WordCounterTool from "../../components/tools/word-counter/WordCounterTool.astro";
-import { toolContentBySlug } from "../../data/toolContent";
-import { getRelatedTools, tools } from "../../data/tools";
+import ToolPage from "../../components/pages/ToolPage.astro";
+import { getActiveTools } from "../../data/tools";
+import { defaultLocale } from "../../i18n/config";
 import type { Tool } from "../../types/tool";
 
-const toolComponents = {
-  "word-counter": WordCounterTool,
-  "character-counter": CharacterCounterTool,
-  "case-converter": CaseConverterTool,
-  "lorem-ipsum-generator": LoremIpsumGeneratorTool,
-  "qr-code-generator": QrCodeGeneratorTool,
-  "password-generator": PasswordGeneratorTool,
-  "uuid-generator": UuidGeneratorTool,
-  "json-formatter": JsonFormatterTool,
-  "base64-encoder-decoder": Base64EncoderDecoderTool,
-  "url-encoder-decoder": UrlEncoderDecoderTool,
-  "timestamp-converter": TimestampConverterTool,
-  "color-converter": ColorConverterTool,
-  "percentage-calculator": PercentageCalculatorTool
-};
-
 export function getStaticPaths() {
-  return tools
-    .filter((tool) => tool.status === "active")
-    .map((tool) => ({
-      params: { slug: tool.slug },
-      props: { tool }
-    }));
+  return getActiveTools(defaultLocale).map((tool) => ({
+    params: { slug: tool.slug },
+    props: { tool }
+  }));
 }
 
 const { tool } = Astro.props as { tool: Tool };
-const ToolComponent = toolComponents[tool.slug as keyof typeof toolComponents];
-const content = toolContentBySlug[tool.slug];
-
-if (!ToolComponent || !content) {
-  throw new Error(`Tool page configuration is missing for ${tool.slug}.`);
-}
-
-const relatedTools = getRelatedTools(tool);
 ---
 
-<ToolLayout tool={tool} relatedTools={relatedTools}>
-  <ToolComponent slot="tool" />
-
-  <Fragment slot="content">
-    <h2>What is {tool.name}?</h2>
-    <p>{content.intro}</p>
-
-    <h2>How to use it</h2>
-    <p>{content.howToUse}</p>
-
-    <h2>How it works</h2>
-    <p>{content.howItWorks}</p>
-
-    <h2>Is data saved?</h2>
-    <p>{content.privacy}</p>
-  </Fragment>
-
-  <Fragment slot="faq">
-    {
-      content.faqs.map((item) => (
-        <section>
-          <h3 class="font-semibold text-ink">{item.question}</h3>
-          <p class="mt-1">{item.answer}</p>
-        </section>
-      ))
-    }
-  </Fragment>
-</ToolLayout>
+<ToolPage tool={tool} locale={defaultLocale} />

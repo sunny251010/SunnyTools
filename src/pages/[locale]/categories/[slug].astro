@@ -1,0 +1,23 @@
+---
+import CategoryPage from "../../../components/pages/CategoryPage.astro";
+import { getCategories } from "../../../data/categories";
+import { isLocale, nonDefaultLocales, type Locale } from "../../../i18n/config";
+import type { ToolCategory } from "../../../types/tool";
+
+export function getStaticPaths() {
+  return nonDefaultLocales.flatMap((locale) =>
+    getCategories(locale).map((category) => ({
+      params: { locale, slug: category.slug },
+      props: { category, locale }
+    }))
+  );
+}
+
+const { category, locale } = Astro.props as { category: ToolCategory; locale: Locale };
+
+if (!isLocale(locale)) {
+  throw new Error(`Unsupported locale: ${locale}`);
+}
+---
+
+<CategoryPage category={category} locale={locale} />

@@ -1,9 +1,9 @@
+import { defaultLocale, type AlternateLink, type Locale } from "../i18n/config";
+import { getMessages } from "../i18n/messages";
+
 export const siteConfig = {
   name: "SunnyTools",
   url: import.meta.env.PUBLIC_SITE_URL ?? "https://sunnytools.site",
-  defaultTitle: "SunnyTools - Free Online Tools",
-  defaultDescription:
-    "Fast, private, browser-based tools for text, developers, generators, conversions, and calculators.",
   defaultImage: "/og-default.svg",
   twitterHandle: "@sunnytools"
 };
@@ -32,6 +32,7 @@ export interface PageSeoInput {
   path?: string;
   image?: string;
   robots?: string;
+  locale?: Locale;
 }
 
 export interface PageSeo {
@@ -50,9 +51,11 @@ export const resolveSiteUrl = (path = "/"): string => {
   return new URL(withBasePath(path), siteConfig.url).toString();
 };
 
-export const buildTitle = (title?: string): string => {
+export const buildTitle = (title?: string, locale: Locale = defaultLocale): string => {
+  const { site } = getMessages(locale);
+
   if (!title) {
-    return siteConfig.defaultTitle;
+    return site.defaultTitle;
   }
 
   return title.includes(siteConfig.name) ? title : `${title} | ${siteConfig.name}`;
@@ -63,11 +66,18 @@ export const createPageSeo = ({
   description,
   path = "/",
   image = siteConfig.defaultImage,
-  robots = "index, follow"
+  robots = "index, follow",
+  locale = defaultLocale
 }: PageSeoInput): PageSeo => ({
-  title: buildTitle(title),
-  description: description ?? siteConfig.defaultDescription,
+  title: buildTitle(title, locale),
+  description: description ?? getMessages(locale).site.defaultDescription,
   canonical: resolveSiteUrl(path),
   image: resolveSiteUrl(image),
   robots
 });
+
+export const resolveAlternateLinks = (alternates: AlternateLink[]): AlternateLink[] =>
+  alternates.map((alternate) => ({
+    ...alternate,
+    href: resolveSiteUrl(alternate.href)
+  }));

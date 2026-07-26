@@ -13,7 +13,7 @@ Component metadata dùng chung nằm tại `src/components/seo/SEO.astro`.
 
 ## Domain
 
-Domain tạm thời là `https://example.com`. Trước khi launch thật, cần thay trong:
+Domain đã mua là `https://sunnytools.site`. Trước khi launch thật, cần thay trong:
 
 - `astro.config.mjs`
 - `src/utils/seo.ts`

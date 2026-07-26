@@ -1,30 +1,46 @@
 ---
 import { getTextStats } from "../../../utils/text";
+import { defaultLocale, type Locale } from "../../../i18n/config";
+import { getMessages } from "../../../i18n/messages";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const copy = getMessages(locale).toolUi;
 
 const initialStats = getTextStats("");
 const stats = [
-  { key: "wordCount", label: "Words", value: initialStats.wordCount },
-  { key: "characterCount", label: "Characters", value: initialStats.characterCount },
+  { key: "wordCount", label: copy.wordCounter.words, value: initialStats.wordCount },
+  { key: "characterCount", label: copy.wordCounter.characters, value: initialStats.characterCount },
   {
     key: "characterCountNoSpaces",
-    label: "Characters without spaces",
+    label: copy.wordCounter.charactersNoSpaces,
     value: initialStats.characterCountNoSpaces
   },
-  { key: "sentenceCount", label: "Sentences", value: initialStats.sentenceCount },
-  { key: "paragraphCount", label: "Paragraphs", value: initialStats.paragraphCount },
-  { key: "readingTimeMinutes", label: "Reading time", value: initialStats.readingTimeMinutes }
+  { key: "sentenceCount", label: copy.wordCounter.sentences, value: initialStats.sentenceCount },
+  { key: "paragraphCount", label: copy.wordCounter.paragraphs, value: initialStats.paragraphCount },
+  { key: "readingTimeMinutes", label: copy.wordCounter.readingTime, value: initialStats.readingTimeMinutes }
 ];
 ---
 
-<div class="space-y-5" data-word-counter>
+<div
+  class="space-y-5"
+  data-word-counter
+  data-minute={copy.wordCounter.minute}
+  data-minutes={copy.wordCounter.minutes}
+  data-copied={copy.shared.copiedToClipboard}
+  data-copy-failed={copy.wordCounter.copyFailed}
+>
   <div>
     <label for="word-counter-input" class="mb-2 block text-sm font-semibold text-ink">
-      Text input
+      {copy.shared.textInput}
     </label>
     <textarea
       id="word-counter-input"
       class="min-h-72 w-full rounded-md border border-slate-300 bg-slate-50 p-4 text-base leading-7 text-ink shadow-inner focus:border-brand-teal focus:bg-white"
-      placeholder="Paste or type your text here"
+      placeholder={copy.wordCounter.placeholder}
       data-word-counter-input></textarea>
   </div>
 
@@ -34,14 +50,14 @@ const stats = [
       class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
       data-word-counter-copy
     >
-      Copy
+      {copy.shared.copy}
     </button>
     <button
       type="button"
       class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal"
       data-word-counter-clear
     >
-      Clear
+      {copy.shared.clear}
     </button>
     <span
       class="rounded-md bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700"
@@ -49,7 +65,7 @@ const stats = [
       data-word-counter-toast
       hidden
     >
-      Copied to clipboard.
+      {copy.shared.copiedToClipboard}
     </span>
   </div>
 
@@ -75,6 +91,10 @@ const stats = [
   const copyButton = root?.querySelector<HTMLButtonElement>("[data-word-counter-copy]");
   const clearButton = root?.querySelector<HTMLButtonElement>("[data-word-counter-clear]");
   const toast = root?.querySelector<HTMLElement>("[data-word-counter-toast]");
+  const minute = root?.dataset.minute ?? "min";
+  const minutes = root?.dataset.minutes ?? "mins";
+  const copied = root?.dataset.copied ?? "Copied to clipboard.";
+  const copyFailed = root?.dataset.copyFailed ?? "Copy failed. Select the text manually.";
   let toastTimer: number | undefined;
 
   const setStat = (key: string, value: number): void => {
@@ -82,7 +102,7 @@ const stats = [
 
     if (target) {
       target.textContent =
-        key === "readingTimeMinutes" ? `${value} ${value === 1 ? "min" : "mins"}` : String(value);
+        key === "readingTimeMinutes" ? `${value} ${value === 1 ? minute : minutes}` : String(value);
     }
   };
 
@@ -125,9 +145,9 @@ const stats = [
     copyButton.addEventListener("click", async () => {
       try {
         await navigator.clipboard.writeText(input.value);
-        showToast("Copied to clipboard.");
+        showToast(copied);
       } catch {
-        showToast("Copy failed. Select the text manually.");
+        showToast(copyFailed);
       }
     });
 

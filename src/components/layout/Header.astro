@@ -1,10 +1,20 @@
 ---
-import { mainNavigation } from "../../data/navigation";
+import { getMainNavigation } from "../../data/navigation";
+import { defaultLocale, localizedPath, stripLocaleFromPath, type Locale } from "../../i18n/config";
+import { getMessages } from "../../i18n/messages";
 import { siteConfig, withBasePath } from "../../utils/seo";
 import Container from "../common/Container.astro";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
 import MobileMenu from "./MobileMenu.astro";
 
-const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const { site, common } = getMessages(locale);
+const mainNavigation = getMainNavigation(locale);
+const currentPath = stripLocaleFromPath(Astro.url.pathname).replace(/\/$/, "") || "/";
 const isActive = (href: string): boolean => {
   const path = new URL(href, siteConfig.url).pathname.replace(/\/$/, "") || "/";
   return path === "/" ? currentPath === "/" : currentPath === path;
@@ -13,16 +23,15 @@ const isActive = (href: string): boolean => {
 
 <header class="sticky top-0 z-40 border-b border-slate-200 bg-white/92 backdrop-blur">
   <Container class="relative flex h-16 items-center justify-between gap-4">
-    <a href={withBasePath("/")} class="flex items-center gap-3 font-semibold text-ink" aria-label="SunnyTools home">
-      <span class="grid h-9 w-9 place-items-center rounded-md bg-brand-teal text-sm text-white">ST</span>
-      <span>{siteConfig.name}</span>
+    <a href={withBasePath(localizedPath("/", locale))} class="flex items-center gap-3 font-semibold text-ink" aria-label={site.homeAria}>
+      <img src={withBasePath("/logo.svg")} alt={siteConfig.name} class="h-10 w-auto" width="169" height="40" />
     </a>
 
-    <nav class="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
+    <nav class="hidden items-center gap-1 md:flex" aria-label={site.primaryNavigation}>
       {
         mainNavigation.map((item) => (
           <a
-            href={withBasePath(item.href)}
+            href={withBasePath(localizedPath(item.href, locale))}
             class:list={[
               "rounded-md px-3 py-2 text-sm font-medium",
               isActive(item.href)
@@ -38,13 +47,14 @@ const isActive = (href: string): boolean => {
 
     <div class="hidden items-center gap-2 md:flex">
       <a
-        href={withBasePath("/tools")}
+        href={withBasePath(localizedPath("/tools", locale))}
         class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-teal-200 hover:text-brand-teal"
       >
-        Search tools
+        {common.searchTools}
       </a>
+      <LanguageSwitcher locale={locale} />
     </div>
 
-    <MobileMenu />
+    <MobileMenu locale={locale} />
   </Container>
 </header>

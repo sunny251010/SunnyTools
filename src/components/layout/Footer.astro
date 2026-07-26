@@ -1,28 +1,36 @@
 ---
-import { footerNavigation } from "../../data/navigation";
+import { getFooterNavigation } from "../../data/navigation";
+import { defaultLocale, localizedPath, type Locale } from "../../i18n/config";
+import { getMessages } from "../../i18n/messages";
 import { siteConfig, withBasePath } from "../../utils/seo";
 import Container from "../common/Container.astro";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const { site } = getMessages(locale);
+const footerNavigation = getFooterNavigation(locale);
 ---
 
 <footer class="mt-auto border-t border-slate-200 bg-white">
   <Container class="py-10">
     <div class="grid gap-8 md:grid-cols-[1.2fr_1fr] md:items-start">
       <div>
-        <a href={withBasePath("/")} class="flex items-center gap-3 font-semibold text-ink">
-          <span class="grid h-9 w-9 place-items-center rounded-md bg-brand-teal text-sm text-white">ST</span>
-          <span>{siteConfig.name}</span>
+        <a href={withBasePath(localizedPath("/", locale))} class="flex items-center gap-3 font-semibold text-ink">
+          <img src={withBasePath("/logo.svg")} alt={siteConfig.name} class="h-11 w-auto" width="186" height="44" />
         </a>
         <p class="mt-4 max-w-xl text-sm leading-6 text-slate-600">
-          Fast, private, browser-based utilities built for everyday writing, development, and
-          calculation tasks.
+          {site.footerDescription}
         </p>
       </div>
-      <nav class="flex flex-wrap gap-x-5 gap-y-3 text-sm font-medium text-slate-600" aria-label="Footer">
-        {footerNavigation.map((item) => <a class="hover:text-brand-teal" href={withBasePath(item.href)}>{item.label}</a>)}
+      <nav class="flex flex-wrap gap-x-5 gap-y-3 text-sm font-medium text-slate-600" aria-label={site.footerNavigation}>
+        {footerNavigation.map((item) => <a class="hover:text-brand-teal" href={withBasePath(localizedPath(item.href, locale))}>{item.label}</a>)}
       </nav>
     </div>
     <p class="mt-8 text-sm text-slate-500">
-      Copyright {new Date().getFullYear()} {siteConfig.name}. All rights reserved.
+      Copyright {new Date().getFullYear()} {siteConfig.name}. {site.copyright}
     </p>
   </Container>
 </footer>

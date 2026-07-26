@@ -1,0 +1,42 @@
+---
+import Container from "../common/Container.astro";
+import { defaultLocale, localizedPath, type Locale } from "../../i18n/config";
+import { getMessages } from "../../i18n/messages";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+type StaticPageKey = "about" | "contact" | "privacyPolicy" | "terms";
+
+interface Props {
+  pageKey: StaticPageKey;
+  path: string;
+  locale?: Locale;
+}
+
+const { pageKey, path, locale = defaultLocale } = Astro.props;
+const page = getMessages(locale).pages[pageKey];
+---
+
+<BaseLayout
+  title={page.title}
+  description={page.description}
+  path={localizedPath(path, locale)}
+  locale={locale}
+>
+  <main class="flex-1">
+    <Container class="py-12 md:py-16">
+      <article class="content-page">
+        <p class="text-sm font-semibold uppercase text-brand-teal">{page.eyebrow}</p>
+        <h1>{page.heading}</h1>
+        {page.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+        {
+          page.sections.map((section) => (
+            <>
+              <h2>{section.title}</h2>
+              <p>{section.body}</p>
+            </>
+          ))
+        }
+      </article>
+    </Container>
+  </main>
+</BaseLayout>

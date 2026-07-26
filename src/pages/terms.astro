@@ -1,28 +1,6 @@
 ---
-import Container from "../components/common/Container.astro";
-import BaseLayout from "../layouts/BaseLayout.astro";
+import StaticPage from "../components/pages/StaticPage.astro";
+import { defaultLocale } from "../i18n/config";
 ---
 
-<BaseLayout
-  title="Terms"
-  description="Read the basic terms for using SunnyTools."
-  path="/terms"
->
-  <main class="flex-1">
-    <Container class="py-12 md:py-16">
-      <article class="content-page">
-        <p class="text-sm font-semibold uppercase text-brand-teal">Terms</p>
-        <h1>Terms of Use</h1>
-        <p>
-          SunnyTools provides browser-based utilities for general informational and productivity
-          purposes. Review outputs before relying on them in production workflows.
-        </p>
-        <h2>No warranty</h2>
-        <p>
-          Tools are provided as-is. The project should add jurisdiction-specific legal language
-          before a public production launch.
-        </p>
-      </article>
-    </Container>
-  </main>
-</BaseLayout>
+<StaticPage pageKey="terms" path="/terms" locale={defaultLocale} />

@@ -1,19 +1,23 @@
 ---
 import type { Tool } from "../../types/tool";
+import { defaultLocale, type Locale } from "../../i18n/config";
+import { getMessages } from "../../i18n/messages";
 import ToolCard from "./ToolCard.astro";
 
 interface Props {
   tools: Tool[];
   emptyMessage?: string;
+  locale?: Locale;
 }
 
-const { tools, emptyMessage = "No tools found." } = Astro.props;
+const { tools, locale = defaultLocale } = Astro.props;
+const emptyMessage = Astro.props.emptyMessage ?? getMessages(locale).common.noToolsFound;
 ---
 
 {
   tools.length > 0 ? (
     <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {tools.map((tool) => <ToolCard tool={tool} />)}
+      {tools.map((tool) => <ToolCard tool={tool} locale={locale} />)}
     </div>
   ) : (
     <p class="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-600">

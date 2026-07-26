@@ -1,33 +1,43 @@
 ---
 import type { ToolCategory } from "../../types/tool";
+import { defaultLocale, type Locale } from "../../i18n/config";
+import { getMessages } from "../../i18n/messages";
 
 interface Props {
   categories: ToolCategory[];
+  locale?: Locale;
 }
 
-const { categories } = Astro.props;
+const { categories, locale = defaultLocale } = Astro.props;
+const { common } = getMessages(locale);
 ---
 
-<section class="rounded-md border border-slate-200 bg-white p-4 shadow-sm sm:p-5" data-tool-search-root>
+<section
+  class="rounded-md border border-slate-200 bg-white p-4 shadow-sm sm:p-5"
+  data-tool-search-root
+  data-tool-singular={common.tool}
+  data-tool-plural={common.tools}
+  data-tools-shown={common.toolsShown}
+>
   <div class="grid gap-3 md:grid-cols-[1fr_220px]">
     <div>
-      <label class="sr-only" for="tool-search-input">Search tools</label>
+      <label class="sr-only" for="tool-search-input">{common.searchTools}</label>
       <input
         id="tool-search-input"
         type="search"
-        placeholder="Search by name, keyword, or task"
+        placeholder={common.searchPlaceholder}
         class="h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-ink shadow-sm focus:border-brand-teal"
         data-tool-search-input
       />
     </div>
     <div>
-      <label class="sr-only" for="tool-category-filter">Filter by category</label>
+      <label class="sr-only" for="tool-category-filter">{common.filterByCategory}</label>
       <select
         id="tool-category-filter"
         class="h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-ink shadow-sm focus:border-brand-teal"
         data-tool-category-filter
       >
-        <option value="">All categories</option>
+        <option value="">{common.allCategories}</option>
         {categories.map((category) => <option value={category.id}>{category.name}</option>)}
       </select>
     </div>
@@ -40,7 +50,7 @@ const { categories } = Astro.props;
       data-tool-search-empty
       hidden
     >
-      No matching tools found.
+      {common.noMatchingTools}
     </p>
   </div>
 </section>
@@ -54,6 +64,9 @@ const { categories } = Astro.props;
     const count = root.querySelector<HTMLElement>("[data-tool-search-count]");
     const emptyState = root.querySelector<HTMLElement>("[data-tool-search-empty]");
     const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-tool-card]"));
+    const singular = root.dataset.toolSingular ?? "tool";
+    const plural = root.dataset.toolPlural ?? "tools";
+    const shown = root.dataset.toolsShown ?? "shown";
 
     if (!input || !categoryFilter || !count || !emptyState) {
       return;
@@ -85,7 +98,7 @@ const { categories } = Astro.props;
         }
       });
 
-      count.textContent = `${visibleCount} ${visibleCount === 1 ? "tool" : "tools"} shown`;
+      count.textContent = `${visibleCount} ${visibleCount === 1 ? singular : plural} ${shown}`;
       emptyState.hidden = visibleCount > 0;
     };
 

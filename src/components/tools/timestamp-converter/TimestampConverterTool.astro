@@ -1,28 +1,41 @@
-<div class="space-y-5" data-timestamp-tool>
+---
+import { defaultLocale, type Locale } from "../../../i18n/config";
+import { getMessages } from "../../../i18n/messages";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const copy = getMessages(locale).toolUi;
+const results = [
+  ["unixSeconds", copy.timestamp.unixSeconds],
+  ["unixMilliseconds", copy.timestamp.unixMilliseconds],
+  ["iso", copy.timestamp.iso],
+  ["utc", copy.timestamp.utc],
+  ["local", copy.timestamp.local]
+];
+---
+
+<div class="space-y-5" data-timestamp-tool data-invalid={copy.timestamp.invalid} data-locale={locale}>
   <div class="grid gap-4 lg:grid-cols-2">
     <label class="text-sm font-semibold text-ink">
-      Unix timestamp
+      {copy.timestamp.unix}
       <input class="mt-2 h-11 w-full rounded-md border border-slate-300 px-3 font-mono" type="text" placeholder="1710000000 or 1710000000000" data-timestamp-unix />
     </label>
     <label class="text-sm font-semibold text-ink">
-      Date and time
+      {copy.timestamp.dateTime}
       <input class="mt-2 h-11 w-full rounded-md border border-slate-300 px-3" type="datetime-local" data-timestamp-date />
     </label>
   </div>
   <div class="flex flex-wrap gap-3">
-    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-timestamp-from-unix>Convert timestamp</button>
-    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-timestamp-from-date>Convert date</button>
-    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-timestamp-now>Use current time</button>
+    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-timestamp-from-unix>{copy.timestamp.convertTimestamp}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-timestamp-from-date>{copy.timestamp.convertDate}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-timestamp-now>{copy.timestamp.currentTime}</button>
   </div>
   <dl class="grid gap-3 sm:grid-cols-2">
     {
-      [
-        ["unixSeconds", "Unix seconds"],
-        ["unixMilliseconds", "Unix milliseconds"],
-        ["iso", "ISO"],
-        ["utc", "UTC"],
-        ["local", "Local"]
-      ].map(([key, label]) => (
+      results.map(([key, label]) => (
         <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
           <dt class="text-sm font-medium text-slate-600">{label}</dt>
           <dd class="mt-2 break-words font-mono text-sm font-semibold text-ink" data-timestamp-result={key}>-</dd>
@@ -38,6 +51,8 @@
   const unixInput = root?.querySelector<HTMLInputElement>("[data-timestamp-unix]");
   const dateInput = root?.querySelector<HTMLInputElement>("[data-timestamp-date]");
   const error = root?.querySelector<HTMLElement>("[data-timestamp-error]");
+  const invalid = root?.dataset.invalid ?? "Enter a valid timestamp or date.";
+  const locale = root?.dataset.locale === "vi" ? "vi-VN" : undefined;
 
   const setResult = (key: string, value: string): void => {
     const target = root?.querySelector<HTMLElement>(`[data-timestamp-result="${key}"]`);
@@ -47,7 +62,7 @@
   const render = (date: Date): void => {
     if (!error) return;
     if (Number.isNaN(date.getTime())) {
-      error.textContent = "Enter a valid timestamp or date.";
+      error.textContent = invalid;
       return;
     }
 
@@ -56,7 +71,7 @@
     setResult("unixMilliseconds", String(date.getTime()));
     setResult("iso", date.toISOString());
     setResult("utc", date.toUTCString());
-    setResult("local", date.toLocaleString());
+    setResult("local", date.toLocaleString(locale));
   };
 
   const fromUnix = (): void => {

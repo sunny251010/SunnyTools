@@ -1,0 +1,19 @@
+---
+import ToolsIndexPage from "../../../components/pages/ToolsIndexPage.astro";
+import { isLocale, nonDefaultLocales, type Locale } from "../../../i18n/config";
+
+export function getStaticPaths() {
+  return nonDefaultLocales.map((locale) => ({
+    params: { locale },
+    props: { locale }
+  }));
+}
+
+const { locale } = Astro.props as { locale: Locale };
+
+if (!isLocale(locale)) {
+  throw new Error(`Unsupported locale: ${locale}`);
+}
+---
+
+<ToolsIndexPage locale={locale} />

@@ -1,8 +1,18 @@
 ---
-import { mainNavigation } from "../../data/navigation";
+import { getMainNavigation } from "../../data/navigation";
+import { defaultLocale, localizedPath, stripLocaleFromPath, type Locale } from "../../i18n/config";
+import { getMessages } from "../../i18n/messages";
 import { siteConfig, withBasePath } from "../../utils/seo";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
 
-const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const { site } = getMessages(locale);
+const mainNavigation = getMainNavigation(locale);
+const currentPath = stripLocaleFromPath(Astro.url.pathname).replace(/\/$/, "") || "/";
 const isActive = (href: string): boolean => {
   const path = new URL(href, siteConfig.url).pathname.replace(/\/$/, "") || "/";
   return path === "/" ? currentPath === "/" : currentPath === path;
@@ -13,7 +23,7 @@ const isActive = (href: string): boolean => {
   <button
     type="button"
     class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-slate-200 bg-white text-slate-700 shadow-sm"
-    aria-label="Open navigation"
+    aria-label={site.openNavigation}
     aria-expanded="false"
     data-mobile-menu-button
   >
@@ -25,7 +35,7 @@ const isActive = (href: string): boolean => {
   </button>
   <nav
     class="absolute left-4 right-4 top-16 rounded-md border border-slate-200 bg-white p-3 shadow-soft"
-    aria-label="Mobile navigation"
+    aria-label={site.mobileNavigation}
     data-mobile-menu-panel
     hidden
   >
@@ -33,7 +43,7 @@ const isActive = (href: string): boolean => {
       {
         mainNavigation.map((item) => (
           <a
-            href={withBasePath(item.href)}
+            href={withBasePath(localizedPath(item.href, locale))}
             class:list={[
               "rounded-md px-3 py-2 text-sm font-medium",
               isActive(item.href)
@@ -45,6 +55,9 @@ const isActive = (href: string): boolean => {
           </a>
         ))
       }
+      <div class="mt-2 border-t border-slate-100 pt-2">
+        <LanguageSwitcher locale={locale} compact />
+      </div>
     </div>
   </nav>
 </div>

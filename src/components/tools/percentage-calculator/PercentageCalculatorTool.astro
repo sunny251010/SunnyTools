@@ -1,6 +1,18 @@
-<div class="space-y-6" data-percentage-tool>
+---
+import { defaultLocale, type Locale } from "../../../i18n/config";
+import { getMessages } from "../../../i18n/messages";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const copy = getMessages(locale).toolUi;
+---
+
+<div class="space-y-6" data-percentage-tool data-invalid={copy.percentage.invalid} data-locale={locale}>
   <section class="rounded-md border border-slate-200 bg-slate-50 p-4">
-    <h2 class="text-lg font-semibold text-ink">What is X% of Y?</h2>
+    <h2 class="text-lg font-semibold text-ink">{copy.percentage.percentOf}</h2>
     <div class="mt-4 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
       <input class="h-11 rounded-md border border-slate-300 px-3" type="number" value="15" data-percent-a />
       <input class="h-11 rounded-md border border-slate-300 px-3" type="number" value="200" data-percent-b />
@@ -8,7 +20,7 @@
     </div>
   </section>
   <section class="rounded-md border border-slate-200 bg-slate-50 p-4">
-    <h2 class="text-lg font-semibold text-ink">X is what percent of Y?</h2>
+    <h2 class="text-lg font-semibold text-ink">{copy.percentage.ratio}</h2>
     <div class="mt-4 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
       <input class="h-11 rounded-md border border-slate-300 px-3" type="number" value="30" data-ratio-a />
       <input class="h-11 rounded-md border border-slate-300 px-3" type="number" value="200" data-ratio-b />
@@ -16,7 +28,7 @@
     </div>
   </section>
   <section class="rounded-md border border-slate-200 bg-slate-50 p-4">
-    <h2 class="text-lg font-semibold text-ink">Percentage change</h2>
+    <h2 class="text-lg font-semibold text-ink">{copy.percentage.change}</h2>
     <div class="mt-4 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
       <input class="h-11 rounded-md border border-slate-300 px-3" type="number" value="80" data-change-from />
       <input class="h-11 rounded-md border border-slate-300 px-3" type="number" value="100" data-change-to />
@@ -27,6 +39,8 @@
 
 <script>
   const root = document.querySelector<HTMLElement>("[data-percentage-tool]");
+  const invalid = root?.dataset.invalid ?? "Invalid";
+  const locale = root?.dataset.locale === "vi" ? "vi-VN" : undefined;
   const read = (selector: string): number =>
     Number(root?.querySelector<HTMLInputElement>(selector)?.value) || 0;
   const write = (selector: string, value: string): void => {
@@ -35,8 +49,8 @@
   };
   const format = (value: number): string =>
     Number.isFinite(value)
-      ? value.toLocaleString(undefined, { maximumFractionDigits: 4 })
-      : "Invalid";
+      ? value.toLocaleString(locale, { maximumFractionDigits: 4 })
+      : invalid;
 
   const update = (): void => {
     const percentResult = (read("[data-percent-a]") / 100) * read("[data-percent-b]");

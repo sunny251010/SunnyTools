@@ -1,24 +1,36 @@
-<div class="space-y-5" data-lorem-generator>
+---
+import { defaultLocale, type Locale } from "../../../i18n/config";
+import { getMessages } from "../../../i18n/messages";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const copy = getMessages(locale).toolUi;
+---
+
+<div class="space-y-5" data-lorem-generator data-copied={copy.shared.copied}>
   <div class="grid gap-4 sm:grid-cols-3">
     <label class="text-sm font-semibold text-ink">
-      Paragraphs
+      {copy.lorem.paragraphs}
       <input class="mt-2 h-11 w-full rounded-md border border-slate-300 px-3" type="number" min="1" max="12" value="3" data-lorem-paragraphs />
     </label>
     <label class="text-sm font-semibold text-ink">
-      Sentences each
+      {copy.lorem.sentencesEach}
       <input class="mt-2 h-11 w-full rounded-md border border-slate-300 px-3" type="number" min="1" max="10" value="4" data-lorem-sentences />
     </label>
     <label class="flex items-end gap-2 text-sm font-semibold text-ink">
       <input class="mb-3 h-4 w-4 accent-brand-teal" type="checkbox" checked data-lorem-classic />
-      Start classic
+      {copy.lorem.startClassic}
     </label>
   </div>
   <div class="flex flex-wrap gap-3">
     <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-lorem-generate>
-      Generate
+      {copy.shared.generate}
     </button>
     <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-lorem-copy>
-      Copy
+      {copy.shared.copy}
     </button>
   </div>
   <textarea class="min-h-80 w-full rounded-md border border-slate-300 bg-slate-50 p-4 text-base leading-7 text-ink shadow-inner" readonly data-lorem-output></textarea>
@@ -32,6 +44,7 @@
   const classicInput = root?.querySelector<HTMLInputElement>("[data-lorem-classic]");
   const output = root?.querySelector<HTMLTextAreaElement>("[data-lorem-output]");
   const status = root?.querySelector<HTMLElement>("[data-lorem-status]");
+  const copied = root?.dataset.copied ?? "Copied.";
   const wordPool = [
     "lorem",
     "ipsum",
@@ -79,7 +92,7 @@
   root?.querySelector<HTMLButtonElement>("[data-lorem-copy]")?.addEventListener("click", async () => {
     if (!output || !status) return;
     await navigator.clipboard.writeText(output.value);
-    status.textContent = "Copied.";
+    status.textContent = copied;
     window.setTimeout(() => {
       status.textContent = "";
     }, 1500);

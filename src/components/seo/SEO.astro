@@ -1,5 +1,6 @@
 ---
 import { createPageSeo, siteConfig } from "../../utils/seo";
+import type { AlternateLink, Locale } from "../../i18n/config";
 
 interface Props {
   title?: string;
@@ -7,17 +8,34 @@ interface Props {
   path?: string;
   image?: string;
   robots?: string;
+  locale?: Locale;
+  alternates?: AlternateLink[];
   type?: "website" | "article";
 }
 
-const { title, description, path, image, robots, type = "website" } = Astro.props;
-const seo = createPageSeo({ title, description, path, image, robots });
+const {
+  title,
+  description,
+  path,
+  image,
+  robots,
+  locale,
+  alternates = [],
+  type = "website"
+} = Astro.props;
+const seo = createPageSeo({ title, description, path, image, robots, locale });
 ---
 
 <title>{seo.title}</title>
 <meta name="description" content={seo.description} />
 <meta name="robots" content={seo.robots} />
 <link rel="canonical" href={seo.canonical} />
+{alternates.map((alternate) => <link rel="alternate" hreflang={alternate.locale} href={alternate.href} />)}
+{
+  alternates.length > 0 && (
+    <link rel="alternate" hreflang="x-default" href={alternates[0].href} />
+  )
+}
 
 <meta property="og:site_name" content={siteConfig.name} />
 <meta property="og:type" content={type} />
