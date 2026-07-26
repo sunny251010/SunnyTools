@@ -1,6 +1,7 @@
 ---
 import { getCategoryById } from "../../data/categories";
 import type { Tool } from "../../types/tool";
+import { withBasePath } from "../../utils/seo";
 
 interface Props {
   tool: Tool;
@@ -37,7 +38,7 @@ const isActive = tool.status === "active";
       {
         isActive ? (
           <a
-            href={`/tools/${tool.slug}`}
+            href={withBasePath(`/tools/${tool.slug}`)}
             class="inline-flex items-center rounded-md bg-brand-teal px-3 py-2 text-sm font-semibold text-white hover:bg-teal-800"
           >
             Open tool

@@ -1,5 +1,6 @@
 ---
 import type { Tool, ToolCategory } from "../../types/tool";
+import { withBasePath } from "../../utils/seo";
 
 interface Props {
   categories: ToolCategory[];
@@ -15,7 +16,7 @@ const getCount = (categoryId: string): number =>
   {
     categories.map((category) => (
       <a
-        href={`/categories/${category.slug}`}
+        href={withBasePath(`/categories/${category.slug}`)}
         class="rounded-md border border-slate-200 bg-white p-5 shadow-sm hover:border-teal-200 hover:shadow-soft"
       >
         <span class="text-sm font-semibold text-brand-teal">{getCount(category.id)} tools</span>

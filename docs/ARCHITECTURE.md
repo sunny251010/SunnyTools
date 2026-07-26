@@ -2,7 +2,7 @@
 
 ## Overview
 
-ToolKit Hub uses Astro as a static-first framework. Pages are rendered at build time, and tool logic
+SunnyTools uses Astro as a static-first framework. Pages are rendered at build time, and tool logic
 runs in the browser only when interaction is needed. This keeps the initial payload small and avoids
 backend work in the foundation phase.
 

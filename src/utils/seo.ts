@@ -1,11 +1,29 @@
 export const siteConfig = {
-  name: "ToolKit Hub",
-  url: "https://example.com",
-  defaultTitle: "ToolKit Hub - Free Online Tools",
+  name: "SunnyTools",
+  url: import.meta.env.PUBLIC_SITE_URL ?? "https://example.com",
+  defaultTitle: "SunnyTools – Free Online Tools",
   defaultDescription:
     "Fast, private, browser-based tools for text, developers, generators, conversions, and calculators.",
   defaultImage: "/og-default.svg",
-  twitterHandle: "@toolkithub"
+  twitterHandle: "@sunnytools"
+};
+
+export const getBasePath = (): string => {
+  const baseUrl = import.meta.env.BASE_URL ?? "/";
+  return baseUrl === "/" ? "" : baseUrl.replace(/\/$/, "");
+};
+
+export const withBasePath = (path: string): string => {
+  if (!path.startsWith("/") || path.startsWith("//")) {
+    return path;
+  }
+
+  const basePath = getBasePath();
+  if (!basePath) {
+    return path;
+  }
+
+  return path === "/" ? `${basePath}/` : `${basePath}${path}`;
 };
 
 export interface PageSeoInput {
@@ -24,7 +42,13 @@ export interface PageSeo {
   robots: string;
 }
 
-export const resolveSiteUrl = (path = "/"): string => new URL(path, siteConfig.url).toString();
+export const resolveSiteUrl = (path = "/"): string => {
+  if (path.startsWith("http://") || path.startsWith("https://")) {
+    return path;
+  }
+
+  return new URL(withBasePath(path), siteConfig.url).toString();
+};
 
 export const buildTitle = (title?: string): string => {
   if (!title) {

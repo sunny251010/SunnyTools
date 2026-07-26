@@ -7,6 +7,7 @@ import ToolGrid from "../components/tools/ToolGrid.astro";
 import { categories } from "../data/categories";
 import { activeTools, popularTools, tools } from "../data/tools";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { withBasePath } from "../utils/seo";
 
 const popularPreview = popularTools.slice(0, 6);
 ---
@@ -29,7 +30,7 @@ const popularPreview = popularTools.slice(0, 6);
             sending your input to a server.
           </p>
 
-          <form action="/tools" method="get" class="mt-8 grid gap-3 sm:grid-cols-[1fr_auto]">
+          <form action={withBasePath("/tools")} method="get" class="mt-8 grid gap-3 sm:grid-cols-[1fr_auto]">
             <label class="sr-only" for="home-tool-search">Search tools</label>
             <input
               id="home-tool-search"
@@ -47,7 +48,7 @@ const popularPreview = popularTools.slice(0, 6);
           </form>
 
           <div class="mt-6 flex flex-wrap gap-3 text-sm font-medium text-slate-600">
-            <a class="rounded-md border border-slate-200 bg-white px-3 py-2 hover:text-brand-teal" href="/tools">
+            <a class="rounded-md border border-slate-200 bg-white px-3 py-2 hover:text-brand-teal" href={withBasePath("/tools")}>
               Browse all tools
             </a>
             <span class="rounded-md bg-teal-50 px-3 py-2 text-brand-teal">

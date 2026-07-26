@@ -1,6 +1,6 @@
 ---
 import { mainNavigation } from "../../data/navigation";
-import { siteConfig } from "../../utils/seo";
+import { siteConfig, withBasePath } from "../../utils/seo";
 
 const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
 const isActive = (href: string): boolean => {
@@ -33,7 +33,7 @@ const isActive = (href: string): boolean => {
       {
         mainNavigation.map((item) => (
           <a
-            href={item.href}
+            href={withBasePath(item.href)}
             class:list={[
               "rounded-md px-3 py-2 text-sm font-medium",
               isActive(item.href)

@@ -7,6 +7,6 @@
   <rect x="150" y="364" width="220" height="86" rx="10" fill="#eef6f4" stroke="#99d4cb"/>
   <rect x="414" y="364" width="220" height="86" rx="10" fill="#fff7ed" stroke="#f7c77b"/>
   <rect x="678" y="364" width="220" height="86" rx="10" fill="#eff6ff" stroke="#93c5fd"/>
-  <text x="150" y="188" fill="#ffffff" font-family="Arial, sans-serif" font-size="31" font-weight="700">ToolKit Hub</text>
+  <text x="150" y="188" fill="#ffffff" font-family="Arial, sans-serif" font-size="31" font-weight="700">SunnyTools</text>
   <text x="150" y="502" fill="#14213d" font-family="Arial, sans-serif" font-size="28" font-weight="700">Fast browser-based tools</text>
 </svg>

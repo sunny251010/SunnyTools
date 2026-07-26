@@ -1,6 +1,6 @@
-# ToolKit Hub
+# SunnyTools
 
-ToolKit Hub is a static-first Astro website for free online tools. It includes the shared
+SunnyTools is a static-first Astro website for free online tools. It includes the shared
 architecture, SEO defaults, documentation, category pages, and a browser-based collection of text,
 generator, developer, conversion, and calculator tools.
 
@@ -115,7 +115,17 @@ The project is static and can be deployed to:
 - Vercel
 - GitHub Pages
 
-For GitHub Pages, set the Astro `base` option if the site is deployed under a subpath.
+GitHub Pages deployment is configured in `.github/workflows/deploy.yml`. Push to `main`, then open
+the GitHub repository settings and set Pages source to GitHub Actions.
+
+For a normal project repository such as `SunnyTools`, the workflow builds with a base path matching
+the repository name. The site will be available at:
+
+```text
+https://<username>.github.io/SunnyTools/
+```
+
+For a user site repository named `<username>.github.io`, the workflow uses `/` as the base path.
 
 ## Current Status
 

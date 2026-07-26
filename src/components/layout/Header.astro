@@ -1,6 +1,6 @@
 ---
 import { mainNavigation } from "../../data/navigation";
-import { siteConfig } from "../../utils/seo";
+import { siteConfig, withBasePath } from "../../utils/seo";
 import Container from "../common/Container.astro";
 import MobileMenu from "./MobileMenu.astro";
 
@@ -13,8 +13,8 @@ const isActive = (href: string): boolean => {
 
 <header class="sticky top-0 z-40 border-b border-slate-200 bg-white/92 backdrop-blur">
   <Container class="relative flex h-16 items-center justify-between gap-4">
-    <a href="/" class="flex items-center gap-3 font-semibold text-ink" aria-label="ToolKit Hub home">
-      <span class="grid h-9 w-9 place-items-center rounded-md bg-brand-teal text-sm text-white">TK</span>
+    <a href={withBasePath("/")} class="flex items-center gap-3 font-semibold text-ink" aria-label="SunnyTools home">
+      <span class="grid h-9 w-9 place-items-center rounded-md bg-brand-teal text-sm text-white">ST</span>
       <span>{siteConfig.name}</span>
     </a>
 
@@ -22,7 +22,7 @@ const isActive = (href: string): boolean => {
       {
         mainNavigation.map((item) => (
           <a
-            href={item.href}
+            href={withBasePath(item.href)}
             class:list={[
               "rounded-md px-3 py-2 text-sm font-medium",
               isActive(item.href)
@@ -38,7 +38,7 @@ const isActive = (href: string): boolean => {
 
     <div class="hidden items-center gap-2 md:flex">
       <a
-        href="/tools"
+        href={withBasePath("/tools")}
         class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-teal-200 hover:text-brand-teal"
       >
         Search tools
