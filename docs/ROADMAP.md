@@ -1,46 +1,47 @@
 # Roadmap
 
-## Phase 1: Foundation
+## Phase 1: Nền Tảng
 
-Priority: High
+Độ ưu tiên: Cao
 
-Goal: Build the static site foundation and one high-quality tool.
+Mục tiêu: Xây dựng nền tảng static site và bộ tool đầu tiên có chất lượng tốt.
 
-Tasks:
+Công việc:
 
-- Initialize Astro with TypeScript.
-- Configure Tailwind CSS, ESLint, and Prettier.
-- Create BaseLayout, Header, Footer, SEO component, and shared UI components.
-- Create centralized tool, category, and navigation data.
-- Build the home page and All Tools page.
-- Build Word Counter.
-- Add responsive behavior and mobile menu.
-- Add About, Contact, Privacy Policy, and Terms pages.
-- Add development-only ad placeholders.
+- Khởi tạo Astro với TypeScript.
+- Cấu hình Tailwind CSS, ESLint và Prettier.
+- Tạo BaseLayout, Header, Footer, SEO component và các UI component dùng chung.
+- Tạo data tập trung cho tool, category và navigation.
+- Tạo trang chủ và trang All Tools.
+- Tạo Word Counter.
+- Thêm responsive và mobile menu.
+- Thêm các trang About, Contact, Privacy Policy và Terms.
+- Thêm ad placeholder chỉ hiện trong development.
 
-Output:
+Kết quả đầu ra:
 
-- Static Astro project ready for local development and deployment.
-- Core tool collection available under `/tools/<slug>`.
-- Category landing pages available under `/categories/<slug>`.
-- Documentation for architecture, SEO, and adding tools.
+- Project Astro static sẵn sàng chạy local và deploy.
+- Bộ tool core nằm dưới `/tools/<slug>`.
+- Category landing pages nằm dưới `/categories/<slug>`.
+- Tài liệu về kiến trúc, SEO và cách thêm tool mới.
 
-Completion criteria:
+Điều kiện hoàn thành:
 
-- `astro check` passes.
-- Production build passes.
-- Internal links for implemented routes work.
-- Tool data is not duplicated across pages.
+- `astro check` pass.
+- Production build pass.
+- Link nội bộ của các route đã triển khai hoạt động.
+- Tool data không bị lặp lại ở nhiều component/page.
 
 ## Phase 2: Text Tools
 
-Priority: High
+Độ ưu tiên: Cao
 
-Goal: Expand the text tool category.
+Mục tiêu: Mở rộng nhóm tool xử lý văn bản.
 
-Status: Initial versions completed. Improve depth, examples, and edge cases next.
+Trạng thái: Đã có phiên bản đầu cho các tool chính. Bước tiếp theo là tăng chiều sâu nội dung, thêm
+ví dụ và xử lý edge case tốt hơn.
 
-Tasks:
+Công việc:
 
 - Character Counter.
 - Case Converter.
@@ -49,49 +50,49 @@ Tasks:
 - Text Compare.
 - Lorem Ipsum Generator.
 
-Output:
+Kết quả đầu ra:
 
-- Multiple active text tools under `/tools/<slug>`.
-- Better internal linking between text tools.
+- Nhiều text tool active dưới `/tools/<slug>`.
+- Internal linking giữa các text tool tốt hơn.
 
-Completion criteria:
+Điều kiện hoàn thành:
 
-- Each tool has its own route, SEO metadata, guide content, FAQ, and related tools.
-- Tool logic stays browser-side.
+- Mỗi tool có route riêng, SEO metadata, nội dung hướng dẫn, FAQ và related tools.
+- Logic của tool chạy trên browser.
 
 ## Phase 3: Generator Tools
 
-Priority: Medium
+Độ ưu tiên: Trung bình
 
-Goal: Add common generation utilities.
+Mục tiêu: Thêm các tool tạo giá trị phổ biến.
 
-Status: Initial versions completed for QR Code, Password, UUID, and Lorem Ipsum.
+Trạng thái: Đã có phiên bản đầu cho QR Code, Password, UUID và Lorem Ipsum.
 
-Tasks:
+Công việc:
 
 - QR Code Generator.
 - Password Generator.
 - UUID Generator.
 - Random Number Generator.
 
-Output:
+Kết quả đầu ra:
 
-- Generator category becomes useful as a standalone cluster.
+- Nhóm Generator Tools có đủ giá trị để dùng như một cụm riêng.
 
-Completion criteria:
+Điều kiện hoàn thành:
 
-- Generated values are created locally.
-- Security-sensitive tools do not transmit data.
+- Giá trị được generate local trên browser.
+- Các tool nhạy cảm về bảo mật không gửi dữ liệu đi đâu.
 
 ## Phase 4: Developer Tools
 
-Priority: High
+Độ ưu tiên: Cao
 
-Goal: Add developer-focused utilities.
+Mục tiêu: Thêm các utility dành cho developer.
 
-Status: Initial versions completed for JSON, Base64, URL, Timestamp, Color, and Percentage tools.
+Trạng thái: Đã có phiên bản đầu cho JSON, Base64, URL, Timestamp, Color và Percentage tools.
 
-Tasks:
+Công việc:
 
 - JSON Formatter.
 - JSON Validator.
@@ -100,23 +101,23 @@ Tasks:
 - Timestamp Converter.
 - Regex Tester.
 
-Output:
+Kết quả đầu ra:
 
-- Developer tool category supports common debugging and data cleanup workflows.
+- Nhóm Developer Tools hỗ trợ các workflow format, debug và làm sạch data thường gặp.
 
-Completion criteria:
+Điều kiện hoàn thành:
 
-- Error states are clear.
-- Inputs are not sent to a backend.
-- Large inputs remain reasonably responsive.
+- Error state rõ ràng.
+- Input không gửi lên backend.
+- Input lớn vẫn cần giữ hiệu năng chấp nhận được.
 
-## Phase 5: SEO and Content
+## Phase 5: SEO Và Nội Dung
 
-Priority: High
+Độ ưu tiên: Cao
 
-Goal: Improve discoverability and crawl quality.
+Mục tiêu: Cải thiện khả năng Google crawl, index và xếp hạng.
 
-Tasks:
+Công việc:
 
 - Sitemap.
 - Robots.txt.
@@ -124,87 +125,87 @@ Tasks:
 - FAQ schema.
 - Internal linking.
 - Related tools.
-- Category landing pages at `/categories/<slug>`.
-- Guide content for each tool.
+- Category landing pages tại `/categories/<slug>`.
+- Nội dung hướng dẫn cho từng tool.
 
-Output:
+Kết quả đầu ra:
 
-- Search-ready content structure and crawl paths.
+- Cấu trúc nội dung sẵn sàng cho SEO và crawl path rõ ràng.
 
-Completion criteria:
+Điều kiện hoàn thành:
 
-- Sitemap includes active routes.
-- Category pages have useful content, not only lists.
-- FAQ schema is generated from structured data.
+- Sitemap có toàn bộ route active.
+- Category page có nội dung hữu ích, không chỉ là danh sách tool.
+- FAQ schema được tạo từ data có cấu trúc.
 
-## Phase 6: Monetization
+## Phase 6: Kiếm Tiền
 
-Priority: Medium
+Độ ưu tiên: Trung bình
 
-Goal: Add revenue support without damaging usability.
+Mục tiêu: Thêm khả năng tạo doanh thu mà không làm hỏng UX.
 
-Tasks:
+Công việc:
 
 - Google AdSense.
-- Ad placement management.
+- Quản lý vị trí quảng cáo.
 - Development placeholder.
 - Production ad component.
-- Cookie consent if required.
-- Core Web Vitals monitoring.
+- Cookie consent nếu cần.
+- Theo dõi Core Web Vitals.
 
-Output:
+Kết quả đầu ra:
 
-- Production-safe ad integration.
+- Tích hợp ads an toàn cho production.
 
-Completion criteria:
+Điều kiện hoàn thành:
 
-- Ads do not cause major layout shift.
-- Consent requirements are reviewed.
-- Placeholders remain useful in development.
+- Ads không gây layout shift lớn.
+- Yêu cầu consent được xem xét.
+- Placeholder vẫn hữu ích trong development.
 
-## Phase 7: Analytics and Optimization
+## Phase 7: Analytics Và Tối Ưu
 
-Priority: Medium
+Độ ưu tiên: Trung bình
 
-Goal: Measure usage and improve performance.
+Mục tiêu: Đo lường người dùng và cải thiện hiệu năng.
 
-Tasks:
+Công việc:
 
-- Google Analytics or Plausible.
-- Track popular tools.
-- Track search queries.
-- Optimize Lighthouse scores.
-- Optimize Core Web Vitals.
+- Google Analytics hoặc Plausible.
+- Theo dõi tool phổ biến.
+- Theo dõi search query.
+- Tối ưu Lighthouse.
+- Tối ưu Core Web Vitals.
 
-Output:
+Kết quả đầu ra:
 
-- Data-informed roadmap and performance improvements.
+- Roadmap và tối ưu được dựa trên dữ liệu thực tế.
 
-Completion criteria:
+Điều kiện hoàn thành:
 
-- Analytics respects privacy requirements.
-- Performance budget is defined and monitored.
+- Analytics tôn trọng yêu cầu privacy.
+- Có performance budget và có cách theo dõi.
 
-## Phase 8: Optional Backend
+## Phase 8: Backend Tùy Chọn
 
-Priority: Low
+Độ ưu tiên: Thấp
 
-Goal: Add account-based or API-backed features only when they are justified.
+Mục tiêu: Chỉ thêm account/API khi thật sự có lý do.
 
-Tasks:
+Công việc:
 
 - User accounts.
-- Saved history.
-- Bookmarked tools.
+- Lưu lịch sử.
+- Bookmark tool.
 - API.
 - Rate limiting.
-- Supabase or custom backend.
+- Supabase hoặc backend riêng.
 
-Output:
+Kết quả đầu ra:
 
-- Optional backend layer with clear boundaries.
+- Lớp backend tùy chọn, có boundary rõ ràng.
 
-Completion criteria:
+Điều kiện hoàn thành:
 
-- Static tools still work without login.
-- Backend features do not compromise privacy expectations.
+- Tool static vẫn chạy được khi không login.
+- Tính năng backend không làm hỏng kỳ vọng privacy của người dùng.

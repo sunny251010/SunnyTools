@@ -1,79 +1,79 @@
-# Architecture
+# Kiến Trúc
 
-## Overview
+## Tổng Quan
 
-SunnyTools uses Astro as a static-first framework. Pages are rendered at build time, and tool logic
-runs in the browser only when interaction is needed. This keeps the initial payload small and avoids
-backend work in the foundation phase.
+SunnyTools dùng Astro theo hướng static-first. Các trang được render sẵn lúc build, còn logic của
+tool chỉ chạy trên trình duyệt khi cần tương tác. Cách này giúp website tải nhanh, ít JavaScript,
+và chưa cần backend trong giai đoạn đầu.
 
-## Data Flow
+## Luồng Dữ Liệu
 
-Tool metadata lives in `src/data/tools.ts`. Categories live in `src/data/categories.ts`. Navigation
-links live in `src/data/navigation.ts`.
+Thông tin tool nằm tập trung trong `src/data/tools.ts`. Danh mục nằm trong
+`src/data/categories.ts`. Link điều hướng nằm trong `src/data/navigation.ts`.
 
-Pages and components import these files directly:
+Page và component đọc trực tiếp các file data này:
 
-- Home page reads featured and popular tools.
-- The All Tools page reads the full list and filters cards on the client.
-- Tool pages read one tool by slug and related tools by category.
-- Cards, grids, and category lists do not duplicate tool data.
+- Trang chủ đọc các tool nổi bật và tool phổ biến.
+- Trang All Tools đọc toàn bộ danh sách tool và filter ở phía client.
+- Trang tool đọc một tool theo slug và lấy related tools theo category.
+- Card, grid và category list không tự viết lại danh sách tool riêng.
 
-## Tool Data Model
+## Data Model Của Tool
 
-The `Tool` interface is defined in `src/types/tool.ts`. It includes identity, slug, descriptions,
-category, keywords, display hints, and status.
+Interface `Tool` được định nghĩa trong `src/types/tool.ts`. Model này gồm id, slug, mô tả,
+category, keywords, thông tin hiển thị và trạng thái.
 
-Tool statuses:
+Trạng thái tool:
 
-- `active`: implemented and linked.
-- `planned`: visible in lists but not linked to a tool route.
-- `draft`: available to authors but not ready for normal discovery.
+- `active`: đã triển khai và có link hoạt động.
+- `planned`: đã lên kế hoạch, có thể hiển thị trong data nhưng chưa nên link đến route thật.
+- `draft`: bản nháp cho tác giả, chưa sẵn sàng đưa ra ngoài.
 
-## Reusable Components
+## Component Tái Sử Dụng
 
-Shared components are grouped by responsibility:
+Component được chia theo trách nhiệm:
 
-- `common`: layout primitives, section titles, breadcrumbs, ad placeholders.
-- `layout`: header, footer, mobile menu, and tool page layout.
-- `seo`: shared metadata output.
-- `tools`: card, grid, search/filter controls, category list, and individual tool components.
+- `common`: container, section title, breadcrumbs, ad placeholder.
+- `layout`: header, footer, mobile menu và tool page layout.
+- `seo`: metadata dùng chung.
+- `tools`: card, grid, search/filter, category list và component riêng của từng tool.
 
-`ToolLayout.astro` provides the common page shape for tool routes. A tool page supplies:
+`ToolLayout.astro` tạo khung chung cho mỗi trang tool. Mỗi tool page cung cấp:
 
-- Tool runner slot.
-- Guide content slot.
-- FAQ slot.
-- Related tools from centralized data.
+- Slot chạy tool.
+- Slot nội dung hướng dẫn.
+- Slot FAQ.
+- Related tools lấy từ data tập trung.
 
-## Why Astro
+## Vì Sao Dùng Astro
 
-Astro is a good fit because most pages are content and metadata driven. It ships minimal JavaScript
-by default, supports TypeScript, renders static pages well, and still allows small client scripts for
-interactive tools.
+Astro phù hợp vì phần lớn website là nội dung tĩnh và metadata SEO. Astro mặc định ship ít
+JavaScript, hỗ trợ TypeScript, build static tốt và vẫn cho phép thêm script client nhỏ cho các tool
+tương tác.
 
-## JavaScript and Islands
+## Khi Nào Dùng JavaScript Hoặc Astro Island
 
-Use plain Astro components and client scripts when a tool only needs local DOM interaction. Consider
-an Astro island when a future tool needs state-heavy UI, canvas rendering, complex validation, or an
-external browser library.
+Nếu tool chỉ cần DOM interaction đơn giản, hãy dùng Astro component kèm client script nhỏ. Chỉ nên
+dùng Astro island khi tool cần UI nhiều state, canvas phức tạp, validation lớn, hoặc một thư viện
+browser riêng.
 
-Avoid adding a full app framework globally. A single complex tool can opt into a focused island later
-without changing the site architecture.
+Không nên biến toàn bộ site thành app React/Vue nếu chưa cần. Một tool phức tạp trong tương lai có
+thể được tách thành island riêng mà không làm đổi kiến trúc chung.
 
 ## SEO
 
-`BaseLayout.astro` renders `SEO.astro`, which uses defaults from `src/utils/seo.ts`. Each page passes
-its own title, description, and path. The temporary domain is `https://example.com` and must be
-changed before launch.
+`BaseLayout.astro` render `SEO.astro`, và `SEO.astro` lấy default từ `src/utils/seo.ts`. Mỗi page
+truyền title, description và path riêng. Domain tạm thời là `https://example.com`; cần đổi thành
+domain thật trước khi launch chính thức.
 
-## Ads
+## Quảng Cáo
 
-`AdPlaceholder.astro` renders only in development through `import.meta.env.DEV`. Production AdSense
-code should be introduced later through a dedicated component and reviewed for privacy, consent, and
-layout impact.
+`AdPlaceholder.astro` chỉ render trong development thông qua `import.meta.env.DEV`. Khi thêm Google
+AdSense thật, nên tạo component production riêng và kiểm tra lại privacy, cookie consent, layout
+shift và Core Web Vitals.
 
-## Future Backend
+## Backend Trong Tương Lai
 
-A backend is not needed for phase 1. If future features require accounts, saved history, bookmarks,
-or APIs, add the backend behind clear feature boundaries. Candidate options include Supabase or a
-small custom API, with rate limiting and privacy rules documented before release.
+Giai đoạn hiện tại chưa cần backend. Nếu sau này cần user account, lưu lịch sử, bookmark tool hoặc
+API, hãy thêm backend sau một boundary rõ ràng. Lựa chọn có thể là Supabase hoặc backend riêng nhỏ,
+kèm rate limiting và quy tắc privacy trước khi release.

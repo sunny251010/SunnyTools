@@ -1,18 +1,18 @@
-# Add a New Tool
+# Thêm Tool Mới
 
-Use this checklist for every new browser-based tool.
+Dùng checklist này mỗi khi thêm một browser-based tool mới.
 
-## 1. Add Tool Data
+## 1. Thêm Data Của Tool
 
-Edit `src/data/tools.ts` and add a `Tool` entry:
+Sửa `src/data/tools.ts` và thêm một entry `Tool`:
 
 ```ts
 {
   id: "new-tool",
   name: "New Tool",
   slug: "new-tool",
-  shortDescription: "Short card text.",
-  description: "Longer SEO-friendly page description.",
+  shortDescription: "Mô tả ngắn hiện trên card.",
+  description: "Mô tả dài hơn, hữu ích cho SEO của page.",
   categoryId: "developer-tools",
   icon: "NT",
   keywords: ["keyword", "task"],
@@ -20,80 +20,76 @@ Edit `src/data/tools.ts` and add a `Tool` entry:
 }
 ```
 
-Use `planned` until the route and tool component are ready.
+Dùng `planned` nếu tool chưa có route và component hoàn chỉnh. Chỉ đổi sang `active` khi route đã
+build được và UI tool chạy ổn.
 
-## 2. Confirm Category
+## 2. Xác Nhận Category
 
-Reuse a category from `src/data/categories.ts`. Add a category only when the tool does not fit the
-existing taxonomy.
+Tái sử dụng category trong `src/data/categories.ts`. Chỉ thêm category mới khi tool không phù hợp
+với các nhóm hiện có.
 
-## 3. Create the Tool Component
+## 3. Tạo Component Tool
 
-Create a folder under `src/components/tools/<tool-slug>/`.
+Tạo folder dưới `src/components/tools/<tool-slug>/`.
 
-Example:
+Ví dụ:
 
 ```text
 src/components/tools/json-formatter/JsonFormatterTool.astro
 ```
 
-Keep UI and browser interaction in this component. Put reusable logic in `src/utils/`.
+Giữ UI và browser interaction trong component này. Nếu có logic tái sử dụng được, đặt vào
+`src/utils/`.
 
-## 4. Create the Route
+## 4. Đăng Ký Tool Vào Dynamic Route
 
-Create:
+Hiện tại các tool active được render bởi:
 
 ```text
-src/pages/tools/<tool-slug>.astro
+src/pages/tools/[slug].astro
 ```
 
-Read the tool from `getToolBySlug("<tool-slug>")`.
+Khi thêm tool mới, import component mới vào file này và thêm vào object `toolComponents` theo slug.
 
-## 5. Use ToolLayout
+## 5. Dùng ToolLayout
 
-Wrap the route with `ToolLayout` and pass the tool and related tools:
+Dynamic route đã wrap mỗi tool bằng `ToolLayout`. Tool component được render vào slot `tool`, còn
+nội dung hướng dẫn và FAQ được lấy từ `src/data/toolContent.ts`.
 
-```astro
-<ToolLayout tool={tool} relatedTools={relatedTools}>
-  <NewTool slot="tool" />
-  <Fragment slot="content">...</Fragment>
-  <Fragment slot="faq">...</Fragment>
-</ToolLayout>
-```
+## 6. Thêm SEO
 
-## 6. Add SEO
+Route kế thừa SEO thông qua `ToolLayout` và `BaseLayout`. Hãy đảm bảo `name`, `description` và
+`slug` trong `src/data/tools.ts` chính xác.
 
-The route inherits SEO through `ToolLayout` and `BaseLayout`. Confirm the tool `name`,
-`description`, and slug are accurate.
+## 7. Thêm Nội Dung Hướng Dẫn
 
-## 7. Add Guide Content
+Thêm entry trong `src/data/toolContent.ts`. Mỗi tool page nên có:
 
-Every tool page should include:
-
-- What the tool is.
-- How to use it.
-- How it calculates or transforms data.
-- Privacy note.
+- Tool này là gì.
+- Cách sử dụng.
+- Cách tính toán/chuyển đổi/generate.
+- Ghi chú privacy.
 - FAQ.
 
-## 8. Add Related Tools
+## 8. Related Tools
 
-Use `getRelatedTools(tool)` unless the tool needs a custom related list.
+Mặc định dùng `getRelatedTools(tool)` để lấy các tool cùng category. Chỉ cần custom nếu một tool cần
+danh sách liên quan đặc biệt.
 
-## 9. Check Responsive UI
+## 9. Kiểm Tra Responsive
 
-Verify:
+Cần kiểm tra:
 
-- Inputs fit on mobile.
-- Buttons are tappable.
-- Long labels wrap cleanly.
-- No horizontal overflow.
+- Input không bị tràn trên mobile.
+- Button dễ bấm.
+- Label dài xuống dòng đẹp.
+- Không có horizontal overflow.
 
-## 10. Run Checks
+## 10. Chạy Kiểm Tra
 
 ```bash
 npm run check
 npm run build
 ```
 
-Fix TypeScript, import, route, and build issues before marking the tool active.
+Sửa lỗi TypeScript, import, route và build trước khi để tool ở trạng thái `active`.
