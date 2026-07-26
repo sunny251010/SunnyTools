@@ -1,7 +1,7 @@
 export const siteConfig = {
   name: "SunnyTools",
-  url: import.meta.env.PUBLIC_SITE_URL ?? "https://example.com",
-  defaultTitle: "SunnyTools – Free Online Tools",
+  url: import.meta.env.PUBLIC_SITE_URL ?? "https://sunnytools.site",
+  defaultTitle: "SunnyTools - Free Online Tools",
   defaultDescription:
     "Fast, private, browser-based tools for text, developers, generators, conversions, and calculators.",
   defaultImage: "/og-default.svg",
