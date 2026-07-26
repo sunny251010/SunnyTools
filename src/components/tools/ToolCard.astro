@@ -1,0 +1,53 @@
+---
+import { getCategoryById } from "../../data/categories";
+import type { Tool } from "../../types/tool";
+
+interface Props {
+  tool: Tool;
+}
+
+const { tool } = Astro.props;
+const category = getCategoryById(tool.categoryId);
+const isActive = tool.status === "active";
+---
+
+<article
+  class="flex h-full flex-col rounded-md border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-teal-200 hover:shadow-soft"
+  data-tool-card
+  data-name={tool.name}
+  data-description={tool.shortDescription}
+  data-keywords={tool.keywords.join(" ")}
+  data-category-id={tool.categoryId}
+  data-status={tool.status}
+>
+  <div class="flex items-start justify-between gap-4">
+    <span class="grid h-11 w-11 shrink-0 place-items-center rounded-md bg-teal-50 text-sm font-bold text-brand-teal">
+      {tool.icon ?? tool.name.slice(0, 2).toUpperCase()}
+    </span>
+    <span class="rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-600">
+      {category?.name ?? "General"}
+    </span>
+  </div>
+
+  <div class="mt-5 flex flex-1 flex-col">
+    <h3 class="text-lg font-semibold text-ink">{tool.name}</h3>
+    <p class="mt-2 flex-1 text-sm leading-6 text-slate-600">{tool.shortDescription}</p>
+
+    <div class="mt-5">
+      {
+        isActive ? (
+          <a
+            href={`/tools/${tool.slug}`}
+            class="inline-flex items-center rounded-md bg-brand-teal px-3 py-2 text-sm font-semibold text-white hover:bg-teal-800"
+          >
+            Open tool
+          </a>
+        ) : (
+          <span class="inline-flex items-center rounded-md border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-500">
+            Planned
+          </span>
+        )
+      }
+    </div>
+  </div>
+</article>

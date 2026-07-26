@@ -1,0 +1,29 @@
+---
+import Container from "../components/common/Container.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Contact"
+  description="Contact the ToolKit Hub team for feedback, requests, and support."
+  path="/contact"
+>
+  <main class="flex-1">
+    <Container class="py-12 md:py-16">
+      <article class="content-page">
+        <p class="text-sm font-semibold uppercase text-brand-teal">Contact</p>
+        <h1>Contact ToolKit Hub</h1>
+        <p>
+          For feedback, bug reports, or new tool ideas, send a note to
+          <a href="mailto:hello@example.com">hello@example.com</a>. Replace this address before
+          launch.
+        </p>
+        <h2>Tool requests</h2>
+        <p>
+          Include the tool name, expected inputs, expected outputs, and any privacy or SEO
+          considerations that should guide the implementation.
+        </p>
+      </article>
+    </Container>
+  </main>
+</BaseLayout>

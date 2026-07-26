@@ -1,0 +1,59 @@
+<div class="space-y-5" data-base64-tool>
+  <div class="grid gap-4 lg:grid-cols-2">
+    <textarea class="min-h-64 w-full rounded-md border border-slate-300 bg-slate-50 p-4 font-mono text-sm leading-6 text-ink shadow-inner" placeholder="Input text or Base64" aria-label="Base64 input" data-base64-input></textarea>
+    <textarea class="min-h-64 w-full rounded-md border border-slate-300 bg-white p-4 font-mono text-sm leading-6 text-ink shadow-inner" readonly aria-label="Base64 output" data-base64-output></textarea>
+  </div>
+  <div class="flex flex-wrap gap-3">
+    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-base64-encode>Encode</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-base64-decode>Decode</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-base64-copy>Copy</button>
+  </div>
+  <p class="text-sm font-medium" role="status" data-base64-status></p>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-base64-tool]");
+  const input = root?.querySelector<HTMLTextAreaElement>("[data-base64-input]");
+  const output = root?.querySelector<HTMLTextAreaElement>("[data-base64-output]");
+  const status = root?.querySelector<HTMLElement>("[data-base64-status]");
+
+  const bytesToBase64 = (bytes: Uint8Array): string => {
+    let binary = "";
+    bytes.forEach((byte) => {
+      binary += String.fromCharCode(byte);
+    });
+    return btoa(binary);
+  };
+
+  const base64ToBytes = (value: string): Uint8Array =>
+    Uint8Array.from(atob(value), (char) => char.charCodeAt(0));
+
+  const encode = (): void => {
+    if (!input || !output || !status) return;
+    output.value = bytesToBase64(new TextEncoder().encode(input.value));
+    status.className = "text-sm font-medium text-emerald-700";
+    status.textContent = "Encoded.";
+  };
+
+  const decode = (): void => {
+    if (!input || !output || !status) return;
+    try {
+      output.value = new TextDecoder().decode(base64ToBytes(input.value.trim()));
+      status.className = "text-sm font-medium text-emerald-700";
+      status.textContent = "Decoded.";
+    } catch {
+      output.value = "";
+      status.className = "text-sm font-medium text-rose-700";
+      status.textContent = "Invalid Base64 input.";
+    }
+  };
+
+  root?.querySelector<HTMLButtonElement>("[data-base64-encode]")?.addEventListener("click", encode);
+  root?.querySelector<HTMLButtonElement>("[data-base64-decode]")?.addEventListener("click", decode);
+  root?.querySelector<HTMLButtonElement>("[data-base64-copy]")?.addEventListener("click", async () => {
+    if (!output || !status) return;
+    await navigator.clipboard.writeText(output.value);
+    status.className = "text-sm font-medium text-emerald-700";
+    status.textContent = "Copied.";
+  });
+</script>

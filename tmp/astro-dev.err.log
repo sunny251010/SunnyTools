@@ -1,0 +1,17 @@
+=1 : The term '=1' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the 
+spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:1
++ ='1'; npm.cmd run dev -- --host 127.0.0.1 --port 4321
++ ~~~~
+    + CategoryInfo          : ObjectNotFound: (=1:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+EPERM: operation not permitted, mkdir 'C:\Users\Sunny\AppData\Roaming\astro\Config'
+  [1mLocation:[22m
+    [4mD:\Workspace\tools-web\node_modules\@astrojs\telemetry\dist\config.js:56:8[24m
+  [1mStack trace:[22m
+[2m    at Object.mkdirSync (node:fs:1350:26)
+    at get store (file:///D:/Workspace/tools-web/node_modules/@astrojs/telemetry/dist/config.js:38:10)
+    at AstroTelemetry.getConfigWithFallback (file:///D:/Workspace/tools-web/node_modules/@astrojs/telemetry/dist/index.js:40:38)
+    at get isDisabled (file:///D:/Workspace/tools-web/node_modules/@astrojs/telemetry/dist/index.js:69:17)
+    at notify (file:///D:/Workspace/tools-web/node_modules/astro/dist/cli/telemetry/index.js:5:19)[22m

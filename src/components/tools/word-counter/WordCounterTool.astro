@@ -1,0 +1,136 @@
+---
+import { getTextStats } from "../../../utils/text";
+
+const initialStats = getTextStats("");
+const stats = [
+  { key: "wordCount", label: "Words", value: initialStats.wordCount },
+  { key: "characterCount", label: "Characters", value: initialStats.characterCount },
+  {
+    key: "characterCountNoSpaces",
+    label: "Characters without spaces",
+    value: initialStats.characterCountNoSpaces
+  },
+  { key: "sentenceCount", label: "Sentences", value: initialStats.sentenceCount },
+  { key: "paragraphCount", label: "Paragraphs", value: initialStats.paragraphCount },
+  { key: "readingTimeMinutes", label: "Reading time", value: initialStats.readingTimeMinutes }
+];
+---
+
+<div class="space-y-5" data-word-counter>
+  <div>
+    <label for="word-counter-input" class="mb-2 block text-sm font-semibold text-ink">
+      Text input
+    </label>
+    <textarea
+      id="word-counter-input"
+      class="min-h-72 w-full rounded-md border border-slate-300 bg-slate-50 p-4 text-base leading-7 text-ink shadow-inner focus:border-brand-teal focus:bg-white"
+      placeholder="Paste or type your text here"
+      data-word-counter-input></textarea>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-3">
+    <button
+      type="button"
+      class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
+      data-word-counter-copy
+    >
+      Copy
+    </button>
+    <button
+      type="button"
+      class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal"
+      data-word-counter-clear
+    >
+      Clear
+    </button>
+    <span
+      class="rounded-md bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700"
+      role="status"
+      data-word-counter-toast
+      hidden
+    >
+      Copied to clipboard.
+    </span>
+  </div>
+
+  <dl class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      stats.map((item) => (
+        <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
+          <dt class="text-sm font-medium text-slate-600">{item.label}</dt>
+          <dd class="mt-2 text-2xl font-semibold text-ink" data-stat-key={item.key}>
+            {item.value}
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+</div>
+
+<script>
+  import { getTextStats } from "../../../utils/text";
+
+  const root = document.querySelector<HTMLElement>("[data-word-counter]");
+  const input = root?.querySelector<HTMLTextAreaElement>("[data-word-counter-input]");
+  const copyButton = root?.querySelector<HTMLButtonElement>("[data-word-counter-copy]");
+  const clearButton = root?.querySelector<HTMLButtonElement>("[data-word-counter-clear]");
+  const toast = root?.querySelector<HTMLElement>("[data-word-counter-toast]");
+  let toastTimer: number | undefined;
+
+  const setStat = (key: string, value: number): void => {
+    const target = root?.querySelector<HTMLElement>(`[data-stat-key="${key}"]`);
+
+    if (target) {
+      target.textContent =
+        key === "readingTimeMinutes" ? `${value} ${value === 1 ? "min" : "mins"}` : String(value);
+    }
+  };
+
+  const updateStats = (): void => {
+    if (!input) {
+      return;
+    }
+
+    const stats = getTextStats(input.value);
+    setStat("wordCount", stats.wordCount);
+    setStat("characterCount", stats.characterCount);
+    setStat("characterCountNoSpaces", stats.characterCountNoSpaces);
+    setStat("sentenceCount", stats.sentenceCount);
+    setStat("paragraphCount", stats.paragraphCount);
+    setStat("readingTimeMinutes", stats.readingTimeMinutes);
+  };
+
+  const showToast = (message: string): void => {
+    if (!toast) {
+      return;
+    }
+
+    toast.textContent = message;
+    toast.hidden = false;
+    window.clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(() => {
+      toast.hidden = true;
+    }, 1800);
+  };
+
+  if (input && copyButton && clearButton) {
+    input.addEventListener("input", updateStats);
+
+    clearButton.addEventListener("click", () => {
+      input.value = "";
+      input.focus();
+      updateStats();
+    });
+
+    copyButton.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(input.value);
+        showToast("Copied to clipboard.");
+      } catch {
+        showToast("Copy failed. Select the text manually.");
+      }
+    });
+
+    updateStats();
+  }
+</script>

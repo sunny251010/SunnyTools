@@ -1,0 +1,81 @@
+---
+const stats = [
+  ["characters", "Characters"],
+  ["noSpaces", "Without spaces"],
+  ["words", "Words"],
+  ["lines", "Lines"],
+  ["remaining", "Remaining"],
+  ["usage", "Limit used"]
+];
+---
+
+<div class="space-y-5" data-character-counter>
+  <div class="grid gap-4 lg:grid-cols-[1fr_180px]">
+    <div>
+      <label for="character-counter-input" class="mb-2 block text-sm font-semibold text-ink">
+        Text input
+      </label>
+      <textarea
+        id="character-counter-input"
+        class="min-h-72 w-full rounded-md border border-slate-300 bg-slate-50 p-4 text-base leading-7 text-ink shadow-inner focus:border-brand-teal focus:bg-white"
+        placeholder="Type or paste text"
+        data-character-input></textarea>
+    </div>
+    <div>
+      <label for="character-limit" class="mb-2 block text-sm font-semibold text-ink">
+        Character limit
+      </label>
+      <input
+        id="character-limit"
+        type="number"
+        min="1"
+        value="160"
+        class="h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-ink"
+        data-character-limit
+      />
+    </div>
+  </div>
+
+  <dl class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      stats.map(([key, label]) => (
+        <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
+          <dt class="text-sm font-medium text-slate-600">{label}</dt>
+          <dd class="mt-2 text-2xl font-semibold text-ink" data-character-stat={key}>0</dd>
+        </div>
+      ))
+    }
+  </dl>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-character-counter]");
+  const input = root?.querySelector<HTMLTextAreaElement>("[data-character-input]");
+  const limitInput = root?.querySelector<HTMLInputElement>("[data-character-limit]");
+
+  const setValue = (key: string, value: string): void => {
+    const target = root?.querySelector<HTMLElement>(`[data-character-stat="${key}"]`);
+    if (target) target.textContent = value;
+  };
+
+  const update = (): void => {
+    if (!input || !limitInput) return;
+
+    const text = input.value;
+    const limit = Number(limitInput.value) || 0;
+    const words = (text.trim().match(/[\p{L}\p{N}]+(?:['-][\p{L}\p{N}]+)*/gu) ?? []).length;
+    const lines = text ? text.split(/\r\n|\r|\n/).length : 0;
+    const usage = limit > 0 ? Math.round((text.length / limit) * 100) : 0;
+
+    setValue("characters", String(text.length));
+    setValue("noSpaces", String(text.replace(/\s/g, "").length));
+    setValue("words", String(words));
+    setValue("lines", String(lines));
+    setValue("remaining", limit > 0 ? String(limit - text.length) : "No limit");
+    setValue("usage", limit > 0 ? `${usage}%` : "No limit");
+  };
+
+  input?.addEventListener("input", update);
+  limitInput?.addEventListener("input", update);
+  update();
+</script>

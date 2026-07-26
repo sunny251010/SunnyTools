@@ -1,0 +1,34 @@
+---
+import Container from "../components/common/Container.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Privacy Policy"
+  description="Read the ToolKit Hub privacy policy for browser-based tools."
+  path="/privacy-policy"
+>
+  <main class="flex-1">
+    <Container class="py-12 md:py-16">
+      <article class="content-page">
+        <p class="text-sm font-semibold uppercase text-brand-teal">Privacy Policy</p>
+        <h1>Privacy Policy</h1>
+        <p>
+          ToolKit Hub is designed so the initial tools run in the browser. The Word Counter does
+          not send text to a backend, database, or third-party service.
+        </p>
+        <h2>Analytics and advertising</h2>
+        <p>
+          Analytics and Google AdSense are not connected in this phase. If they are added later,
+          this page should be updated before production launch.
+        </p>
+        <h2>Contact</h2>
+        <p>
+          Questions about privacy can be sent to
+          <a href="mailto:hello@example.com">hello@example.com</a>. Replace this address before
+          launch.
+        </p>
+      </article>
+    </Container>
+  </main>
+</BaseLayout>

@@ -1,0 +1,85 @@
+<div class="space-y-5" data-timestamp-tool>
+  <div class="grid gap-4 lg:grid-cols-2">
+    <label class="text-sm font-semibold text-ink">
+      Unix timestamp
+      <input class="mt-2 h-11 w-full rounded-md border border-slate-300 px-3 font-mono" type="text" placeholder="1710000000 or 1710000000000" data-timestamp-unix />
+    </label>
+    <label class="text-sm font-semibold text-ink">
+      Date and time
+      <input class="mt-2 h-11 w-full rounded-md border border-slate-300 px-3" type="datetime-local" data-timestamp-date />
+    </label>
+  </div>
+  <div class="flex flex-wrap gap-3">
+    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-timestamp-from-unix>Convert timestamp</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-timestamp-from-date>Convert date</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-timestamp-now>Use current time</button>
+  </div>
+  <dl class="grid gap-3 sm:grid-cols-2">
+    {
+      [
+        ["unixSeconds", "Unix seconds"],
+        ["unixMilliseconds", "Unix milliseconds"],
+        ["iso", "ISO"],
+        ["utc", "UTC"],
+        ["local", "Local"]
+      ].map(([key, label]) => (
+        <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
+          <dt class="text-sm font-medium text-slate-600">{label}</dt>
+          <dd class="mt-2 break-words font-mono text-sm font-semibold text-ink" data-timestamp-result={key}>-</dd>
+        </div>
+      ))
+    }
+  </dl>
+  <p class="text-sm font-medium text-rose-700" role="alert" data-timestamp-error></p>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-timestamp-tool]");
+  const unixInput = root?.querySelector<HTMLInputElement>("[data-timestamp-unix]");
+  const dateInput = root?.querySelector<HTMLInputElement>("[data-timestamp-date]");
+  const error = root?.querySelector<HTMLElement>("[data-timestamp-error]");
+
+  const setResult = (key: string, value: string): void => {
+    const target = root?.querySelector<HTMLElement>(`[data-timestamp-result="${key}"]`);
+    if (target) target.textContent = value;
+  };
+
+  const render = (date: Date): void => {
+    if (!error) return;
+    if (Number.isNaN(date.getTime())) {
+      error.textContent = "Enter a valid timestamp or date.";
+      return;
+    }
+
+    error.textContent = "";
+    setResult("unixSeconds", String(Math.floor(date.getTime() / 1000)));
+    setResult("unixMilliseconds", String(date.getTime()));
+    setResult("iso", date.toISOString());
+    setResult("utc", date.toUTCString());
+    setResult("local", date.toLocaleString());
+  };
+
+  const fromUnix = (): void => {
+    if (!unixInput) return;
+    const raw = unixInput.value.trim();
+    const numeric = Number(raw);
+    const milliseconds = raw.length <= 10 ? numeric * 1000 : numeric;
+    render(new Date(milliseconds));
+  };
+
+  const fromDate = (): void => {
+    if (!dateInput) return;
+    render(new Date(dateInput.value));
+  };
+
+  const useNow = (): void => {
+    const now = new Date();
+    if (unixInput) unixInput.value = String(Math.floor(now.getTime() / 1000));
+    render(now);
+  };
+
+  root?.querySelector<HTMLButtonElement>("[data-timestamp-from-unix]")?.addEventListener("click", fromUnix);
+  root?.querySelector<HTMLButtonElement>("[data-timestamp-from-date]")?.addEventListener("click", fromDate);
+  root?.querySelector<HTMLButtonElement>("[data-timestamp-now]")?.addEventListener("click", useNow);
+  useNow();
+</script>

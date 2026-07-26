@@ -1,0 +1,58 @@
+<div class="space-y-6" data-percentage-tool>
+  <section class="rounded-md border border-slate-200 bg-slate-50 p-4">
+    <h2 class="text-lg font-semibold text-ink">What is X% of Y?</h2>
+    <div class="mt-4 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
+      <input class="h-11 rounded-md border border-slate-300 px-3" type="number" value="15" data-percent-a />
+      <input class="h-11 rounded-md border border-slate-300 px-3" type="number" value="200" data-percent-b />
+      <output class="rounded-md bg-white px-4 py-3 font-semibold text-ink" data-percent-result>30</output>
+    </div>
+  </section>
+  <section class="rounded-md border border-slate-200 bg-slate-50 p-4">
+    <h2 class="text-lg font-semibold text-ink">X is what percent of Y?</h2>
+    <div class="mt-4 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
+      <input class="h-11 rounded-md border border-slate-300 px-3" type="number" value="30" data-ratio-a />
+      <input class="h-11 rounded-md border border-slate-300 px-3" type="number" value="200" data-ratio-b />
+      <output class="rounded-md bg-white px-4 py-3 font-semibold text-ink" data-ratio-result>15%</output>
+    </div>
+  </section>
+  <section class="rounded-md border border-slate-200 bg-slate-50 p-4">
+    <h2 class="text-lg font-semibold text-ink">Percentage change</h2>
+    <div class="mt-4 grid gap-3 sm:grid-cols-[1fr_1fr_auto]">
+      <input class="h-11 rounded-md border border-slate-300 px-3" type="number" value="80" data-change-from />
+      <input class="h-11 rounded-md border border-slate-300 px-3" type="number" value="100" data-change-to />
+      <output class="rounded-md bg-white px-4 py-3 font-semibold text-ink" data-change-result>25%</output>
+    </div>
+  </section>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-percentage-tool]");
+  const read = (selector: string): number =>
+    Number(root?.querySelector<HTMLInputElement>(selector)?.value) || 0;
+  const write = (selector: string, value: string): void => {
+    const target = root?.querySelector<HTMLOutputElement>(selector);
+    if (target) target.value = value;
+  };
+  const format = (value: number): string =>
+    Number.isFinite(value)
+      ? value.toLocaleString(undefined, { maximumFractionDigits: 4 })
+      : "Invalid";
+
+  const update = (): void => {
+    const percentResult = (read("[data-percent-a]") / 100) * read("[data-percent-b]");
+    const ratioBase = read("[data-ratio-b]");
+    const ratioResult = ratioBase === 0 ? Number.NaN : (read("[data-ratio-a]") / ratioBase) * 100;
+    const changeFrom = read("[data-change-from]");
+    const changeResult =
+      changeFrom === 0 ? Number.NaN : ((read("[data-change-to]") - changeFrom) / changeFrom) * 100;
+
+    write("[data-percent-result]", format(percentResult));
+    write("[data-ratio-result]", `${format(ratioResult)}%`);
+    write("[data-change-result]", `${format(changeResult)}%`);
+  };
+
+  root?.querySelectorAll<HTMLInputElement>("input").forEach((input) => {
+    input.addEventListener("input", update);
+  });
+  update();
+</script>

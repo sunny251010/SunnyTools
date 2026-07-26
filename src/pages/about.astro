@@ -1,0 +1,29 @@
+---
+import Container from "../components/common/Container.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="About"
+  description="Learn about the ToolKit Hub project and its static-first architecture."
+  path="/about"
+>
+  <main class="flex-1">
+    <Container class="py-12 md:py-16">
+      <article class="content-page">
+        <p class="text-sm font-semibold uppercase text-brand-teal">About</p>
+        <h1>ToolKit Hub is a growing collection of fast online tools.</h1>
+        <p>
+          The project starts with a static-first foundation, shared data files, reusable layouts,
+          and browser-only tools. The goal is to keep pages fast, private, easy to maintain, and
+          simple to deploy.
+        </p>
+        <h2>Project principles</h2>
+        <p>
+          Tool pages should load quickly, solve one job clearly, avoid unnecessary dependencies,
+          and keep user input on the device whenever possible.
+        </p>
+      </article>
+    </Container>
+  </main>
+</BaseLayout>

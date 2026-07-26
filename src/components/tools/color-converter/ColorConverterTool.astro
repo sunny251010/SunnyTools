@@ -1,0 +1,117 @@
+<div class="space-y-5" data-color-tool>
+  <div class="grid gap-4 lg:grid-cols-[1fr_180px]">
+    <label class="text-sm font-semibold text-ink">
+      HEX color
+      <input class="mt-2 h-11 w-full rounded-md border border-slate-300 px-3 font-mono" type="text" value="#0f766e" data-color-input />
+    </label>
+    <div class="rounded-md border border-slate-200 bg-white p-3">
+      <span class="block text-sm font-semibold text-ink">Preview</span>
+      <div class="mt-2 h-20 rounded-md border border-slate-200" data-color-preview></div>
+    </div>
+  </div>
+  <dl class="grid gap-3 sm:grid-cols-3">
+    {
+      [
+        ["hex", "HEX"],
+        ["rgb", "RGB"],
+        ["hsl", "HSL"]
+      ].map(([key, label]) => (
+        <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
+          <dt class="text-sm font-medium text-slate-600">{label}</dt>
+          <dd class="mt-2 break-words font-mono text-sm font-semibold text-ink" data-color-result={key}>-</dd>
+        </div>
+      ))
+    }
+  </dl>
+  <div class="flex flex-wrap gap-3">
+    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-color-convert>Convert</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-color-copy>Copy results</button>
+  </div>
+  <p class="text-sm font-medium" role="status" data-color-status></p>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-color-tool]");
+  const input = root?.querySelector<HTMLInputElement>("[data-color-input]");
+  const preview = root?.querySelector<HTMLElement>("[data-color-preview]");
+  const status = root?.querySelector<HTMLElement>("[data-color-status]");
+
+  const setResult = (key: string, value: string): void => {
+    const target = root?.querySelector<HTMLElement>(`[data-color-result="${key}"]`);
+    if (target) target.textContent = value;
+  };
+
+  const parseHex = (value: string): [number, number, number] | null => {
+    const clean = value.trim().replace(/^#/, "");
+    const expanded =
+      clean.length === 3
+        ? clean
+            .split("")
+            .map((char) => char + char)
+            .join("")
+        : clean;
+    if (!/^[0-9a-fA-F]{6}$/.test(expanded)) return null;
+    return [0, 2, 4].map((index) => Number.parseInt(expanded.slice(index, index + 2), 16)) as [
+      number,
+      number,
+      number
+    ];
+  };
+
+  const toHsl = (red: number, green: number, blue: number): [number, number, number] => {
+    const r = red / 255;
+    const g = green / 255;
+    const b = blue / 255;
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    let hue = 0;
+    let saturation = 0;
+    const lightness = (max + min) / 2;
+
+    if (max !== min) {
+      const delta = max - min;
+      saturation = lightness > 0.5 ? delta / (2 - max - min) : delta / (max + min);
+      if (max === r) hue = (g - b) / delta + (g < b ? 6 : 0);
+      if (max === g) hue = (b - r) / delta + 2;
+      if (max === b) hue = (r - g) / delta + 4;
+      hue *= 60;
+    }
+
+    return [Math.round(hue), Math.round(saturation * 100), Math.round(lightness * 100)];
+  };
+
+  const convert = (): void => {
+    if (!input || !preview || !status) return;
+    const parsed = parseHex(input.value);
+    if (!parsed) {
+      status.className = "text-sm font-medium text-rose-700";
+      status.textContent = "Enter a valid HEX color.";
+      return;
+    }
+
+    const [red, green, blue] = parsed;
+    const hex = `#${[red, green, blue].map((value) => value.toString(16).padStart(2, "0")).join("")}`;
+    const [hue, saturation, lightness] = toHsl(red, green, blue);
+
+    preview.style.backgroundColor = hex;
+    setResult("hex", hex);
+    setResult("rgb", `rgb(${red}, ${green}, ${blue})`);
+    setResult("hsl", `hsl(${hue}, ${saturation}%, ${lightness}%)`);
+    status.className = "text-sm font-medium text-emerald-700";
+    status.textContent = "Converted.";
+  };
+
+  root?.querySelector<HTMLButtonElement>("[data-color-convert]")?.addEventListener("click", convert);
+  input?.addEventListener("input", convert);
+  root?.querySelector<HTMLButtonElement>("[data-color-copy]")?.addEventListener("click", async () => {
+    if (!status) return;
+    const values = ["hex", "rgb", "hsl"]
+      .map((key) => root?.querySelector<HTMLElement>(`[data-color-result="${key}"]`)?.textContent)
+      .filter(Boolean)
+      .join("\n");
+    await navigator.clipboard.writeText(values);
+    status.className = "text-sm font-medium text-emerald-700";
+    status.textContent = "Copied.";
+  });
+  convert();
+</script>

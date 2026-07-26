@@ -1,0 +1,41 @@
+---
+import Footer from "../components/layout/Footer.astro";
+import Header from "../components/layout/Header.astro";
+import SEO from "../components/seo/SEO.astro";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  path?: string;
+  image?: string;
+  robots?: string;
+  type?: "website" | "article";
+}
+
+const { title, description, path = Astro.url.pathname, image, robots, type } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <SEO
+      title={title}
+      description={description}
+      path={path}
+      image={image}
+      robots={robots}
+      type={type}
+    />
+  </head>
+  <body class="min-h-screen antialiased">
+    <div class="flex min-h-screen flex-col">
+      <Header />
+      <slot />
+      <Footer />
+    </div>
+  </body>
+</html>

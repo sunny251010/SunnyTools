@@ -1,0 +1,19 @@
+---
+interface Props {
+  label?: string;
+}
+
+const { label = "Development ad placeholder" } = Astro.props;
+const shouldShow = import.meta.env.DEV;
+---
+
+{
+  shouldShow && (
+    <aside
+      class="my-8 rounded-md border border-dashed border-slate-300 bg-white/75 px-6 py-5 text-center text-sm text-slate-500"
+      aria-label={label}
+    >
+      {label}
+    </aside>
+  )
+}

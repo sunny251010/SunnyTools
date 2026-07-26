@@ -1,0 +1,23 @@
+---
+import type { Tool } from "../../types/tool";
+import ToolCard from "./ToolCard.astro";
+
+interface Props {
+  tools: Tool[];
+  emptyMessage?: string;
+}
+
+const { tools, emptyMessage = "No tools found." } = Astro.props;
+---
+
+{
+  tools.length > 0 ? (
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {tools.map((tool) => <ToolCard tool={tool} />)}
+    </div>
+  ) : (
+    <p class="rounded-md border border-slate-200 bg-white p-5 text-sm text-slate-600">
+      {emptyMessage}
+    </p>
+  )
+}

@@ -1,0 +1,50 @@
+---
+import { mainNavigation } from "../../data/navigation";
+import { siteConfig } from "../../utils/seo";
+import Container from "../common/Container.astro";
+import MobileMenu from "./MobileMenu.astro";
+
+const currentPath = Astro.url.pathname.replace(/\/$/, "") || "/";
+const isActive = (href: string): boolean => {
+  const path = new URL(href, siteConfig.url).pathname.replace(/\/$/, "") || "/";
+  return path === "/" ? currentPath === "/" : currentPath === path;
+};
+---
+
+<header class="sticky top-0 z-40 border-b border-slate-200 bg-white/92 backdrop-blur">
+  <Container class="relative flex h-16 items-center justify-between gap-4">
+    <a href="/" class="flex items-center gap-3 font-semibold text-ink" aria-label="ToolKit Hub home">
+      <span class="grid h-9 w-9 place-items-center rounded-md bg-brand-teal text-sm text-white">TK</span>
+      <span>{siteConfig.name}</span>
+    </a>
+
+    <nav class="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
+      {
+        mainNavigation.map((item) => (
+          <a
+            href={item.href}
+            class:list={[
+              "rounded-md px-3 py-2 text-sm font-medium",
+              isActive(item.href)
+                ? "bg-teal-50 text-brand-teal"
+                : "text-slate-700 hover:bg-slate-50 hover:text-brand-teal"
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="hidden items-center gap-2 md:flex">
+      <a
+        href="/tools"
+        class="rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-700 shadow-sm hover:border-teal-200 hover:text-brand-teal"
+      >
+        Search tools
+      </a>
+    </div>
+
+    <MobileMenu />
+  </Container>
+</header>

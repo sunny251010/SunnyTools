@@ -1,0 +1,45 @@
+<div class="space-y-5" data-uuid-generator>
+  <div class="flex flex-wrap items-end gap-4">
+    <label class="text-sm font-semibold text-ink">
+      Quantity
+      <input class="mt-2 h-11 w-28 rounded-md border border-slate-300 px-3" type="number" min="1" max="100" value="5" data-uuid-count />
+    </label>
+    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-uuid-generate>Generate</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-uuid-copy>Copy</button>
+  </div>
+  <textarea class="min-h-64 w-full rounded-md border border-slate-300 bg-slate-50 p-4 font-mono text-sm leading-7 text-ink shadow-inner" readonly data-uuid-output></textarea>
+  <p class="text-sm font-medium text-emerald-700" role="status" data-uuid-status></p>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-uuid-generator]");
+  const countInput = root?.querySelector<HTMLInputElement>("[data-uuid-count]");
+  const output = root?.querySelector<HTMLTextAreaElement>("[data-uuid-output]");
+  const status = root?.querySelector<HTMLElement>("[data-uuid-status]");
+
+  const fallbackUuid = (): string =>
+    "10000000-1000-4000-8000-100000000000".replace(/[018]/g, (char) =>
+      (Number(char) ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (Number(char) / 4)))).toString(16)
+    );
+
+  const createUuid = (): string =>
+    "randomUUID" in crypto ? crypto.randomUUID() : fallbackUuid();
+
+  const generate = (): void => {
+    if (!countInput || !output) return;
+    const count = Math.min(100, Math.max(1, Number(countInput.value) || 1));
+    output.value = Array.from({ length: count }, createUuid).join("\n");
+  };
+
+  root?.querySelector<HTMLButtonElement>("[data-uuid-generate]")?.addEventListener("click", generate);
+  root?.querySelector<HTMLButtonElement>("[data-uuid-copy]")?.addEventListener("click", async () => {
+    if (!output || !status) return;
+    await navigator.clipboard.writeText(output.value);
+    status.textContent = "Copied.";
+    window.setTimeout(() => {
+      status.textContent = "";
+    }, 1500);
+  });
+
+  generate();
+</script>

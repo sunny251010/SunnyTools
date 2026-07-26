@@ -1,0 +1,89 @@
+<div class="space-y-5" data-lorem-generator>
+  <div class="grid gap-4 sm:grid-cols-3">
+    <label class="text-sm font-semibold text-ink">
+      Paragraphs
+      <input class="mt-2 h-11 w-full rounded-md border border-slate-300 px-3" type="number" min="1" max="12" value="3" data-lorem-paragraphs />
+    </label>
+    <label class="text-sm font-semibold text-ink">
+      Sentences each
+      <input class="mt-2 h-11 w-full rounded-md border border-slate-300 px-3" type="number" min="1" max="10" value="4" data-lorem-sentences />
+    </label>
+    <label class="flex items-end gap-2 text-sm font-semibold text-ink">
+      <input class="mb-3 h-4 w-4 accent-brand-teal" type="checkbox" checked data-lorem-classic />
+      Start classic
+    </label>
+  </div>
+  <div class="flex flex-wrap gap-3">
+    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-lorem-generate>
+      Generate
+    </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-lorem-copy>
+      Copy
+    </button>
+  </div>
+  <textarea class="min-h-80 w-full rounded-md border border-slate-300 bg-slate-50 p-4 text-base leading-7 text-ink shadow-inner" readonly data-lorem-output></textarea>
+  <p class="text-sm font-medium text-emerald-700" role="status" data-lorem-status></p>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-lorem-generator]");
+  const paragraphInput = root?.querySelector<HTMLInputElement>("[data-lorem-paragraphs]");
+  const sentenceInput = root?.querySelector<HTMLInputElement>("[data-lorem-sentences]");
+  const classicInput = root?.querySelector<HTMLInputElement>("[data-lorem-classic]");
+  const output = root?.querySelector<HTMLTextAreaElement>("[data-lorem-output]");
+  const status = root?.querySelector<HTMLElement>("[data-lorem-status]");
+  const wordPool = [
+    "lorem",
+    "ipsum",
+    "dolor",
+    "sit",
+    "amet",
+    "consectetur",
+    "adipiscing",
+    "elit",
+    "curabitur",
+    "viverra",
+    "magna",
+    "pulvinar",
+    "integer",
+    "facilisis",
+    "nibh",
+    "porta",
+    "lectus",
+    "sagittis",
+    "sollicitudin",
+    "tempor"
+  ];
+
+  const sentence = (offset: number): string => {
+    const length = 8 + (offset % 8);
+    const parts = Array.from({ length }, (_, index) => wordPool[(offset + index) % wordPool.length]);
+    const text = parts.join(" ");
+    return `${text.charAt(0).toUpperCase()}${text.slice(1)}.`;
+  };
+
+  const generate = (): void => {
+    if (!paragraphInput || !sentenceInput || !classicInput || !output) return;
+
+    const paragraphs = Math.min(12, Math.max(1, Number(paragraphInput.value) || 1));
+    const sentences = Math.min(10, Math.max(1, Number(sentenceInput.value) || 1));
+    let offset = classicInput.checked ? 0 : Math.floor(Math.random() * wordPool.length);
+
+    output.value = Array.from({ length: paragraphs }, () => {
+      const paragraph = Array.from({ length: sentences }, () => sentence(offset++));
+      return paragraph.join(" ");
+    }).join("\n\n");
+  };
+
+  root?.querySelector<HTMLButtonElement>("[data-lorem-generate]")?.addEventListener("click", generate);
+  root?.querySelector<HTMLButtonElement>("[data-lorem-copy]")?.addEventListener("click", async () => {
+    if (!output || !status) return;
+    await navigator.clipboard.writeText(output.value);
+    status.textContent = "Copied.";
+    window.setTimeout(() => {
+      status.textContent = "";
+    }, 1500);
+  });
+
+  generate();
+</script>
