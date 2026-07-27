@@ -1,0 +1,145 @@
+---
+import { defaultLocale, type Locale } from "../../../i18n/config";
+import { getMessages } from "../../../i18n/messages";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const copy = getMessages(locale).toolUi;
+---
+
+<div class="space-y-5" data-html-formatter data-copied={copy.shared.copied} data-formatted={copy.htmlFormatter.formatted} data-invalid={copy.htmlFormatter.invalid}>
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div>
+      <label for="html-format-input" class="mb-2 block text-sm font-semibold text-ink">{copy.htmlFormatter.htmlInput}</label>
+      <textarea id="html-format-input" class="min-h-80 w-full rounded-md border border-slate-300 bg-slate-50 p-4 font-mono text-sm leading-6 text-ink shadow-inner focus:border-brand-teal focus:bg-white" data-html-input></textarea>
+    </div>
+    <div>
+      <label for="html-format-output" class="mb-2 block text-sm font-semibold text-ink">{copy.shared.output}</label>
+      <textarea id="html-format-output" class="min-h-80 w-full rounded-md border border-slate-300 bg-white p-4 font-mono text-sm leading-6 text-ink shadow-inner" readonly data-html-output></textarea>
+    </div>
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <label class="text-sm font-semibold text-ink">
+      {copy.htmlFormatter.indentSize}
+      <select class="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3" data-html-indent>
+        <option value="2">2</option>
+        <option value="4">4</option>
+      </select>
+    </label>
+    <label class="flex items-end gap-2 text-sm font-semibold text-ink">
+      <input class="mb-3 h-4 w-4 accent-brand-teal" type="checkbox" data-html-tabs />
+      {copy.htmlFormatter.useTabs}
+    </label>
+  </div>
+
+  <div class="flex flex-wrap gap-3">
+    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-html-format>{copy.json.format}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-html-copy>{copy.shared.copy}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-html-download>{copy.shared.downloadHtml}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-html-example>{copy.shared.loadExample}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-html-clear>{copy.shared.clear}</button>
+  </div>
+  <p class="text-sm font-medium" role="status" data-html-status></p>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-html-formatter]");
+  const input = root?.querySelector<HTMLTextAreaElement>("[data-html-input]");
+  const output = root?.querySelector<HTMLTextAreaElement>("[data-html-output]");
+  const indentInput = root?.querySelector<HTMLSelectElement>("[data-html-indent]");
+  const tabInput = root?.querySelector<HTMLInputElement>("[data-html-tabs]");
+  const status = root?.querySelector<HTMLElement>("[data-html-status]");
+  const copied = root?.dataset.copied ?? "Copied.";
+  const formatted = root?.dataset.formatted ?? "HTML formatted.";
+  const invalid = root?.dataset.invalid ?? "Enter valid HTML text.";
+  const voidTags = new Set(["area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"]);
+
+  const downloadText = (filename: string, text: string): void => {
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(new Blob([text], { type: "text/html;charset=utf-8" }));
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
+
+  const validateBalance = (html: string): boolean => {
+    const stack: string[] = [];
+    const tokens = html.match(/<\/?[^>]+>/g) ?? [];
+    for (const token of tokens) {
+      const close = token.match(/^<\/\s*([A-Za-z0-9:-]+)/);
+      const open = token.match(/^<\s*([A-Za-z0-9:-]+)/);
+      if (close) {
+        const tag = close[1].toLowerCase();
+        if (stack.pop() !== tag) return false;
+      } else if (open && !token.endsWith("/>")) {
+        const tag = open[1].toLowerCase();
+        if (!voidTags.has(tag) && !token.startsWith("<!")) stack.push(tag);
+      }
+    }
+    return stack.length === 0;
+  };
+
+  const formatHtml = (html: string): string => {
+    const unit = tabInput?.checked ? "\t" : " ".repeat(Number(indentInput?.value) || 2);
+    const tokens = html.replace(/>\s+</g, "><").match(/<[^>]+>|[^<]+/g) ?? [];
+    let depth = 0;
+    const lines: string[] = [];
+
+    tokens.forEach((token) => {
+      const trimmed = token.trim();
+      if (!trimmed) return;
+
+      if (/^<\//.test(trimmed)) {
+        depth = Math.max(0, depth - 1);
+      }
+
+      lines.push(`${unit.repeat(depth)}${trimmed}`);
+
+      const open = trimmed.match(/^<\s*([A-Za-z0-9:-]+)/);
+      if (open && !/^<\//.test(trimmed) && !trimmed.endsWith("/>") && !trimmed.startsWith("<!") && !voidTags.has(open[1].toLowerCase())) {
+        depth += 1;
+      }
+    });
+
+    return lines.join("\n");
+  };
+
+  const run = (): void => {
+    if (!input || !output || !status) return;
+    if (!input.value.trim() || !validateBalance(input.value)) {
+      status.className = "text-sm font-medium text-rose-700";
+      status.textContent = invalid;
+      output.value = "";
+      return;
+    }
+    output.value = formatHtml(input.value);
+    status.className = "text-sm font-medium text-emerald-700";
+    status.textContent = formatted;
+  };
+
+  root?.querySelector<HTMLButtonElement>("[data-html-format]")?.addEventListener("click", run);
+  root?.querySelector<HTMLButtonElement>("[data-html-copy]")?.addEventListener("click", async () => {
+    if (!output || !status) return;
+    await navigator.clipboard.writeText(output.value);
+    status.className = "text-sm font-medium text-emerald-700";
+    status.textContent = copied;
+  });
+  root?.querySelector<HTMLButtonElement>("[data-html-download]")?.addEventListener("click", () => {
+    if (output?.value) downloadText("formatted.html", output.value);
+  });
+  root?.querySelector<HTMLButtonElement>("[data-html-example]")?.addEventListener("click", () => {
+    if (!input) return;
+    input.value = '<main><section><h1>SunnyTools</h1><p>Format <strong>HTML</strong> locally.</p></section></main>';
+    run();
+  });
+  root?.querySelector<HTMLButtonElement>("[data-html-clear]")?.addEventListener("click", () => {
+    if (!input || !output || !status) return;
+    input.value = "";
+    output.value = "";
+    status.textContent = "";
+  });
+</script>

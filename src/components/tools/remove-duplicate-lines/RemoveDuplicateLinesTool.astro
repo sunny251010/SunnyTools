@@ -66,6 +66,12 @@ const copy = getMessages(locale).toolUi;
     <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-duplicate-copy>
       {copy.shared.copy}
     </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-duplicate-download>
+      {copy.shared.downloadTxt}
+    </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-duplicate-example>
+      {copy.shared.loadExample}
+    </button>
     <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-duplicate-clear>
       {copy.shared.clear}
     </button>
@@ -86,6 +92,14 @@ const copy = getMessages(locale).toolUi;
   const status = root?.querySelector<HTMLElement>("[data-duplicate-status]");
   const copied = root?.dataset.copied ?? "Copied.";
   const processed = root?.dataset.processed ?? "Duplicates removed.";
+
+  const downloadText = (filename: string, text: string): void => {
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
 
   const normalizeLine = (line: string): string => {
     const trimmed = trimInput?.checked ? line.trim() : line;
@@ -132,6 +146,14 @@ const copy = getMessages(locale).toolUi;
     if (!output || !status) return;
     await navigator.clipboard.writeText(output.value);
     status.textContent = copied;
+  });
+  root?.querySelector<HTMLButtonElement>("[data-duplicate-download]")?.addEventListener("click", () => {
+    if (output?.value) downloadText("unique-lines.txt", output.value);
+  });
+  root?.querySelector<HTMLButtonElement>("[data-duplicate-example]")?.addEventListener("click", () => {
+    if (!input) return;
+    input.value = "apple\nbanana\nApple\nbanana\norange\n apple ";
+    process();
   });
   root?.querySelector<HTMLButtonElement>("[data-duplicate-clear]")?.addEventListener("click", clear);
   input?.addEventListener("input", process);

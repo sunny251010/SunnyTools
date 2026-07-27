@@ -15,7 +15,10 @@ const modes = [
   ["sentence", copy.caseConverter.sentence],
   ["kebab", copy.caseConverter.kebab],
   ["snake", copy.caseConverter.snake],
-  ["camel", copy.caseConverter.camel]
+  ["camel", copy.caseConverter.camel],
+  ["pascal", copy.caseConverter.pascal],
+  ["constant", copy.caseConverter.constant],
+  ["dot", copy.caseConverter.dot]
 ];
 ---
 
@@ -38,6 +41,16 @@ const modes = [
         data-case-output></textarea>
     </div>
   </div>
+  <div class="grid gap-3 sm:grid-cols-2">
+    <div class="rounded-md border border-slate-200 bg-slate-50 p-3">
+      <p class="text-xs font-semibold uppercase text-slate-500">{copy.wordCounter.characters}</p>
+      <p class="mt-1 text-2xl font-semibold text-ink" data-case-characters>0</p>
+    </div>
+    <div class="rounded-md border border-slate-200 bg-slate-50 p-3">
+      <p class="text-xs font-semibold uppercase text-slate-500">{copy.wordCounter.words}</p>
+      <p class="mt-1 text-2xl font-semibold text-ink" data-case-words>0</p>
+    </div>
+  </div>
   <div class="flex flex-wrap gap-3">
     {
       modes.map(([mode, label]) => (
@@ -57,6 +70,20 @@ const modes = [
     >
       {copy.shared.copy}
     </button>
+    <button
+      type="button"
+      class="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal"
+      data-case-example
+    >
+      {copy.shared.loadExample}
+    </button>
+    <button
+      type="button"
+      class="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal"
+      data-case-clear
+    >
+      {copy.shared.clear}
+    </button>
   </div>
   <p class="text-sm font-medium text-emerald-700" role="status" data-case-status></p>
 </div>
@@ -66,12 +93,14 @@ const modes = [
   const input = root?.querySelector<HTMLTextAreaElement>("[data-case-input]");
   const output = root?.querySelector<HTMLTextAreaElement>("[data-case-output]");
   const status = root?.querySelector<HTMLElement>("[data-case-status]");
+  const characters = root?.querySelector<HTMLElement>("[data-case-characters]");
+  const wordCount = root?.querySelector<HTMLElement>("[data-case-words]");
   const copied = root?.dataset.copied ?? "Copied.";
 
   const words = (value: string): string[] =>
     value
       .trim()
-      .split(/[^A-Za-z0-9]+/)
+      .split(/[^\p{L}\p{N}]+/u)
       .filter(Boolean);
 
   const titleCase = (value: string): string =>
@@ -81,6 +110,17 @@ const modes = [
     value
       .toLowerCase()
       .replace(/(^\s*\p{L}|[.!?]\s+\p{L})/gu, (match) => match.toUpperCase());
+
+  const capitalized = (word: string): string => {
+    const lower = word.toLocaleLowerCase();
+    return lower.charAt(0).toLocaleUpperCase() + lower.slice(1);
+  };
+
+  const updateStats = (): void => {
+    if (!input || !characters || !wordCount) return;
+    characters.textContent = String([...input.value].length);
+    wordCount.textContent = String(words(input.value).length);
+  };
 
   const convert = (mode: string): void => {
     if (!input || !output) return;
@@ -99,10 +139,14 @@ const modes = [
           const lower = word.toLowerCase();
           return index === 0 ? lower : lower.charAt(0).toUpperCase() + lower.slice(1);
         })
-        .join("")
+        .join(""),
+      pascal: normalizedWords.map(capitalized).join(""),
+      constant: normalizedWords.map((word) => word.toLocaleUpperCase()).join("_"),
+      dot: normalizedWords.map((word) => word.toLocaleLowerCase()).join(".")
     };
 
     output.value = converters[mode] ?? value;
+    updateStats();
   };
 
   root?.querySelectorAll<HTMLButtonElement>("[data-case-mode]").forEach((button) => {
@@ -117,4 +161,18 @@ const modes = [
       status.textContent = "";
     }, 1500);
   });
+  root?.querySelector<HTMLButtonElement>("[data-case-example]")?.addEventListener("click", () => {
+    if (!input) return;
+    input.value = "Tiếng Việt Có Dấu và Sunny Tools slug example";
+    convert("title");
+  });
+  root?.querySelector<HTMLButtonElement>("[data-case-clear]")?.addEventListener("click", () => {
+    if (!input || !output || !status) return;
+    input.value = "";
+    output.value = "";
+    status.textContent = "";
+    updateStats();
+  });
+  input?.addEventListener("input", updateStats);
+  updateStats();
 </script>

@@ -1,0 +1,199 @@
+---
+import { defaultLocale, type Locale } from "../../../i18n/config";
+import { getMessages } from "../../../i18n/messages";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const copy = getMessages(locale).toolUi;
+---
+
+<div class="space-y-5" data-markdown-previewer data-copied={copy.shared.copied} data-html-copied={copy.markdown.htmlCopied} data-rendered={copy.markdown.rendered}>
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div>
+      <label for="markdown-input" class="mb-2 block text-sm font-semibold text-ink">{copy.markdown.markdownInput}</label>
+      <textarea
+        id="markdown-input"
+        class="min-h-96 w-full rounded-md border border-slate-300 bg-slate-50 p-4 font-mono text-sm leading-7 text-ink shadow-inner focus:border-brand-teal focus:bg-white"
+        data-markdown-input></textarea>
+    </div>
+    <div>
+      <div class="mb-2 text-sm font-semibold text-ink">{copy.markdown.preview}</div>
+      <div class="tool-content min-h-96 max-w-none overflow-auto rounded-md border border-slate-300 bg-white p-4" data-markdown-preview></div>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-3">
+    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-markdown-copy-md>{copy.markdown.copyMarkdown}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-markdown-copy-html>{copy.markdown.copyHtml}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-markdown-download>{copy.shared.downloadMd}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-markdown-example>{copy.shared.loadExample}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-markdown-clear>{copy.shared.clear}</button>
+  </div>
+  <p class="text-sm font-medium text-emerald-700" role="status" data-markdown-status></p>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-markdown-previewer]");
+  const input = root?.querySelector<HTMLTextAreaElement>("[data-markdown-input]");
+  const preview = root?.querySelector<HTMLElement>("[data-markdown-preview]");
+  const status = root?.querySelector<HTMLElement>("[data-markdown-status]");
+  const copied = root?.dataset.copied ?? "Copied.";
+  const htmlCopied = root?.dataset.htmlCopied ?? "HTML copied.";
+  const rendered = root?.dataset.rendered ?? "Preview rendered.";
+
+  const escapeHtml = (value: string): string =>
+    value
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+
+  const inline = (value: string): string =>
+    escapeHtml(value)
+      .replace(/`([^`]+)`/g, "<code>$1</code>")
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+      .replace(/!\[([^\]]*)\]\((https?:\/\/[^)\s]+)\)/g, '<img src="$2" alt="$1" loading="lazy" />')
+      .replace(/\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g, '<a href="$2" rel="nofollow noopener" target="_blank">$1</a>');
+
+  const renderTable = (lines: string[], start: number): { html: string; next: number } | undefined => {
+    if (start + 1 >= lines.length || !/^\s*\|.+\|\s*$/.test(lines[start]) || !/^\s*\|?[\s:-]+\|[\s|:-]*$/.test(lines[start + 1])) {
+      return undefined;
+    }
+
+    const cells = (line: string): string[] => line.trim().replace(/^\||\|$/g, "").split("|").map((cell) => inline(cell.trim()));
+    const header = cells(lines[start]);
+    const rows: string[][] = [];
+    let index = start + 2;
+
+    while (index < lines.length && /^\s*\|.+\|\s*$/.test(lines[index])) {
+      rows.push(cells(lines[index]));
+      index += 1;
+    }
+
+    return {
+      next: index,
+      html: `<table><thead><tr>${header.map((cell) => `<th>${cell}</th>`).join("")}</tr></thead><tbody>${rows
+        .map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`)
+        .join("")}</tbody></table>`
+    };
+  };
+
+  const renderMarkdown = (markdown: string): string => {
+    const lines = markdown.replace(/\r\n/g, "\n").split("\n");
+    const html: string[] = [];
+    let index = 0;
+    let inCode = false;
+    let code: string[] = [];
+
+    while (index < lines.length) {
+      const line = lines[index];
+
+      if (line.trim().startsWith("```")) {
+        if (inCode) {
+          html.push(`<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`);
+          code = [];
+          inCode = false;
+        } else {
+          inCode = true;
+        }
+        index += 1;
+        continue;
+      }
+
+      if (inCode) {
+        code.push(line);
+        index += 1;
+        continue;
+      }
+
+      const table = renderTable(lines, index);
+      if (table) {
+        html.push(table.html);
+        index = table.next;
+        continue;
+      }
+
+      if (/^\s*$/.test(line)) {
+        index += 1;
+        continue;
+      }
+
+      if (/^\s*---+\s*$/.test(line)) {
+        html.push("<hr />");
+      } else if (/^#{1,6}\s+/.test(line)) {
+        const level = line.match(/^#+/)?.[0].length ?? 2;
+        html.push(`<h${level}>${inline(line.replace(/^#{1,6}\s+/, ""))}</h${level}>`);
+      } else if (/^\s*>\s?/.test(line)) {
+        html.push(`<blockquote>${inline(line.replace(/^\s*>\s?/, ""))}</blockquote>`);
+      } else if (/^\s*[-*+]\s+/.test(line)) {
+        const items: string[] = [];
+        while (index < lines.length && /^\s*[-*+]\s+/.test(lines[index])) {
+          items.push(`<li>${inline(lines[index].replace(/^\s*[-*+]\s+/, ""))}</li>`);
+          index += 1;
+        }
+        html.push(`<ul>${items.join("")}</ul>`);
+        continue;
+      } else if (/^\s*\d+\.\s+/.test(line)) {
+        const items: string[] = [];
+        while (index < lines.length && /^\s*\d+\.\s+/.test(lines[index])) {
+          items.push(`<li>${inline(lines[index].replace(/^\s*\d+\.\s+/, ""))}</li>`);
+          index += 1;
+        }
+        html.push(`<ol>${items.join("")}</ol>`);
+        continue;
+      } else {
+        html.push(`<p>${inline(line)}</p>`);
+      }
+
+      index += 1;
+    }
+
+    if (inCode) html.push(`<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`);
+    return html.join("\n");
+  };
+
+  const downloadText = (filename: string, text: string, type = "text/plain;charset=utf-8"): void => {
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(new Blob([text], { type }));
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
+
+  const render = (): void => {
+    if (!input || !preview) return;
+    preview.innerHTML = renderMarkdown(input.value);
+    if (status) status.textContent = rendered;
+  };
+
+  root?.querySelector<HTMLButtonElement>("[data-markdown-copy-md]")?.addEventListener("click", async () => {
+    if (!input || !status) return;
+    await navigator.clipboard.writeText(input.value);
+    status.textContent = copied;
+  });
+  root?.querySelector<HTMLButtonElement>("[data-markdown-copy-html]")?.addEventListener("click", async () => {
+    if (!preview || !status) return;
+    await navigator.clipboard.writeText(preview.innerHTML);
+    status.textContent = htmlCopied;
+  });
+  root?.querySelector<HTMLButtonElement>("[data-markdown-download]")?.addEventListener("click", () => {
+    if (input?.value) downloadText("markdown.md", input.value, "text/markdown;charset=utf-8");
+  });
+  root?.querySelector<HTMLButtonElement>("[data-markdown-example]")?.addEventListener("click", () => {
+    if (!input) return;
+    input.value = "# Markdown Preview\n\n**Bold text**, *italic text*, and `inline code`.\n\n- Fast\n- Local\n- Sanitized\n\n| Name | Status |\n| --- | --- |\n| SunnyTools | Ready |\n\n> Preview stays in your browser.";
+    render();
+  });
+  root?.querySelector<HTMLButtonElement>("[data-markdown-clear]")?.addEventListener("click", () => {
+    if (!input || !preview || !status) return;
+    input.value = "";
+    preview.innerHTML = "";
+    status.textContent = "";
+  });
+  input?.addEventListener("input", render);
+  render();
+</script>

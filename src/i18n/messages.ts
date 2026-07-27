@@ -169,6 +169,12 @@ export const messages = {
         clear: "Clear",
         generate: "Generate",
         downloadPng: "Download PNG",
+        downloadTxt: "Download TXT",
+        downloadMd: "Download MD",
+        downloadHtml: "Download HTML",
+        downloadCss: "Download CSS",
+        downloadJs: "Download JS",
+        loadExample: "Load example",
         encode: "Encode",
         decode: "Decode",
         convert: "Convert",
@@ -203,7 +209,20 @@ export const messages = {
         sentence: "Sentence",
         kebab: "kebab-case",
         snake: "snake_case",
-        camel: "camelCase"
+        camel: "camelCase",
+        pascal: "PascalCase",
+        constant: "CONSTANT_CASE",
+        dot: "dot.case"
+      },
+      slug: {
+        title: "Title or text",
+        separator: "Separator",
+        hyphen: "Hyphen",
+        underscore: "Underscore",
+        lowercase: "Lowercase",
+        removeStopWords: "Remove stop words",
+        generatedSlug: "Generated slug",
+        generated: "Slug generated."
       },
       duplicateLines: {
         trimLines: "Trim lines",
@@ -218,6 +237,7 @@ export const messages = {
         sortType: "Sort type",
         text: "Text",
         numeric: "Numeric",
+        length: "Line length",
         direction: "Direction",
         ascending: "Ascending",
         descending: "Descending",
@@ -233,10 +253,40 @@ export const messages = {
         unchanged: "Unchanged",
         added: "Added",
         removed: "Removed",
+        mode: "Mode",
+        lineMode: "Line",
+        wordMode: "Word",
+        swap: "Swap",
         summary: "Summary",
         type: "Type",
         line: "Line",
         noDifference: "No line differences found."
+      },
+      markdown: {
+        markdownInput: "Markdown input",
+        preview: "Preview",
+        copyMarkdown: "Copy Markdown",
+        copyHtml: "Copy HTML",
+        htmlCopied: "HTML copied.",
+        rendered: "Preview rendered."
+      },
+      htmlFormatter: {
+        htmlInput: "HTML input",
+        indentSize: "Indent size",
+        useTabs: "Use tabs",
+        formatted: "HTML formatted.",
+        invalid: "Enter valid HTML text."
+      },
+      minifier: {
+        source: "Source",
+        minified: "Minified",
+        before: "Before",
+        after: "After",
+        saved: "Saved",
+        keepComments: "Keep comments",
+        minifiedStatus: "Minified locally.",
+        invalidCss: "CSS has unmatched braces or unfinished strings.",
+        invalidJs: "JavaScript has unfinished strings, comments, templates, or brackets."
       },
       lorem: {
         paragraphs: "Paragraphs",
@@ -519,6 +569,12 @@ export const messages = {
         clear: "Xóa",
         generate: "Tạo",
         downloadPng: "Tải PNG",
+        downloadTxt: "Tải TXT",
+        downloadMd: "Tải MD",
+        downloadHtml: "Tải HTML",
+        downloadCss: "Tải CSS",
+        downloadJs: "Tải JS",
+        loadExample: "Tải ví dụ",
         encode: "Mã hóa",
         decode: "Giải mã",
         convert: "Chuyển đổi",
@@ -553,7 +609,20 @@ export const messages = {
         sentence: "Viết hoa câu",
         kebab: "kebab-case",
         snake: "snake_case",
-        camel: "camelCase"
+        camel: "camelCase",
+        pascal: "PascalCase",
+        constant: "CONSTANT_CASE",
+        dot: "dot.case"
+      },
+      slug: {
+        title: "Tiêu đề hoặc văn bản",
+        separator: "Ký tự phân cách",
+        hyphen: "Gạch ngang",
+        underscore: "Gạch dưới",
+        lowercase: "Chữ thường",
+        removeStopWords: "Xóa từ thừa",
+        generatedSlug: "Slug đã tạo",
+        generated: "Đã tạo slug."
       },
       duplicateLines: {
         trimLines: "Cắt khoảng trắng",
@@ -568,6 +637,7 @@ export const messages = {
         sortType: "Kiểu sắp xếp",
         text: "Văn bản",
         numeric: "Số",
+        length: "Độ dài dòng",
         direction: "Thứ tự",
         ascending: "Tăng dần",
         descending: "Giảm dần",
@@ -583,10 +653,40 @@ export const messages = {
         unchanged: "Giữ nguyên",
         added: "Đã thêm",
         removed: "Đã xóa",
+        mode: "Chế độ",
+        lineMode: "Dòng",
+        wordMode: "Từ",
+        swap: "Đổi vị trí",
         summary: "Tóm tắt",
         type: "Loại",
         line: "Dòng",
         noDifference: "Không tìm thấy khác biệt theo dòng."
+      },
+      markdown: {
+        markdownInput: "Nhập Markdown",
+        preview: "Xem trước",
+        copyMarkdown: "Sao chép Markdown",
+        copyHtml: "Sao chép HTML",
+        htmlCopied: "Đã sao chép HTML.",
+        rendered: "Đã render preview."
+      },
+      htmlFormatter: {
+        htmlInput: "Nhập HTML",
+        indentSize: "Kích thước indent",
+        useTabs: "Dùng tab",
+        formatted: "Đã định dạng HTML.",
+        invalid: "Hãy nhập HTML dạng văn bản hợp lệ."
+      },
+      minifier: {
+        source: "Nguồn",
+        minified: "Đã thu gọn",
+        before: "Trước",
+        after: "Sau",
+        saved: "Tiết kiệm",
+        keepComments: "Giữ comment",
+        minifiedStatus: "Đã thu gọn cục bộ.",
+        invalidCss: "CSS có ngoặc chưa khớp hoặc string chưa đóng.",
+        invalidJs: "JavaScript có string, comment, template hoặc ngoặc chưa đóng."
       },
       lorem: {
         paragraphs: "Đoạn",

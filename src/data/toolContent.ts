@@ -118,6 +118,32 @@ const contentBySlug: Record<string, LocalizedToolContent> = {
       ]
     }
   },
+  "slug-generator": {
+    en: {
+      intro: "Slug Generator turns titles, headings, and Vietnamese text into clean SEO-friendly URL slugs.",
+      howToUse: "Paste a title, choose hyphen or underscore separators, then copy or download the generated slug.",
+      howItWorks:
+        "The browser normalizes accents, removes unsafe URL characters, applies optional stop-word cleanup, and joins words with your selected separator.",
+      privacy: "Slug generation runs locally. Your titles are not uploaded.",
+      faqs: [
+        { question: "Does it support Vietnamese accents?", answer: "Yes. Vietnamese diacritics are normalized into ASCII characters." },
+        { question: "Can I use underscores?", answer: "Yes. Choose underscore as the separator." },
+        { question: "Can it remove stop words?", answer: "Yes. Enable the stop-word option for common English and Vietnamese filler words." }
+      ]
+    },
+    vi: {
+      intro: "Công cụ Tạo Đường Dẫn Slug chuyển tiêu đề, heading và tiếng Việt có dấu thành URL slug thân thiện SEO.",
+      howToUse: "Dán tiêu đề, chọn dấu gạch ngang hoặc gạch dưới, rồi sao chép hoặc tải slug đã tạo.",
+      howItWorks:
+        "Trình duyệt chuẩn hóa dấu tiếng Việt, xóa ký tự không an toàn cho URL, tùy chọn bỏ từ thừa và nối các từ bằng ký tự phân cách đã chọn.",
+      privacy: "Việc tạo slug chạy cục bộ. Tiêu đề của bạn không được upload.",
+      faqs: [
+        { question: "Công cụ có hỗ trợ tiếng Việt có dấu không?", answer: "Có. Dấu tiếng Việt được chuẩn hóa thành ký tự ASCII." },
+        { question: "Có dùng dấu gạch dưới được không?", answer: "Có. Chọn underscore làm ký tự phân cách." },
+        { question: "Có thể xóa từ thừa không?", answer: "Có. Bật tùy chọn bỏ từ thừa cho một số từ phổ biến tiếng Anh và tiếng Việt." }
+      ]
+    }
+  },
   "sort-lines": {
     en: {
       intro: "Sort Lines reorders pasted text line by line for lists, IDs, numbers, and simple cleanup tasks.",
@@ -393,6 +419,136 @@ const contentBySlug: Record<string, LocalizedToolContent> = {
         { question: "Công cụ hỗ trợ kiểu regex nào?", answer: "Công cụ dùng biểu thức chính quy JavaScript." },
         { question: "Có hiển thị capture group không?", answer: "Có. Các group khớp được liệt kê cho từng match." },
         { question: "Văn bản mẫu có bị upload không?", answer: "Không. Mọi thứ chạy trong trình duyệt." }
+      ]
+    }
+  },
+  "markdown-previewer": {
+    en: {
+      intro: "Markdown Previewer renders common Markdown syntax into sanitized HTML for quick writing and documentation checks.",
+      howToUse: "Write Markdown in the editor, review the preview, then copy Markdown, copy HTML, or download a .md file.",
+      howItWorks:
+        "The browser escapes raw HTML first and then renders supported Markdown patterns such as headings, lists, links, code blocks, tables, and blockquotes.",
+      privacy: "Markdown stays in your browser and is not sent to a backend.",
+      faqs: [
+        { question: "Can Markdown run scripts?", answer: "No. Raw HTML is escaped before preview rendering." },
+        { question: "Does it support tables?", answer: "Yes. Simple pipe tables are rendered." },
+        { question: "Can I copy generated HTML?", answer: "Yes. Use the Copy HTML button." }
+      ]
+    },
+    vi: {
+      intro: "Công cụ Xem Trước Markdown render các cú pháp Markdown phổ biến thành HTML đã sanitize để kiểm tra nội dung và tài liệu nhanh.",
+      howToUse: "Viết Markdown trong editor, xem preview, rồi sao chép Markdown, sao chép HTML hoặc tải file .md.",
+      howItWorks:
+        "Trình duyệt escape HTML thô trước, sau đó render các pattern Markdown được hỗ trợ như heading, list, link, code block, table và blockquote.",
+      privacy: "Markdown ở lại trong trình duyệt và không gửi tới backend.",
+      faqs: [
+        { question: "Markdown có chạy script được không?", answer: "Không. HTML thô được escape trước khi render preview." },
+        { question: "Có hỗ trợ bảng không?", answer: "Có. Bảng pipe đơn giản được render." },
+        { question: "Có sao chép HTML đã tạo được không?", answer: "Có. Dùng nút Sao chép HTML." }
+      ]
+    }
+  },
+  "html-formatter": {
+    en: {
+      intro: "HTML Formatter turns compact or messy HTML into readable indented markup.",
+      howToUse: "Paste HTML, choose indentation settings, then format, copy, or download the result.",
+      howItWorks:
+        "The browser tokenizes tags and text, preserves content, and applies indentation without executing markup.",
+      privacy: "HTML formatting happens locally in your browser.",
+      faqs: [
+        { question: "Does it execute HTML?", answer: "No. Input is formatted as text." },
+        { question: "Can I use tabs?", answer: "Yes. Enable the tab indentation option." },
+        { question: "Will it remove valid content?", answer: "No. The formatter is conservative and keeps text and tags." }
+      ]
+    },
+    vi: {
+      intro: "Công cụ Định Dạng HTML chuyển HTML nén hoặc lộn xộn thành markup có thụt lề dễ đọc.",
+      howToUse: "Dán HTML, chọn thiết lập indent, rồi định dạng, sao chép hoặc tải kết quả.",
+      howItWorks:
+        "Trình duyệt tách tag và text, giữ nội dung, rồi áp dụng thụt lề mà không thực thi markup.",
+      privacy: "Việc định dạng HTML diễn ra cục bộ trong trình duyệt.",
+      faqs: [
+        { question: "Công cụ có thực thi HTML không?", answer: "Không. Input được định dạng như văn bản." },
+        { question: "Có dùng tab được không?", answer: "Có. Bật tùy chọn thụt lề bằng tab." },
+        { question: "Có làm mất nội dung hợp lệ không?", answer: "Không. Formatter giữ tag và text theo hướng thận trọng." }
+      ]
+    }
+  },
+  "css-minifier": {
+    en: {
+      intro: "CSS Minifier compresses CSS snippets and shows size savings.",
+      howToUse: "Paste CSS, minify it, then review byte savings, copy the output, or download a .min.css file.",
+      howItWorks:
+        "The browser removes comments and unnecessary whitespace while keeping strings and common CSS syntax intact.",
+      privacy: "CSS input is processed locally and never uploaded.",
+      faqs: [
+        { question: "Does it change CSS behavior?", answer: "It uses conservative whitespace and comment removal to preserve valid CSS behavior." },
+        { question: "Can I download the minified file?", answer: "Yes. Download it as .min.css." },
+        { question: "Does it validate CSS?", answer: "It catches basic unmatched braces and string issues before minifying." }
+      ]
+    },
+    vi: {
+      intro: "Công cụ Thu Gọn CSS nén đoạn CSS và hiển thị dung lượng tiết kiệm.",
+      howToUse: "Dán CSS, minify, rồi xem số byte giảm, sao chép output hoặc tải file .min.css.",
+      howItWorks:
+        "Trình duyệt xóa comment và khoảng trắng không cần thiết trong khi giữ string và cú pháp CSS phổ biến.",
+      privacy: "Input CSS được xử lý cục bộ và không bao giờ upload.",
+      faqs: [
+        { question: "Có làm thay đổi hành vi CSS không?", answer: "Công cụ xóa comment và khoảng trắng theo hướng thận trọng để giữ hành vi CSS hợp lệ." },
+        { question: "Có tải file đã minify được không?", answer: "Có. Tải dưới dạng .min.css." },
+        { question: "Công cụ có kiểm tra CSS không?", answer: "Công cụ bắt các lỗi cơ bản như thiếu ngoặc hoặc string chưa đóng trước khi minify." }
+      ]
+    }
+  },
+  "javascript-minifier": {
+    en: {
+      intro: "JavaScript Minifier compresses JavaScript text without running it.",
+      howToUse: "Paste JavaScript, choose whether to keep comments, minify, then copy or download the .min.js file.",
+      howItWorks:
+        "The browser walks through the source text, preserves strings and templates, removes safe whitespace, and never uses eval or Function.",
+      privacy: "JavaScript input stays on the page and is never executed or uploaded.",
+      faqs: [
+        { question: "Does it run my JavaScript?", answer: "No. It only reads and rewrites text." },
+        { question: "Can comments be kept?", answer: "Yes. Toggle the keep comments option." },
+        { question: "Does it detect syntax issues?", answer: "It reports common unclosed strings, comments, and brackets before minifying." }
+      ]
+    },
+    vi: {
+      intro: "Công cụ Thu Gọn JavaScript nén văn bản JavaScript mà không chạy code.",
+      howToUse: "Dán JavaScript, chọn giữ comment hay không, minify, rồi sao chép hoặc tải file .min.js.",
+      howItWorks:
+        "Trình duyệt duyệt source text, giữ string và template, xóa khoảng trắng an toàn và không bao giờ dùng eval hoặc Function.",
+      privacy: "Input JavaScript chỉ ở trên trang, không được thực thi và không upload.",
+      faqs: [
+        { question: "Công cụ có chạy JavaScript của tôi không?", answer: "Không. Công cụ chỉ đọc và ghi lại văn bản." },
+        { question: "Có giữ comment được không?", answer: "Có. Bật tùy chọn giữ comment." },
+        { question: "Có phát hiện lỗi cú pháp không?", answer: "Công cụ báo các lỗi phổ biến như string, comment hoặc ngoặc chưa đóng trước khi minify." }
+      ]
+    }
+  },
+  "unix-timestamp-converter": {
+    en: {
+      intro: "Unix Timestamp Converter converts epoch seconds or milliseconds into readable dates and back.",
+      howToUse: "Enter a Unix timestamp or date-time value, convert in either direction, and copy individual outputs.",
+      howItWorks:
+        "The browser creates JavaScript Date values, auto-detects common seconds or milliseconds input, and displays UTC, local, ISO, and Unix formats.",
+      privacy: "Date conversion is local and no values are stored.",
+      faqs: [
+        { question: "Does it support milliseconds?", answer: "Yes. Long Unix values are treated as milliseconds." },
+        { question: "Can I convert a date back to Unix time?", answer: "Yes. Use the date input and Convert date button." },
+        { question: "Which local timezone is used?", answer: "The local time comes from your browser timezone." }
+      ]
+    },
+    vi: {
+      intro: "Công cụ Chuyển Đổi Unix Timestamp chuyển epoch giây hoặc mili giây thành ngày giờ dễ đọc và ngược lại.",
+      howToUse: "Nhập Unix timestamp hoặc giá trị ngày giờ, chuyển đổi hai chiều và sao chép từng output.",
+      howItWorks:
+        "Trình duyệt tạo JavaScript Date, tự nhận diện input giây hoặc mili giây phổ biến, rồi hiển thị UTC, local, ISO và Unix.",
+      privacy: "Việc chuyển đổi ngày giờ diễn ra cục bộ và không lưu giá trị.",
+      faqs: [
+        { question: "Có hỗ trợ mili giây không?", answer: "Có. Giá trị Unix dài được hiểu là mili giây." },
+        { question: "Có chuyển ngày giờ ngược lại thành Unix không?", answer: "Có. Dùng ô nhập ngày và nút Chuyển ngày." },
+        { question: "Múi giờ local là gì?", answer: "Giờ local lấy từ múi giờ của trình duyệt." }
       ]
     }
   },

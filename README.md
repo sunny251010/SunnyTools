@@ -98,6 +98,8 @@ public/
 
 See `docs/ADD_NEW_TOOL.md` for the full checklist.
 
+See `docs/TOOL_EXPANSION.md` for the current 10-tool expansion backlog and implementation status.
+
 ## Domain And Contact
 
 The production domain is currently configured as `https://sunnytools.site` in:
@@ -147,6 +149,7 @@ Implemented tools:
 - Character Counter
 - Case Converter
 - Remove Duplicate Lines
+- Slug Generator
 - Sort Lines
 - Text Compare
 - Lorem Ipsum Generator
@@ -159,6 +162,11 @@ Implemented tools:
 - Base64 Encoder/Decoder
 - URL Encoder/Decoder
 - Regex Tester
+- Markdown Previewer
+- HTML Formatter
+- CSS Minifier
+- JavaScript Minifier
+- Unix Timestamp Converter
 - Timestamp Converter
 - Color Converter
 - Percentage Calculator

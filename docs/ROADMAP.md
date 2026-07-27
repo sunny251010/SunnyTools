@@ -1,5 +1,7 @@
 # Roadmap
 
+Ghi chú: Danh sách 10 tool mở rộng gần nhất được theo dõi trong `docs/TOOL_EXPANSION.md`.
+
 ## Phase 1: Nền Tảng
 
 Độ ưu tiên: Cao
@@ -46,6 +48,7 @@ Công việc:
 - Character Counter.
 - Case Converter.
 - Remove Duplicate Lines.
+- Slug Generator.
 - Sort Lines.
 - Text Compare.
 - Lorem Ipsum Generator.
@@ -90,8 +93,9 @@ Kết quả đầu ra:
 
 Mục tiêu: Thêm các utility dành cho developer.
 
-Trạng thái: Đã có phiên bản đầu cho JSON Formatter, JSON Validator, Base64, URL, Regex, Timestamp,
-Color và Percentage tools.
+Trạng thái: Đã có phiên bản đầu cho JSON Formatter, JSON Validator, Base64, URL, Regex, Markdown,
+HTML Formatter, CSS Minifier, JavaScript Minifier, Unix Timestamp, Timestamp, Color và Percentage
+tools.
 
 Công việc:
 
@@ -101,6 +105,11 @@ Công việc:
 - URL Encoder/Decoder.
 - Timestamp Converter.
 - Regex Tester.
+- Markdown Previewer.
+- HTML Formatter.
+- CSS Minifier.
+- JavaScript Minifier.
+- Unix Timestamp Converter.
 
 Kết quả đầu ra:
 

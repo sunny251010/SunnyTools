@@ -1,0 +1,159 @@
+---
+import { defaultLocale, type Locale } from "../../../i18n/config";
+import { getMessages } from "../../../i18n/messages";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const copy = getMessages(locale).toolUi;
+---
+
+<div class="space-y-5" data-slug-generator data-copied={copy.shared.copied} data-generated={copy.slug.generated}>
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div>
+      <label for="slug-input" class="mb-2 block text-sm font-semibold text-ink">{copy.slug.title}</label>
+      <textarea
+        id="slug-input"
+        class="min-h-48 w-full rounded-md border border-slate-300 bg-slate-50 p-4 text-base leading-7 text-ink shadow-inner focus:border-brand-teal focus:bg-white"
+        data-slug-input></textarea>
+    </div>
+    <div>
+      <label for="slug-output" class="mb-2 block text-sm font-semibold text-ink">{copy.slug.generatedSlug}</label>
+      <textarea
+        id="slug-output"
+        class="min-h-48 w-full rounded-md border border-slate-300 bg-white p-4 font-mono text-sm leading-7 text-ink shadow-inner"
+        readonly
+        data-slug-output></textarea>
+    </div>
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <label class="text-sm font-semibold text-ink">
+      {copy.slug.separator}
+      <select class="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3" data-slug-separator>
+        <option value="-">{copy.slug.hyphen}</option>
+        <option value="_">{copy.slug.underscore}</option>
+      </select>
+    </label>
+    <label class="flex items-end gap-2 text-sm font-semibold text-ink">
+      <input class="mb-3 h-4 w-4 accent-brand-teal" type="checkbox" checked data-slug-lowercase />
+      {copy.slug.lowercase}
+    </label>
+    <label class="flex items-end gap-2 text-sm font-semibold text-ink">
+      <input class="mb-3 h-4 w-4 accent-brand-teal" type="checkbox" data-slug-stopwords />
+      {copy.slug.removeStopWords}
+    </label>
+  </div>
+
+  <div class="flex flex-wrap gap-3">
+    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-slug-copy>{copy.shared.copy}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-slug-download>{copy.shared.downloadTxt}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-slug-example>{copy.shared.loadExample}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-slug-clear>{copy.shared.clear}</button>
+  </div>
+  <p class="text-sm font-medium text-emerald-700" role="status" data-slug-status></p>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-slug-generator]");
+  const input = root?.querySelector<HTMLTextAreaElement>("[data-slug-input]");
+  const output = root?.querySelector<HTMLTextAreaElement>("[data-slug-output]");
+  const separatorInput = root?.querySelector<HTMLSelectElement>("[data-slug-separator]");
+  const lowercaseInput = root?.querySelector<HTMLInputElement>("[data-slug-lowercase]");
+  const stopWordsInput = root?.querySelector<HTMLInputElement>("[data-slug-stopwords]");
+  const status = root?.querySelector<HTMLElement>("[data-slug-status]");
+  const copied = root?.dataset.copied ?? "Copied.";
+  const generated = root?.dataset.generated ?? "Slug generated.";
+  const stopWords = new Set([
+    "a",
+    "an",
+    "and",
+    "are",
+    "as",
+    "at",
+    "be",
+    "by",
+    "for",
+    "from",
+    "in",
+    "is",
+    "of",
+    "on",
+    "or",
+    "the",
+    "to",
+    "with",
+    "cua",
+    "cho",
+    "la",
+    "mot",
+    "nhung",
+    "va",
+    "ve",
+    "voi"
+  ]);
+
+  const downloadText = (filename: string, text: string): void => {
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
+
+  const normalizeVietnamese = (value: string): string =>
+    value
+      .replace(/[đĐ]/g, (char) => (char === "Đ" ? "D" : "d"))
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+
+  const generateSlug = (): void => {
+    if (!input || !output || !separatorInput) return;
+
+    const separator = separatorInput.value;
+    let normalized = normalizeVietnamese(input.value)
+      .replace(/['’]/g, "")
+      .replace(/[^A-Za-z0-9]+/g, " ")
+      .trim();
+
+    if (lowercaseInput?.checked) {
+      normalized = normalized.toLowerCase();
+    }
+
+    let words = normalized.split(/\s+/).filter(Boolean);
+    if (stopWordsInput?.checked) {
+      words = words.filter((word) => !stopWords.has(word.toLowerCase()));
+    }
+
+    output.value = words.join(separator);
+    if (status) status.textContent = generated;
+  };
+
+  const clear = (): void => {
+    if (!input || !output || !status) return;
+    input.value = "";
+    output.value = "";
+    status.textContent = "";
+  };
+
+  root?.querySelector<HTMLButtonElement>("[data-slug-copy]")?.addEventListener("click", async () => {
+    if (!output || !status) return;
+    await navigator.clipboard.writeText(output.value);
+    status.textContent = copied;
+  });
+  root?.querySelector<HTMLButtonElement>("[data-slug-download]")?.addEventListener("click", () => {
+    if (output?.value) downloadText("slug.txt", output.value);
+  });
+  root?.querySelector<HTMLButtonElement>("[data-slug-example]")?.addEventListener("click", () => {
+    if (!input) return;
+    input.value = "Tiếng Việt Có Dấu: Hướng Dẫn Tạo Slug SEO Cho Bài Viết";
+    generateSlug();
+  });
+  root?.querySelector<HTMLButtonElement>("[data-slug-clear]")?.addEventListener("click", clear);
+  input?.addEventListener("input", generateSlug);
+  separatorInput?.addEventListener("change", generateSlug);
+  lowercaseInput?.addEventListener("change", generateSlug);
+  stopWordsInput?.addEventListener("change", generateSlug);
+</script>

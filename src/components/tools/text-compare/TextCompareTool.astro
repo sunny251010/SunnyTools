@@ -35,12 +35,26 @@ const copy = getMessages(locale).toolUi;
     </div>
   </div>
 
+  <label class="block max-w-xs text-sm font-semibold text-ink">
+    {copy.textCompare.mode}
+    <select class="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3" data-compare-mode>
+      <option value="line">{copy.textCompare.lineMode}</option>
+      <option value="word">{copy.textCompare.wordMode}</option>
+    </select>
+  </label>
+
   <div class="flex flex-wrap gap-3">
     <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-compare-run>
       {copy.textCompare.compare}
     </button>
     <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-compare-clear>
       {copy.shared.clear}
+    </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-compare-swap>
+      {copy.textCompare.swap}
+    </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-compare-example>
+      {copy.shared.loadExample}
     </button>
   </div>
 
@@ -81,6 +95,7 @@ const copy = getMessages(locale).toolUi;
   const root = document.querySelector<HTMLElement>("[data-text-compare]");
   const original = root?.querySelector<HTMLTextAreaElement>("[data-compare-original]");
   const changed = root?.querySelector<HTMLTextAreaElement>("[data-compare-changed]");
+  const modeInput = root?.querySelector<HTMLSelectElement>("[data-compare-mode]");
   const output = root?.querySelector<HTMLElement>("[data-compare-output]");
   const unchangedCount = root?.querySelector<HTMLElement>("[data-compare-unchanged-count]");
   const addedCount = root?.querySelector<HTMLElement>("[data-compare-added-count]");
@@ -93,6 +108,7 @@ const copy = getMessages(locale).toolUi;
   };
 
   const linesOf = (value: string): string[] => (value.length === 0 ? [] : value.split(/\r?\n/));
+  const wordsOf = (value: string): string[] => (value.length === 0 ? [] : value.match(/\S+/g) ?? []);
 
   const diffLines = (left: string[], right: string[]): DiffRow[] => {
     const matrix = Array.from({ length: left.length + 1 }, () => Array(right.length + 1).fill(0) as number[]);
@@ -151,7 +167,8 @@ const copy = getMessages(locale).toolUi;
   const compare = (): void => {
     if (!original || !changed || !output || !unchangedCount || !addedCount || !removedCount) return;
 
-    const rows = diffLines(linesOf(original.value), linesOf(changed.value));
+    const tokenizer = modeInput?.value === "word" ? wordsOf : linesOf;
+    const rows = diffLines(tokenizer(original.value), tokenizer(changed.value));
     const counts = rows.reduce(
       (total, row) => {
         total[row.kind] += 1;
@@ -188,7 +205,19 @@ const copy = getMessages(locale).toolUi;
 
   root?.querySelector<HTMLButtonElement>("[data-compare-run]")?.addEventListener("click", compare);
   root?.querySelector<HTMLButtonElement>("[data-compare-clear]")?.addEventListener("click", clear);
+  root?.querySelector<HTMLButtonElement>("[data-compare-swap]")?.addEventListener("click", () => {
+    if (!original || !changed) return;
+    [original.value, changed.value] = [changed.value, original.value];
+    compare();
+  });
+  root?.querySelector<HTMLButtonElement>("[data-compare-example]")?.addEventListener("click", () => {
+    if (!original || !changed) return;
+    original.value = "SunnyTools formats JSON\nIt counts words\nIt runs locally";
+    changed.value = "SunnyTools formats JSON\nIt compares text\nIt runs locally";
+    compare();
+  });
   original?.addEventListener("input", compare);
   changed?.addEventListener("input", compare);
+  modeInput?.addEventListener("change", compare);
   compare();
 </script>

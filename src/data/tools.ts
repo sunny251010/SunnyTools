@@ -107,6 +107,28 @@ const toolRecords: ToolRecord[] = [
     }
   },
   {
+    id: "slug-generator",
+    slug: "slug-generator",
+    categoryId: "text-tools",
+    icon: "SL",
+    popular: true,
+    status: "active",
+    text: {
+      en: {
+        name: "Slug Generator",
+        shortDescription: "Create SEO-friendly slugs from titles and Vietnamese text.",
+        description: "Generate clean URL slugs locally with separator, lowercase, and stop-word options.",
+        keywords: ["slug generator", "seo slug", "url slug", "vietnamese slug"]
+      },
+      vi: {
+        name: "Tạo Đường Dẫn Slug",
+        shortDescription: "Tạo slug thân thiện SEO từ tiêu đề và tiếng Việt có dấu.",
+        description: "Tạo URL slug sạch ngay trong trình duyệt với tùy chọn ký tự phân cách, chữ thường và từ thừa.",
+        keywords: ["tạo slug", "seo slug", "đường dẫn slug", "slug tiếng việt"]
+      }
+    }
+  },
+  {
     id: "sort-lines",
     slug: "sort-lines",
     categoryId: "text-tools",
@@ -361,6 +383,112 @@ const toolRecords: ToolRecord[] = [
         shortDescription: "Thử biểu thức chính quy JavaScript và xem các kết quả khớp.",
         description: "Kiểm tra pattern regex cục bộ với flags, highlight match và captured groups.",
         keywords: ["regex", "biểu thức chính quy", "pattern", "lập trình"]
+      }
+    }
+  },
+  {
+    id: "markdown-previewer",
+    slug: "markdown-previewer",
+    categoryId: "developer-tools",
+    icon: "MD",
+    featured: true,
+    status: "active",
+    text: {
+      en: {
+        name: "Markdown Previewer",
+        shortDescription: "Preview Markdown as sanitized HTML in your browser.",
+        description: "Write Markdown, preview common syntax, and copy the generated safe HTML locally.",
+        keywords: ["markdown preview", "markdown to html", "preview markdown", "developer"]
+      },
+      vi: {
+        name: "Xem Trước Markdown",
+        shortDescription: "Xem trước Markdown dưới dạng HTML đã sanitize trong trình duyệt.",
+        description: "Viết Markdown, xem trước cú pháp phổ biến và sao chép HTML an toàn được tạo cục bộ.",
+        keywords: ["xem trước markdown", "markdown sang html", "preview markdown", "lập trình"]
+      }
+    }
+  },
+  {
+    id: "html-formatter",
+    slug: "html-formatter",
+    categoryId: "developer-tools",
+    icon: "<>",
+    status: "active",
+    text: {
+      en: {
+        name: "HTML Formatter",
+        shortDescription: "Format messy HTML into readable indented markup.",
+        description: "Beautify HTML snippets locally with spaces or tabs without sending markup to a server.",
+        keywords: ["html formatter", "beautify html", "format html", "developer"]
+      },
+      vi: {
+        name: "Định Dạng HTML",
+        shortDescription: "Định dạng HTML lộn xộn thành markup dễ đọc.",
+        description: "Làm đẹp đoạn HTML cục bộ với spaces hoặc tabs mà không gửi markup lên máy chủ.",
+        keywords: ["định dạng html", "format html", "làm đẹp html", "lập trình"]
+      }
+    }
+  },
+  {
+    id: "css-minifier",
+    slug: "css-minifier",
+    categoryId: "developer-tools",
+    icon: "CSS",
+    status: "active",
+    text: {
+      en: {
+        name: "CSS Minifier",
+        shortDescription: "Minify CSS and compare size savings.",
+        description: "Compress CSS snippets locally, review byte savings, and download a .min.css file.",
+        keywords: ["css minifier", "minify css", "compress css", "developer"]
+      },
+      vi: {
+        name: "Thu Gọn CSS",
+        shortDescription: "Minify CSS và xem dung lượng giảm được.",
+        description: "Nén CSS cục bộ, xem số byte tiết kiệm và tải file .min.css.",
+        keywords: ["thu gọn css", "minify css", "nén css", "lập trình"]
+      }
+    }
+  },
+  {
+    id: "javascript-minifier",
+    slug: "javascript-minifier",
+    categoryId: "developer-tools",
+    icon: "JS",
+    status: "active",
+    text: {
+      en: {
+        name: "JavaScript Minifier",
+        shortDescription: "Minify JavaScript without executing user code.",
+        description: "Compress JavaScript locally, optionally keep comments, and download a .min.js file.",
+        keywords: ["javascript minifier", "minify js", "compress javascript", "developer"]
+      },
+      vi: {
+        name: "Thu Gọn JavaScript",
+        shortDescription: "Minify JavaScript mà không thực thi code người dùng.",
+        description: "Nén JavaScript cục bộ, tùy chọn giữ comment và tải file .min.js.",
+        keywords: ["thu gọn javascript", "minify js", "nén javascript", "lập trình"]
+      }
+    }
+  },
+  {
+    id: "unix-timestamp-converter",
+    slug: "unix-timestamp-converter",
+    categoryId: "developer-tools",
+    icon: "UT",
+    status: "active",
+    text: {
+      en: {
+        name: "Unix Timestamp Converter",
+        shortDescription: "Convert Unix timestamps to dates and dates back to Unix time.",
+        description: "Translate seconds, milliseconds, UTC, local time, and ISO values directly in the browser.",
+        keywords: ["unix timestamp", "timestamp converter", "epoch time", "developer"]
+      },
+      vi: {
+        name: "Chuyển Đổi Unix Timestamp",
+        shortDescription: "Chuyển Unix timestamp sang ngày giờ và ngược lại.",
+        description: "Chuyển giây, mili giây, UTC, giờ local và ISO ngay trong trình duyệt.",
+        keywords: ["unix timestamp", "chuyển timestamp", "epoch time", "lập trình"]
       }
     }
   },

@@ -4,9 +4,13 @@ import Base64EncoderDecoderTool from "../tools/base64-encoder-decoder/Base64Enco
 import CaseConverterTool from "../tools/case-converter/CaseConverterTool.astro";
 import CharacterCounterTool from "../tools/character-counter/CharacterCounterTool.astro";
 import ColorConverterTool from "../tools/color-converter/ColorConverterTool.astro";
+import CssMinifierTool from "../tools/css-minifier/CssMinifierTool.astro";
+import HtmlFormatterTool from "../tools/html-formatter/HtmlFormatterTool.astro";
+import JavaScriptMinifierTool from "../tools/javascript-minifier/JavaScriptMinifierTool.astro";
 import JsonFormatterTool from "../tools/json-formatter/JsonFormatterTool.astro";
 import JsonValidatorTool from "../tools/json-validator/JsonValidatorTool.astro";
 import LoremIpsumGeneratorTool from "../tools/lorem-ipsum-generator/LoremIpsumGeneratorTool.astro";
+import MarkdownPreviewerTool from "../tools/markdown-previewer/MarkdownPreviewerTool.astro";
 import PasswordGeneratorTool from "../tools/password-generator/PasswordGeneratorTool.astro";
 import PercentageCalculatorTool from "../tools/percentage-calculator/PercentageCalculatorTool.astro";
 import QrCodeGeneratorTool from "../tools/qr-code-generator/QrCodeGeneratorTool.astro";
@@ -16,9 +20,11 @@ import RemoveDuplicateLinesTool from "../tools/remove-duplicate-lines/RemoveDupl
 import SortLinesTool from "../tools/sort-lines/SortLinesTool.astro";
 import TextCompareTool from "../tools/text-compare/TextCompareTool.astro";
 import TimestampConverterTool from "../tools/timestamp-converter/TimestampConverterTool.astro";
+import UnixTimestampConverterTool from "../tools/unix-timestamp-converter/UnixTimestampConverterTool.astro";
 import UrlEncoderDecoderTool from "../tools/url-encoder-decoder/UrlEncoderDecoderTool.astro";
 import UuidGeneratorTool from "../tools/uuid-generator/UuidGeneratorTool.astro";
 import WordCounterTool from "../tools/word-counter/WordCounterTool.astro";
+import SlugGeneratorTool from "../tools/slug-generator/SlugGeneratorTool.astro";
 import { getRelatedTools } from "../../data/tools";
 import { getToolContent } from "../../data/toolContent";
 import { defaultLocale, type Locale } from "../../i18n/config";
@@ -35,6 +41,7 @@ const toolComponents = {
   "character-counter": CharacterCounterTool,
   "case-converter": CaseConverterTool,
   "remove-duplicate-lines": RemoveDuplicateLinesTool,
+  "slug-generator": SlugGeneratorTool,
   "sort-lines": SortLinesTool,
   "text-compare": TextCompareTool,
   "lorem-ipsum-generator": LoremIpsumGeneratorTool,
@@ -47,6 +54,11 @@ const toolComponents = {
   "base64-encoder-decoder": Base64EncoderDecoderTool,
   "url-encoder-decoder": UrlEncoderDecoderTool,
   "regex-tester": RegexTesterTool,
+  "markdown-previewer": MarkdownPreviewerTool,
+  "html-formatter": HtmlFormatterTool,
+  "css-minifier": CssMinifierTool,
+  "javascript-minifier": JavaScriptMinifierTool,
+  "unix-timestamp-converter": UnixTimestampConverterTool,
   "timestamp-converter": TimestampConverterTool,
   "color-converter": ColorConverterTool,
   "percentage-calculator": PercentageCalculatorTool

@@ -1,0 +1,134 @@
+---
+import { defaultLocale, type Locale } from "../../../i18n/config";
+import { getMessages } from "../../../i18n/messages";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const copy = getMessages(locale).toolUi;
+---
+
+<div class="space-y-5" data-css-minifier data-copied={copy.shared.copied} data-minified={copy.minifier.minifiedStatus} data-invalid={copy.minifier.invalidCss}>
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div>
+      <label for="css-minify-input" class="mb-2 block text-sm font-semibold text-ink">{copy.minifier.source}</label>
+      <textarea id="css-minify-input" class="min-h-80 w-full rounded-md border border-slate-300 bg-slate-50 p-4 font-mono text-sm leading-6 text-ink shadow-inner focus:border-brand-teal focus:bg-white" data-css-input></textarea>
+    </div>
+    <div>
+      <label for="css-minify-output" class="mb-2 block text-sm font-semibold text-ink">{copy.minifier.minified}</label>
+      <textarea id="css-minify-output" class="min-h-80 w-full rounded-md border border-slate-300 bg-white p-4 font-mono text-sm leading-6 text-ink shadow-inner" readonly data-css-output></textarea>
+    </div>
+  </div>
+  <div class="grid gap-3 sm:grid-cols-3">
+    <div class="rounded-md border border-slate-200 bg-slate-50 p-3"><p class="text-xs font-semibold uppercase text-slate-500">{copy.minifier.before}</p><p class="mt-1 text-2xl font-semibold text-ink" data-css-before>0 B</p></div>
+    <div class="rounded-md border border-slate-200 bg-slate-50 p-3"><p class="text-xs font-semibold uppercase text-slate-500">{copy.minifier.after}</p><p class="mt-1 text-2xl font-semibold text-ink" data-css-after>0 B</p></div>
+    <div class="rounded-md border border-slate-200 bg-slate-50 p-3"><p class="text-xs font-semibold uppercase text-slate-500">{copy.minifier.saved}</p><p class="mt-1 text-2xl font-semibold text-ink" data-css-saved>0%</p></div>
+  </div>
+  <div class="flex flex-wrap gap-3">
+    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-css-run>{copy.json.minify}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-css-copy>{copy.shared.copy}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-css-download>{copy.shared.downloadCss}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-css-example>{copy.shared.loadExample}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-css-clear>{copy.shared.clear}</button>
+  </div>
+  <p class="text-sm font-medium" role="status" data-css-status></p>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-css-minifier]");
+  const input = root?.querySelector<HTMLTextAreaElement>("[data-css-input]");
+  const output = root?.querySelector<HTMLTextAreaElement>("[data-css-output]");
+  const beforeText = root?.querySelector<HTMLElement>("[data-css-before]");
+  const afterText = root?.querySelector<HTMLElement>("[data-css-after]");
+  const savedText = root?.querySelector<HTMLElement>("[data-css-saved]");
+  const status = root?.querySelector<HTMLElement>("[data-css-status]");
+  const copied = root?.dataset.copied ?? "Copied.";
+  const minified = root?.dataset.minified ?? "Minified locally.";
+  const invalid = root?.dataset.invalid ?? "CSS has unmatched braces or unfinished strings.";
+
+  const size = (value: string): number => new Blob([value]).size;
+  const formatBytes = (value: number): string => `${value} B`;
+
+  const validate = (css: string): boolean => {
+    let braces = 0;
+    let quote = "";
+    for (let index = 0; index < css.length; index += 1) {
+      const char = css[index];
+      const previous = css[index - 1];
+      if (quote) {
+        if (char === quote && previous !== "\\") quote = "";
+        continue;
+      }
+      if (char === '"' || char === "'") quote = char;
+      if (char === "{") braces += 1;
+      if (char === "}") braces -= 1;
+      if (braces < 0) return false;
+    }
+    return braces === 0 && quote === "";
+  };
+
+  const minify = (css: string): string =>
+    css
+      .replace(/\/\*[\s\S]*?\*\//g, "")
+      .replace(/\s+/g, " ")
+      .replace(/\s*([{}:;,>+~])\s*/g, "$1")
+      .replace(/;}/g, "}")
+      .trim();
+
+  const updateStats = (before: string, after: string): void => {
+    if (!beforeText || !afterText || !savedText) return;
+    const beforeSize = size(before);
+    const afterSize = size(after);
+    const saved = beforeSize > 0 ? Math.max(0, Math.round(((beforeSize - afterSize) / beforeSize) * 100)) : 0;
+    beforeText.textContent = formatBytes(beforeSize);
+    afterText.textContent = formatBytes(afterSize);
+    savedText.textContent = `${saved}%`;
+  };
+
+  const run = (): void => {
+    if (!input || !output || !status) return;
+    if (!validate(input.value)) {
+      status.className = "text-sm font-medium text-rose-700";
+      status.textContent = invalid;
+      output.value = "";
+      updateStats(input.value, "");
+      return;
+    }
+    output.value = minify(input.value);
+    updateStats(input.value, output.value);
+    status.className = "text-sm font-medium text-emerald-700";
+    status.textContent = minified;
+  };
+
+  const downloadText = (filename: string, text: string): void => {
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(new Blob([text], { type: "text/css;charset=utf-8" }));
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
+
+  root?.querySelector<HTMLButtonElement>("[data-css-run]")?.addEventListener("click", run);
+  root?.querySelector<HTMLButtonElement>("[data-css-copy]")?.addEventListener("click", async () => {
+    if (!output || !status) return;
+    await navigator.clipboard.writeText(output.value);
+    status.textContent = copied;
+  });
+  root?.querySelector<HTMLButtonElement>("[data-css-download]")?.addEventListener("click", () => {
+    if (output?.value) downloadText("styles.min.css", output.value);
+  });
+  root?.querySelector<HTMLButtonElement>("[data-css-example]")?.addEventListener("click", () => {
+    if (!input) return;
+    input.value = "/* SunnyTools */\n.card {\n  color: #14213d;\n  padding: 16px;\n}\n.card:hover {\n  color: #0f766e;\n}";
+    run();
+  });
+  root?.querySelector<HTMLButtonElement>("[data-css-clear]")?.addEventListener("click", () => {
+    if (!input || !output || !status) return;
+    input.value = "";
+    output.value = "";
+    status.textContent = "";
+    updateStats("", "");
+  });
+</script>

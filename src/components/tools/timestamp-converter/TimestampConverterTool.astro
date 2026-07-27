@@ -17,7 +17,7 @@ const results = [
 ];
 ---
 
-<div class="space-y-5" data-timestamp-tool data-invalid={copy.timestamp.invalid} data-locale={locale}>
+<div class="space-y-5" data-timestamp-tool data-invalid={copy.timestamp.invalid} data-locale={locale} data-copied={copy.shared.copied}>
   <div class="grid gap-4 lg:grid-cols-2">
     <label class="text-sm font-semibold text-ink">
       {copy.timestamp.unix}
@@ -32,12 +32,19 @@ const results = [
     <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-timestamp-from-unix>{copy.timestamp.convertTimestamp}</button>
     <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-timestamp-from-date>{copy.timestamp.convertDate}</button>
     <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-timestamp-now>{copy.timestamp.currentTime}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-timestamp-example>{copy.shared.loadExample}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-timestamp-clear>{copy.shared.clear}</button>
   </div>
   <dl class="grid gap-3 sm:grid-cols-2">
     {
       results.map(([key, label]) => (
         <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
-          <dt class="text-sm font-medium text-slate-600">{label}</dt>
+          <dt class="flex items-center justify-between gap-3 text-sm font-medium text-slate-600">
+            <span>{label}</span>
+            <button type="button" class="rounded-md border border-slate-200 bg-white px-2 py-1 text-xs font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-timestamp-copy={key}>
+              {copy.shared.copy}
+            </button>
+          </dt>
           <dd class="mt-2 break-words font-mono text-sm font-semibold text-ink" data-timestamp-result={key}>-</dd>
         </div>
       ))
@@ -52,7 +59,9 @@ const results = [
   const dateInput = root?.querySelector<HTMLInputElement>("[data-timestamp-date]");
   const error = root?.querySelector<HTMLElement>("[data-timestamp-error]");
   const invalid = root?.dataset.invalid ?? "Enter a valid timestamp or date.";
+  const copied = root?.dataset.copied ?? "Copied.";
   const locale = root?.dataset.locale === "vi" ? "vi-VN" : undefined;
+  const resultKeys = ["unixSeconds", "unixMilliseconds", "iso", "utc", "local"];
 
   const setResult = (key: string, value: string): void => {
     const target = root?.querySelector<HTMLElement>(`[data-timestamp-result="${key}"]`);
@@ -62,10 +71,12 @@ const results = [
   const render = (date: Date): void => {
     if (!error) return;
     if (Number.isNaN(date.getTime())) {
+      error.className = "text-sm font-medium text-rose-700";
       error.textContent = invalid;
       return;
     }
 
+    error.className = "text-sm font-medium text-rose-700";
     error.textContent = "";
     setResult("unixSeconds", String(Math.floor(date.getTime() / 1000)));
     setResult("unixMilliseconds", String(date.getTime()));
@@ -93,8 +104,34 @@ const results = [
     render(now);
   };
 
+  const loadExample = (): void => {
+    if (unixInput) unixInput.value = "1710000000";
+    render(new Date(1710000000 * 1000));
+  };
+
+  const clear = (): void => {
+    if (unixInput) unixInput.value = "";
+    if (dateInput) dateInput.value = "";
+    if (error) error.textContent = "";
+    resultKeys.forEach((key) => setResult(key, "-"));
+  };
+
   root?.querySelector<HTMLButtonElement>("[data-timestamp-from-unix]")?.addEventListener("click", fromUnix);
   root?.querySelector<HTMLButtonElement>("[data-timestamp-from-date]")?.addEventListener("click", fromDate);
   root?.querySelector<HTMLButtonElement>("[data-timestamp-now]")?.addEventListener("click", useNow);
+  root?.querySelector<HTMLButtonElement>("[data-timestamp-example]")?.addEventListener("click", loadExample);
+  root?.querySelector<HTMLButtonElement>("[data-timestamp-clear]")?.addEventListener("click", clear);
+  root?.querySelectorAll<HTMLButtonElement>("[data-timestamp-copy]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const key = button.dataset.timestampCopy;
+      const value = key ? root?.querySelector<HTMLElement>(`[data-timestamp-result="${key}"]`)?.textContent : "";
+      if (!value || value === "-") return;
+      await navigator.clipboard.writeText(value);
+      if (error) {
+        error.className = "text-sm font-medium text-emerald-700";
+        error.textContent = copied;
+      }
+    });
+  });
   useNow();
 </script>
