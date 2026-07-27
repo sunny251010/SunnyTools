@@ -92,6 +92,84 @@ const contentBySlug: Record<string, LocalizedToolContent> = {
       ]
     }
   },
+  "remove-duplicate-lines": {
+    en: {
+      intro: "Remove Duplicate Lines cleans repeated lines from pasted lists, keyword sets, logs, and notes.",
+      howToUse: "Paste text, choose whether to trim lines or match case, then copy the unique result.",
+      howItWorks:
+        "The browser reads each line in order, builds a local set of seen values, and keeps the first matching line.",
+      privacy: "Your text is processed locally and is never uploaded.",
+      faqs: [
+        { question: "Does it preserve order?", answer: "Yes. The first occurrence keeps its original position." },
+        { question: "Can it ignore capitalization?", answer: "Yes. Turn off case-sensitive matching." },
+        { question: "Can empty lines be removed?", answer: "Yes. Use the skip empty lines option." }
+      ]
+    },
+    vi: {
+      intro: "Công cụ Xóa Dòng Trùng Lặp làm sạch các dòng bị lặp trong danh sách, bộ từ khóa, log và ghi chú đã dán.",
+      howToUse: "Dán văn bản, chọn có cắt khoảng trắng hoặc phân biệt hoa thường hay không, sau đó sao chép kết quả duy nhất.",
+      howItWorks:
+        "Trình duyệt đọc từng dòng theo thứ tự, tạo tập giá trị đã gặp cục bộ và giữ lại dòng khớp đầu tiên.",
+      privacy: "Văn bản của bạn được xử lý cục bộ và không bao giờ được upload.",
+      faqs: [
+        { question: "Công cụ có giữ nguyên thứ tự không?", answer: "Có. Lần xuất hiện đầu tiên giữ nguyên vị trí ban đầu." },
+        { question: "Có thể bỏ qua chữ hoa/thường không?", answer: "Có. Tắt tùy chọn phân biệt hoa thường." },
+        { question: "Có thể xóa dòng trống không?", answer: "Có. Bật tùy chọn bỏ qua dòng trống." }
+      ]
+    }
+  },
+  "sort-lines": {
+    en: {
+      intro: "Sort Lines reorders pasted text line by line for lists, IDs, numbers, and simple cleanup tasks.",
+      howToUse: "Paste lines, choose text or numeric sorting, pick ascending or descending order, then copy the output.",
+      howItWorks:
+        "Sorting runs with browser JavaScript. Text mode uses locale-aware comparison, while numeric mode parses line values as numbers.",
+      privacy: "All sorting happens in your browser.",
+      faqs: [
+        { question: "Can it sort numbers?", answer: "Yes. Select numeric mode for number lists." },
+        { question: "Can it remove blanks?", answer: "Yes. Enable skip empty lines before sorting." },
+        { question: "Does it change my original text?", answer: "No. The sorted result is shown separately." }
+      ]
+    },
+    vi: {
+      intro: "Công cụ Sắp Xếp Dòng sắp xếp từng dòng văn bản cho danh sách, ID, số và các tác vụ làm sạch đơn giản.",
+      howToUse: "Dán các dòng, chọn sắp xếp theo văn bản hoặc số, chọn tăng dần hoặc giảm dần, rồi sao chép output.",
+      howItWorks:
+        "Việc sắp xếp chạy bằng JavaScript trong trình duyệt. Chế độ văn bản dùng so sánh theo ngôn ngữ, còn chế độ số parse giá trị dòng thành số.",
+      privacy: "Mọi thao tác sắp xếp diễn ra trong trình duyệt của bạn.",
+      faqs: [
+        { question: "Có sắp xếp số được không?", answer: "Có. Chọn chế độ số cho danh sách số." },
+        { question: "Có bỏ dòng trống được không?", answer: "Có. Bật tùy chọn bỏ qua dòng trống trước khi sắp xếp." },
+        { question: "Input gốc có bị thay đổi không?", answer: "Không. Kết quả đã sắp xếp được hiển thị riêng." }
+      ]
+    }
+  },
+  "text-compare": {
+    en: {
+      intro: "Text Compare highlights line-level differences between two text blocks.",
+      howToUse: "Paste the original text on the left and the changed text on the right, then review the diff summary.",
+      howItWorks:
+        "The browser compares lines with a lightweight longest-common-subsequence pass and labels unchanged, removed, and added lines.",
+      privacy: "Both text blocks stay in your browser.",
+      faqs: [
+        { question: "Does it compare word by word?", answer: "This version focuses on line-level differences." },
+        { question: "Can I compare lists?", answer: "Yes. It works well for simple list changes." },
+        { question: "Is either text saved?", answer: "No. Refreshing the page clears the comparison." }
+      ]
+    },
+    vi: {
+      intro: "Công cụ So Sánh Văn Bản đánh dấu khác biệt theo từng dòng giữa hai khối văn bản.",
+      howToUse: "Dán văn bản gốc bên trái và văn bản đã thay đổi bên phải, rồi xem phần tóm tắt khác biệt.",
+      howItWorks:
+        "Trình duyệt so sánh các dòng bằng thuật toán longest-common-subsequence nhẹ và gắn nhãn dòng giữ nguyên, bị xóa hoặc được thêm.",
+      privacy: "Cả hai khối văn bản đều ở lại trong trình duyệt của bạn.",
+      faqs: [
+        { question: "Công cụ có so sánh từng từ không?", answer: "Phiên bản này tập trung vào khác biệt theo từng dòng." },
+        { question: "Có so sánh danh sách được không?", answer: "Có. Công cụ phù hợp với các thay đổi danh sách đơn giản." },
+        { question: "Văn bản có được lưu không?", answer: "Không. Tải lại trang sẽ xóa phần so sánh." }
+      ]
+    }
+  },
   "lorem-ipsum-generator": {
     en: {
       intro: "Lorem Ipsum Generator creates placeholder copy for mockups, wireframes, and layout tests.",
@@ -189,6 +267,32 @@ const contentBySlug: Record<string, LocalizedToolContent> = {
         { question: "Công cụ tạo UUID phiên bản nào?", answer: "Công cụ tạo UUID version 4." },
         { question: "Có tạo nhiều ID cùng lúc được không?", answer: "Được. Chọn số lượng trước khi tạo." },
         { question: "ID có được gửi đi đâu không?", answer: "Không. Chúng là giá trị cục bộ trong trình duyệt." }
+      ]
+    }
+  },
+  "random-number-generator": {
+    en: {
+      intro: "Random Number Generator creates local random integers or decimals inside a chosen range.",
+      howToUse: "Set minimum, maximum, quantity, decimal places, and whether repeated values are allowed.",
+      howItWorks:
+        "The tool uses browser cryptographic randomness when available and maps random values into your selected range.",
+      privacy: "Generated numbers are created locally and are not sent anywhere.",
+      faqs: [
+        { question: "Can it generate decimals?", answer: "Yes. Increase the decimal places value." },
+        { question: "Can it avoid duplicates?", answer: "Yes for integer ranges large enough to satisfy the requested quantity." },
+        { question: "Is the result stored?", answer: "No. Values only exist in the page." }
+      ]
+    },
+    vi: {
+      intro: "Công cụ Tạo Số Ngẫu Nhiên tạo số nguyên hoặc số thập phân cục bộ trong khoảng bạn chọn.",
+      howToUse: "Đặt giá trị nhỏ nhất, lớn nhất, số lượng, số chữ số thập phân và tùy chọn cho phép lặp.",
+      howItWorks:
+        "Công cụ dùng độ ngẫu nhiên mã hóa của trình duyệt khi có thể và ánh xạ giá trị ngẫu nhiên vào khoảng đã chọn.",
+      privacy: "Các số được tạo cục bộ và không được gửi đi đâu.",
+      faqs: [
+        { question: "Có tạo số thập phân được không?", answer: "Có. Tăng giá trị chữ số thập phân." },
+        { question: "Có tránh số trùng được không?", answer: "Có với khoảng số nguyên đủ lớn cho số lượng yêu cầu." },
+        { question: "Kết quả có được lưu không?", answer: "Không. Giá trị chỉ tồn tại trên trang." }
       ]
     }
   },

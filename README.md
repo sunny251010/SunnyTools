@@ -98,14 +98,14 @@ public/
 
 See `docs/ADD_NEW_TOOL.md` for the full checklist.
 
-## Change the Domain
+## Domain And Contact
 
-Replace the temporary `https://example.com` value in:
+The production domain is currently configured as `https://sunnytools.site` in:
 
 - `astro.config.mjs`
 - `src/utils/seo.ts`
 
-Update the contact email placeholders before production launch.
+The contact email used in public copy is `sunny.contact.251010@gmail.com`.
 
 ## Deployment Notes
 
@@ -146,10 +146,14 @@ Implemented tools:
 - Word Counter
 - Character Counter
 - Case Converter
+- Remove Duplicate Lines
+- Sort Lines
+- Text Compare
 - Lorem Ipsum Generator
 - QR Code Generator
 - Password Generator
 - UUID Generator
+- Random Number Generator
 - JSON Formatter
 - Base64 Encoder/Decoder
 - URL Encoder/Decoder

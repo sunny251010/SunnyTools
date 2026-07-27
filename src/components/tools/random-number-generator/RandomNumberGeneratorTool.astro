@@ -1,0 +1,142 @@
+---
+import { defaultLocale, type Locale } from "../../../i18n/config";
+import { getMessages } from "../../../i18n/messages";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const copy = getMessages(locale).toolUi;
+---
+
+<div
+  class="space-y-5"
+  data-random-number
+  data-copied={copy.shared.copied}
+  data-generated={copy.randomNumber.generated}
+  data-invalid={copy.randomNumber.invalidRange}
+  data-too-many={copy.randomNumber.tooManyUnique}
+>
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+    <label class="text-sm font-semibold text-ink">
+      {copy.randomNumber.minimum}
+      <input class="mt-2 h-11 w-full rounded-md border border-slate-300 px-3" type="number" value="1" step="any" data-random-min />
+    </label>
+    <label class="text-sm font-semibold text-ink">
+      {copy.randomNumber.maximum}
+      <input class="mt-2 h-11 w-full rounded-md border border-slate-300 px-3" type="number" value="100" step="any" data-random-max />
+    </label>
+    <label class="text-sm font-semibold text-ink">
+      {copy.randomNumber.quantity}
+      <input class="mt-2 h-11 w-full rounded-md border border-slate-300 px-3" type="number" min="1" max="1000" value="10" data-random-quantity />
+    </label>
+    <label class="text-sm font-semibold text-ink">
+      {copy.randomNumber.decimals}
+      <input class="mt-2 h-11 w-full rounded-md border border-slate-300 px-3" type="number" min="0" max="8" value="0" data-random-decimals />
+    </label>
+    <label class="flex items-end gap-2 text-sm font-semibold text-ink">
+      <input class="mb-3 h-4 w-4 accent-brand-teal" type="checkbox" checked data-random-repeats />
+      {copy.randomNumber.allowRepeats}
+    </label>
+  </div>
+
+  <div class="flex flex-wrap gap-3">
+    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-random-generate>
+      {copy.shared.generate}
+    </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-random-copy>
+      {copy.shared.copy}
+    </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-random-clear>
+      {copy.shared.clear}
+    </button>
+  </div>
+
+  <textarea class="min-h-72 w-full rounded-md border border-slate-300 bg-slate-50 p-4 font-mono text-sm leading-7 text-ink shadow-inner" readonly data-random-output></textarea>
+  <p class="text-sm font-medium" role="status" data-random-status></p>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-random-number]");
+  const minInput = root?.querySelector<HTMLInputElement>("[data-random-min]");
+  const maxInput = root?.querySelector<HTMLInputElement>("[data-random-max]");
+  const quantityInput = root?.querySelector<HTMLInputElement>("[data-random-quantity]");
+  const decimalsInput = root?.querySelector<HTMLInputElement>("[data-random-decimals]");
+  const repeatsInput = root?.querySelector<HTMLInputElement>("[data-random-repeats]");
+  const output = root?.querySelector<HTMLTextAreaElement>("[data-random-output]");
+  const status = root?.querySelector<HTMLElement>("[data-random-status]");
+  const copied = root?.dataset.copied ?? "Copied.";
+  const generated = root?.dataset.generated ?? "Numbers generated locally.";
+  const invalidRange = root?.dataset.invalid ?? "Enter a valid range.";
+  const tooManyUnique = root?.dataset.tooMany ?? "The range is too small for that many unique integers.";
+
+  const randomUnit = (): number => {
+    const buffer = new Uint32Array(1);
+    crypto.getRandomValues(buffer);
+    return buffer[0] / 4294967296;
+  };
+
+  const randomInteger = (min: number, max: number): number =>
+    Math.floor(randomUnit() * (max - min + 1)) + min;
+
+  const setStatus = (message: string, isError = false): void => {
+    if (!status) return;
+    status.className = `text-sm font-medium ${isError ? "text-rose-700" : "text-emerald-700"}`;
+    status.textContent = message;
+  };
+
+  const generate = (): void => {
+    if (!minInput || !maxInput || !quantityInput || !decimalsInput || !repeatsInput || !output) return;
+
+    const min = Number(minInput.value);
+    const max = Number(maxInput.value);
+    const quantity = Math.min(1000, Math.max(1, Number(quantityInput.value) || 1));
+    const decimals = Math.min(8, Math.max(0, Number(decimalsInput.value) || 0));
+    const scale = 10 ** decimals;
+    const scaledMin = Math.ceil(min * scale);
+    const scaledMax = Math.floor(max * scale);
+    const possibleCount = scaledMax - scaledMin + 1;
+
+    if (!Number.isFinite(min) || !Number.isFinite(max) || min > max || possibleCount <= 0) {
+      output.value = "";
+      setStatus(invalidRange, true);
+      return;
+    }
+
+    if (!repeatsInput.checked && quantity > possibleCount) {
+      output.value = "";
+      setStatus(tooManyUnique, true);
+      return;
+    }
+
+    const values: number[] = [];
+    const seen = new Set<number>();
+
+    while (values.length < quantity) {
+      const value = randomInteger(scaledMin, scaledMax);
+      if (!repeatsInput.checked && seen.has(value)) continue;
+
+      seen.add(value);
+      values.push(value);
+    }
+
+    output.value = values.map((value) => (value / scale).toFixed(decimals)).join("\n");
+    setStatus(generated);
+  };
+
+  const clear = (): void => {
+    if (!output || !status) return;
+    output.value = "";
+    status.textContent = "";
+  };
+
+  root?.querySelector<HTMLButtonElement>("[data-random-generate]")?.addEventListener("click", generate);
+  root?.querySelector<HTMLButtonElement>("[data-random-copy]")?.addEventListener("click", async () => {
+    if (!output) return;
+    await navigator.clipboard.writeText(output.value);
+    setStatus(copied);
+  });
+  root?.querySelector<HTMLButtonElement>("[data-random-clear]")?.addEventListener("click", clear);
+  generate();
+</script>

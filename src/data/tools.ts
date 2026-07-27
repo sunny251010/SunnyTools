@@ -86,6 +86,69 @@ const toolRecords: ToolRecord[] = [
     }
   },
   {
+    id: "remove-duplicate-lines",
+    slug: "remove-duplicate-lines",
+    categoryId: "text-tools",
+    icon: "RD",
+    status: "active",
+    text: {
+      en: {
+        name: "Remove Duplicate Lines",
+        shortDescription: "Remove repeated lines while keeping the first occurrence.",
+        description: "Clean lists, keywords, logs, and pasted text by removing duplicate lines locally.",
+        keywords: ["duplicate lines", "unique lines", "dedupe", "text cleanup"]
+      },
+      vi: {
+        name: "Xóa Dòng Trùng Lặp",
+        shortDescription: "Xóa các dòng bị lặp và giữ lại lần xuất hiện đầu tiên.",
+        description: "Làm sạch danh sách, từ khóa, log và văn bản đã dán bằng cách xóa dòng trùng lặp cục bộ.",
+        keywords: ["dòng trùng", "dòng duy nhất", "lọc trùng", "làm sạch văn bản"]
+      }
+    }
+  },
+  {
+    id: "sort-lines",
+    slug: "sort-lines",
+    categoryId: "text-tools",
+    icon: "AZ",
+    status: "active",
+    text: {
+      en: {
+        name: "Sort Lines",
+        shortDescription: "Sort text lines alphabetically, numerically, ascending, or descending.",
+        description: "Reorder lists and pasted text lines directly in your browser.",
+        keywords: ["sort lines", "alphabetical", "numeric sort", "list cleanup"]
+      },
+      vi: {
+        name: "Sắp Xếp Dòng",
+        shortDescription: "Sắp xếp dòng theo chữ cái, số, tăng dần hoặc giảm dần.",
+        description: "Sắp xếp lại danh sách và các dòng văn bản đã dán ngay trong trình duyệt.",
+        keywords: ["sắp xếp dòng", "theo chữ cái", "sắp xếp số", "làm sạch danh sách"]
+      }
+    }
+  },
+  {
+    id: "text-compare",
+    slug: "text-compare",
+    categoryId: "text-tools",
+    icon: "TC",
+    status: "active",
+    text: {
+      en: {
+        name: "Text Compare",
+        shortDescription: "Compare two text blocks and highlight added or removed lines.",
+        description: "Check differences between drafts, lists, snippets, and notes without uploading text.",
+        keywords: ["text compare", "diff", "compare text", "line changes"]
+      },
+      vi: {
+        name: "So Sánh Văn Bản",
+        shortDescription: "So sánh hai khối văn bản và đánh dấu dòng thêm hoặc xóa.",
+        description: "Kiểm tra khác biệt giữa bản nháp, danh sách, snippet và ghi chú mà không upload văn bản.",
+        keywords: ["so sánh văn bản", "diff", "khác biệt", "thay đổi dòng"]
+      }
+    }
+  },
+  {
     id: "lorem-ipsum-generator",
     slug: "lorem-ipsum-generator",
     categoryId: "generator-tools",
@@ -168,6 +231,28 @@ const toolRecords: ToolRecord[] = [
         shortDescription: "Tạo UUID cho database, test và ứng dụng.",
         description: "Tạo UUID nhanh bằng công cụ nhẹ chạy trên trình duyệt.",
         keywords: ["uuid", "guid", "id", "ngẫu nhiên"]
+      }
+    }
+  },
+  {
+    id: "random-number-generator",
+    slug: "random-number-generator",
+    categoryId: "generator-tools",
+    icon: "RN",
+    featured: true,
+    status: "active",
+    text: {
+      en: {
+        name: "Random Number Generator",
+        shortDescription: "Generate random integers or decimals within a custom range.",
+        description: "Create random numbers locally for tests, samples, giveaways, and quick decisions.",
+        keywords: ["random number", "integer", "decimal", "generator"]
+      },
+      vi: {
+        name: "Tạo Số Ngẫu Nhiên",
+        shortDescription: "Tạo số nguyên hoặc số thập phân ngẫu nhiên trong khoảng tùy chỉnh.",
+        description: "Tạo số ngẫu nhiên cục bộ cho test, dữ liệu mẫu, bốc thăm và quyết định nhanh.",
+        keywords: ["số ngẫu nhiên", "số nguyên", "số thập phân", "tạo số"]
       }
     }
   },

@@ -63,8 +63,7 @@ thể được tách thành island riêng mà không làm đổi kiến trúc ch
 ## SEO
 
 `BaseLayout.astro` render `SEO.astro`, và `SEO.astro` lấy default từ `src/utils/seo.ts`. Mỗi page
-truyền title, description và path riêng. Domain tạm thời là `https://example.com`; cần đổi thành
-domain thật trước khi launch chính thức.
+truyền title, description và path riêng. Domain production hiện tại là `https://sunnytools.site`.
 
 ## Quảng Cáo
 

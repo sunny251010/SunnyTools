@@ -1,0 +1,194 @@
+---
+import { defaultLocale, type Locale } from "../../../i18n/config";
+import { getMessages } from "../../../i18n/messages";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const copy = getMessages(locale).toolUi;
+---
+
+<div
+  class="space-y-5"
+  data-text-compare
+  data-unchanged={copy.textCompare.unchanged}
+  data-added={copy.textCompare.added}
+  data-removed={copy.textCompare.removed}
+  data-none={copy.textCompare.noDifference}
+>
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div>
+      <label for="text-compare-original" class="mb-2 block text-sm font-semibold text-ink">{copy.textCompare.original}</label>
+      <textarea
+        id="text-compare-original"
+        class="min-h-72 w-full rounded-md border border-slate-300 bg-slate-50 p-4 font-mono text-sm leading-7 text-ink shadow-inner focus:border-brand-teal focus:bg-white"
+        data-compare-original></textarea>
+    </div>
+    <div>
+      <label for="text-compare-changed" class="mb-2 block text-sm font-semibold text-ink">{copy.textCompare.changed}</label>
+      <textarea
+        id="text-compare-changed"
+        class="min-h-72 w-full rounded-md border border-slate-300 bg-slate-50 p-4 font-mono text-sm leading-7 text-ink shadow-inner focus:border-brand-teal focus:bg-white"
+        data-compare-changed></textarea>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-3">
+    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-compare-run>
+      {copy.textCompare.compare}
+    </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-compare-clear>
+      {copy.shared.clear}
+    </button>
+  </div>
+
+  <section class="rounded-md border border-slate-200 bg-white p-4">
+    <h2 class="text-base font-semibold text-ink">{copy.textCompare.summary}</h2>
+    <div class="mt-3 grid gap-3 sm:grid-cols-3">
+      <div class="rounded-md bg-slate-50 p-3">
+        <p class="text-xs font-semibold uppercase text-slate-500">{copy.textCompare.unchanged}</p>
+        <p class="mt-1 text-2xl font-semibold text-ink" data-compare-unchanged-count>0</p>
+      </div>
+      <div class="rounded-md bg-emerald-50 p-3">
+        <p class="text-xs font-semibold uppercase text-emerald-700">{copy.textCompare.added}</p>
+        <p class="mt-1 text-2xl font-semibold text-emerald-800" data-compare-added-count>0</p>
+      </div>
+      <div class="rounded-md bg-rose-50 p-3">
+        <p class="text-xs font-semibold uppercase text-rose-700">{copy.textCompare.removed}</p>
+        <p class="mt-1 text-2xl font-semibold text-rose-800" data-compare-removed-count>0</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="overflow-hidden rounded-md border border-slate-200 bg-white">
+    <div class="grid grid-cols-[88px_minmax(0,1fr)] border-b border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold uppercase text-slate-500">
+      <span>{copy.textCompare.type}</span>
+      <span>{copy.textCompare.line}</span>
+    </div>
+    <div class="max-h-[32rem] overflow-auto font-mono text-sm leading-6" data-compare-output></div>
+  </div>
+</div>
+
+<script>
+  type DiffKind = "same" | "added" | "removed";
+  interface DiffRow {
+    kind: DiffKind;
+    value: string;
+  }
+
+  const root = document.querySelector<HTMLElement>("[data-text-compare]");
+  const original = root?.querySelector<HTMLTextAreaElement>("[data-compare-original]");
+  const changed = root?.querySelector<HTMLTextAreaElement>("[data-compare-changed]");
+  const output = root?.querySelector<HTMLElement>("[data-compare-output]");
+  const unchangedCount = root?.querySelector<HTMLElement>("[data-compare-unchanged-count]");
+  const addedCount = root?.querySelector<HTMLElement>("[data-compare-added-count]");
+  const removedCount = root?.querySelector<HTMLElement>("[data-compare-removed-count]");
+  const labels = {
+    same: root?.dataset.unchanged ?? "Unchanged",
+    added: root?.dataset.added ?? "Added",
+    removed: root?.dataset.removed ?? "Removed",
+    none: root?.dataset.none ?? "No line differences found."
+  };
+
+  const linesOf = (value: string): string[] => (value.length === 0 ? [] : value.split(/\r?\n/));
+
+  const diffLines = (left: string[], right: string[]): DiffRow[] => {
+    const matrix = Array.from({ length: left.length + 1 }, () => Array(right.length + 1).fill(0) as number[]);
+
+    for (let i = left.length - 1; i >= 0; i -= 1) {
+      for (let j = right.length - 1; j >= 0; j -= 1) {
+        matrix[i][j] = left[i] === right[j] ? matrix[i + 1][j + 1] + 1 : Math.max(matrix[i + 1][j], matrix[i][j + 1]);
+      }
+    }
+
+    const rows: DiffRow[] = [];
+    let i = 0;
+    let j = 0;
+
+    while (i < left.length && j < right.length) {
+      if (left[i] === right[j]) {
+        rows.push({ kind: "same", value: left[i] });
+        i += 1;
+        j += 1;
+      } else if (matrix[i + 1][j] >= matrix[i][j + 1]) {
+        rows.push({ kind: "removed", value: left[i] });
+        i += 1;
+      } else {
+        rows.push({ kind: "added", value: right[j] });
+        j += 1;
+      }
+    }
+
+    while (i < left.length) rows.push({ kind: "removed", value: left[i++] });
+    while (j < right.length) rows.push({ kind: "added", value: right[j++] });
+
+    return rows;
+  };
+
+  const renderRow = (row: DiffRow): HTMLElement => {
+    const item = document.createElement("div");
+    const styles: Record<DiffKind, string> = {
+      same: "grid grid-cols-[88px_minmax(0,1fr)] gap-3 border-b border-slate-100 px-3 py-2 text-slate-700",
+      added: "grid grid-cols-[88px_minmax(0,1fr)] gap-3 border-b border-emerald-100 bg-emerald-50 px-3 py-2 text-emerald-900",
+      removed: "grid grid-cols-[88px_minmax(0,1fr)] gap-3 border-b border-rose-100 bg-rose-50 px-3 py-2 text-rose-900"
+    };
+    item.className = styles[row.kind];
+
+    const kind = document.createElement("span");
+    kind.className = "font-semibold";
+    kind.textContent = row.kind === "same" ? labels.same : labels[row.kind];
+
+    const value = document.createElement("span");
+    value.className = "min-w-0 whitespace-pre-wrap break-words";
+    value.textContent = row.value || " ";
+
+    item.append(kind, value);
+    return item;
+  };
+
+  const compare = (): void => {
+    if (!original || !changed || !output || !unchangedCount || !addedCount || !removedCount) return;
+
+    const rows = diffLines(linesOf(original.value), linesOf(changed.value));
+    const counts = rows.reduce(
+      (total, row) => {
+        total[row.kind] += 1;
+        return total;
+      },
+      { same: 0, added: 0, removed: 0 }
+    );
+
+    unchangedCount.textContent = String(counts.same);
+    addedCount.textContent = String(counts.added);
+    removedCount.textContent = String(counts.removed);
+    output.textContent = "";
+
+    if (rows.length === 0 || (counts.added === 0 && counts.removed === 0)) {
+      const empty = document.createElement("p");
+      empty.className = "px-3 py-4 font-sans text-sm text-slate-600";
+      empty.textContent = labels.none;
+      output.append(empty);
+      return;
+    }
+
+    rows.forEach((row) => output.append(renderRow(row)));
+  };
+
+  const clear = (): void => {
+    if (!original || !changed || !output || !unchangedCount || !addedCount || !removedCount) return;
+    original.value = "";
+    changed.value = "";
+    unchangedCount.textContent = "0";
+    addedCount.textContent = "0";
+    removedCount.textContent = "0";
+    output.textContent = "";
+  };
+
+  root?.querySelector<HTMLButtonElement>("[data-compare-run]")?.addEventListener("click", compare);
+  root?.querySelector<HTMLButtonElement>("[data-compare-clear]")?.addEventListener("click", clear);
+  original?.addEventListener("input", compare);
+  changed?.addEventListener("input", compare);
+  compare();
+</script>

@@ -111,7 +111,7 @@ export const messages = {
         eyebrow: "Contact",
         heading: "Contact SunnyTools",
         paragraphs: [
-          "For feedback, bug reports, or new tool ideas, send a note to hello@example.com. Replace this address before launch."
+          "For feedback, bug reports, or new tool ideas, send a note to sunny.contact.251010@gmail.com."
         ],
         sections: [
           {
@@ -135,7 +135,7 @@ export const messages = {
           },
           {
             title: "Contact",
-            body: "Questions about privacy can be sent to hello@example.com. Replace this address before launch."
+            body: "Questions about privacy can be sent to sunny.contact.251010@gmail.com."
           }
         ]
       },
@@ -202,6 +202,39 @@ export const messages = {
         snake: "snake_case",
         camel: "camelCase"
       },
+      duplicateLines: {
+        trimLines: "Trim lines",
+        caseSensitive: "Case sensitive",
+        skipEmpty: "Skip empty lines",
+        uniqueLines: "Unique lines",
+        duplicatesRemoved: "Duplicates removed",
+        inputLines: "Input lines",
+        processed: "Duplicates removed."
+      },
+      sortLines: {
+        sortType: "Sort type",
+        text: "Text",
+        numeric: "Numeric",
+        direction: "Direction",
+        ascending: "Ascending",
+        descending: "Descending",
+        trimLines: "Trim lines",
+        skipEmpty: "Skip empty lines",
+        uniqueOnly: "Unique only",
+        sorted: "Lines sorted."
+      },
+      textCompare: {
+        original: "Original text",
+        changed: "Changed text",
+        compare: "Compare",
+        unchanged: "Unchanged",
+        added: "Added",
+        removed: "Removed",
+        summary: "Summary",
+        type: "Type",
+        line: "Line",
+        noDifference: "No line differences found."
+      },
       lorem: {
         paragraphs: "Paragraphs",
         sentencesEach: "Sentences each",
@@ -225,6 +258,16 @@ export const messages = {
       },
       uuid: {
         quantity: "Quantity"
+      },
+      randomNumber: {
+        minimum: "Minimum",
+        maximum: "Maximum",
+        quantity: "Quantity",
+        decimals: "Decimals",
+        allowRepeats: "Allow repeats",
+        invalidRange: "Enter a valid range.",
+        tooManyUnique: "The range is too small for that many unique integers.",
+        generated: "Numbers generated locally."
       },
       json: {
         input: "JSON input",
@@ -387,7 +430,7 @@ export const messages = {
         eyebrow: "Liên hệ",
         heading: "Liên hệ SunnyTools",
         paragraphs: [
-          "Nếu bạn muốn gửi phản hồi, báo lỗi hoặc đề xuất công cụ mới, hãy gửi email tới hello@example.com. Địa chỉ này cần được thay trước khi launch."
+          "Nếu bạn muốn gửi phản hồi, báo lỗi hoặc đề xuất công cụ mới, hãy gửi email tới sunny.contact.251010@gmail.com."
         ],
         sections: [
           {
@@ -411,7 +454,7 @@ export const messages = {
           },
           {
             title: "Liên hệ",
-            body: "Câu hỏi về privacy có thể gửi tới hello@example.com. Địa chỉ này cần được thay trước khi launch."
+            body: "Câu hỏi về privacy có thể gửi tới sunny.contact.251010@gmail.com."
           }
         ]
       },
@@ -478,6 +521,39 @@ export const messages = {
         snake: "snake_case",
         camel: "camelCase"
       },
+      duplicateLines: {
+        trimLines: "Cắt khoảng trắng",
+        caseSensitive: "Phân biệt hoa thường",
+        skipEmpty: "Bỏ dòng trống",
+        uniqueLines: "Dòng duy nhất",
+        duplicatesRemoved: "Dòng trùng đã xóa",
+        inputLines: "Dòng đầu vào",
+        processed: "Đã xóa dòng trùng."
+      },
+      sortLines: {
+        sortType: "Kiểu sắp xếp",
+        text: "Văn bản",
+        numeric: "Số",
+        direction: "Thứ tự",
+        ascending: "Tăng dần",
+        descending: "Giảm dần",
+        trimLines: "Cắt khoảng trắng",
+        skipEmpty: "Bỏ dòng trống",
+        uniqueOnly: "Chỉ giữ dòng duy nhất",
+        sorted: "Đã sắp xếp dòng."
+      },
+      textCompare: {
+        original: "Văn bản gốc",
+        changed: "Văn bản đã đổi",
+        compare: "So sánh",
+        unchanged: "Giữ nguyên",
+        added: "Đã thêm",
+        removed: "Đã xóa",
+        summary: "Tóm tắt",
+        type: "Loại",
+        line: "Dòng",
+        noDifference: "Không tìm thấy khác biệt theo dòng."
+      },
       lorem: {
         paragraphs: "Đoạn",
         sentencesEach: "Câu mỗi đoạn",
@@ -501,6 +577,16 @@ export const messages = {
       },
       uuid: {
         quantity: "Số lượng"
+      },
+      randomNumber: {
+        minimum: "Nhỏ nhất",
+        maximum: "Lớn nhất",
+        quantity: "Số lượng",
+        decimals: "Chữ số thập phân",
+        allowRepeats: "Cho phép lặp",
+        invalidRange: "Hãy nhập khoảng hợp lệ.",
+        tooManyUnique: "Khoảng số quá nhỏ cho số lượng số nguyên duy nhất này.",
+        generated: "Số đã được tạo cục bộ."
       },
       json: {
         input: "Nhập JSON",

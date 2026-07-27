@@ -9,6 +9,10 @@ import LoremIpsumGeneratorTool from "../tools/lorem-ipsum-generator/LoremIpsumGe
 import PasswordGeneratorTool from "../tools/password-generator/PasswordGeneratorTool.astro";
 import PercentageCalculatorTool from "../tools/percentage-calculator/PercentageCalculatorTool.astro";
 import QrCodeGeneratorTool from "../tools/qr-code-generator/QrCodeGeneratorTool.astro";
+import RandomNumberGeneratorTool from "../tools/random-number-generator/RandomNumberGeneratorTool.astro";
+import RemoveDuplicateLinesTool from "../tools/remove-duplicate-lines/RemoveDuplicateLinesTool.astro";
+import SortLinesTool from "../tools/sort-lines/SortLinesTool.astro";
+import TextCompareTool from "../tools/text-compare/TextCompareTool.astro";
 import TimestampConverterTool from "../tools/timestamp-converter/TimestampConverterTool.astro";
 import UrlEncoderDecoderTool from "../tools/url-encoder-decoder/UrlEncoderDecoderTool.astro";
 import UuidGeneratorTool from "../tools/uuid-generator/UuidGeneratorTool.astro";
@@ -28,10 +32,14 @@ const toolComponents = {
   "word-counter": WordCounterTool,
   "character-counter": CharacterCounterTool,
   "case-converter": CaseConverterTool,
+  "remove-duplicate-lines": RemoveDuplicateLinesTool,
+  "sort-lines": SortLinesTool,
+  "text-compare": TextCompareTool,
   "lorem-ipsum-generator": LoremIpsumGeneratorTool,
   "qr-code-generator": QrCodeGeneratorTool,
   "password-generator": PasswordGeneratorTool,
   "uuid-generator": UuidGeneratorTool,
+  "random-number-generator": RandomNumberGeneratorTool,
   "json-formatter": JsonFormatterTool,
   "base64-encoder-decoder": Base64EncoderDecoderTool,
   "url-encoder-decoder": UrlEncoderDecoderTool,

@@ -38,8 +38,8 @@ Kết quả đầu ra:
 
 Mục tiêu: Mở rộng nhóm tool xử lý văn bản.
 
-Trạng thái: Đã có phiên bản đầu cho các tool chính. Bước tiếp theo là tăng chiều sâu nội dung, thêm
-ví dụ và xử lý edge case tốt hơn.
+Trạng thái: Đã có phiên bản đầu cho toàn bộ danh sách tool Phase 2. Bước tiếp theo là tăng chiều sâu
+nội dung, thêm ví dụ và xử lý edge case tốt hơn.
 
 Công việc:
 
@@ -66,7 +66,7 @@ Kết quả đầu ra:
 
 Mục tiêu: Thêm các tool tạo giá trị phổ biến.
 
-Trạng thái: Đã có phiên bản đầu cho QR Code, Password, UUID và Lorem Ipsum.
+Trạng thái: Đã có phiên bản đầu cho QR Code, Password, UUID, Random Number và Lorem Ipsum.
 
 Công việc:
 
