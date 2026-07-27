@@ -3,6 +3,8 @@ import type { Tool } from "../../types/tool";
 import { getCategoryById } from "../../data/categories";
 import { defaultLocale, localizedPath, type Locale } from "../../i18n/config";
 import { getMessages } from "../../i18n/messages";
+import type { FAQItem } from "../../types/tool";
+import { createBreadcrumbSchema, createFaqSchema, createToolSchema } from "../../utils/schema";
 import AdPlaceholder from "../common/AdPlaceholder.astro";
 import Breadcrumbs from "../common/Breadcrumbs.astro";
 import Container from "../common/Container.astro";
@@ -14,27 +16,36 @@ interface Props {
   tool: Tool;
   relatedTools?: Tool[];
   locale?: Locale;
+  faqs?: FAQItem[];
 }
 
-const { tool, relatedTools = [], locale = defaultLocale } = Astro.props;
+const { tool, relatedTools = [], locale = defaultLocale, faqs = [] } = Astro.props;
 const { toolPage } = getMessages(locale);
 const category = getCategoryById(tool.categoryId, locale);
+const path = localizedPath(`/tools/${tool.slug}`, locale);
+const breadcrumbItems = [
+  { label: toolPage.breadcrumbHome, href: localizedPath("/", locale) },
+  { label: toolPage.breadcrumbAllTools, href: localizedPath("/tools", locale) },
+  { label: tool.name }
+];
+const structuredData = [
+  createToolSchema(tool, path, category?.name),
+  createBreadcrumbSchema(breadcrumbItems),
+  ...(faqs.length > 0 ? [createFaqSchema(faqs)] : [])
+];
 ---
 
 <BaseLayout
   title={tool.name}
   description={tool.description}
-  path={localizedPath(`/tools/${tool.slug}`, locale)}
+  path={path}
   locale={locale}
+  structuredData={structuredData}
 >
   <main class="flex-1">
     <Container class="py-8 md:py-10">
       <Breadcrumbs
-        items={[
-          { label: toolPage.breadcrumbHome, href: localizedPath("/", locale) },
-          { label: toolPage.breadcrumbAllTools, href: localizedPath("/tools", locale) },
-          { label: tool.name }
-        ]}
+        items={breadcrumbItems}
       />
 
       <section class="mt-8 max-w-4xl">

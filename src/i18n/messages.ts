@@ -75,7 +75,10 @@ export const messages = {
       eyebrow: "Category",
       collectionSuffix: "collection",
       descriptionSuffix: "Browse free browser-based",
-      sectionDescription: "Each tool has its own URL and runs directly in the browser."
+      sectionDescription: "Each tool has its own URL and runs directly in the browser.",
+      guideTitle: "What this category helps with",
+      useCasesTitle: "Common use cases",
+      tipsTitle: "Practical tips"
     },
     toolPage: {
       breadcrumbHome: "Home",
@@ -276,6 +279,19 @@ export const messages = {
         valid: "Valid JSON.",
         invalid: "Invalid JSON."
       },
+      jsonValidator: {
+        validate: "Validate",
+        status: "Status",
+        details: "Details",
+        valid: "Valid JSON.",
+        invalid: "Invalid JSON.",
+        empty: "Paste JSON to validate.",
+        line: "Line",
+        column: "Column",
+        rootType: "Root type",
+        itemCount: "Items",
+        characterCount: "Characters"
+      },
       base64: {
         placeholder: "Input text or Base64",
         inputAria: "Base64 input",
@@ -291,6 +307,21 @@ export const messages = {
         encoded: "Encoded.",
         decoded: "Decoded.",
         malformed: "Malformed URL encoded input."
+      },
+      regex: {
+        pattern: "Pattern",
+        flags: "Flags",
+        sampleText: "Sample text",
+        matches: "Matches",
+        groups: "Groups",
+        noMatches: "No matches found.",
+        invalid: "Invalid regular expression.",
+        global: "Global",
+        ignoreCase: "Ignore case",
+        multiline: "Multiline",
+        dotAll: "Dot all",
+        unicode: "Unicode",
+        sticky: "Sticky"
       },
       timestamp: {
         unix: "Unix timestamp",
@@ -394,7 +425,10 @@ export const messages = {
       eyebrow: "Danh mục",
       collectionSuffix: "collection",
       descriptionSuffix: "Duyệt các công cụ miễn phí chạy trên trình duyệt trong nhóm",
-      sectionDescription: "Mỗi công cụ có URL riêng và chạy trực tiếp trên trình duyệt."
+      sectionDescription: "Mỗi công cụ có URL riêng và chạy trực tiếp trên trình duyệt.",
+      guideTitle: "Nhóm này hỗ trợ gì",
+      useCasesTitle: "Trường hợp sử dụng phổ biến",
+      tipsTitle: "Gợi ý thực tế"
     },
     toolPage: {
       breadcrumbHome: "Trang chủ",
@@ -595,6 +629,19 @@ export const messages = {
         valid: "JSON hợp lệ.",
         invalid: "JSON không hợp lệ."
       },
+      jsonValidator: {
+        validate: "Kiểm tra",
+        status: "Trạng thái",
+        details: "Chi tiết",
+        valid: "JSON hợp lệ.",
+        invalid: "JSON không hợp lệ.",
+        empty: "Dán JSON để kiểm tra.",
+        line: "Dòng",
+        column: "Cột",
+        rootType: "Kiểu gốc",
+        itemCount: "Mục",
+        characterCount: "Ký tự"
+      },
       base64: {
         placeholder: "Nhập văn bản hoặc Base64",
         inputAria: "Input Base64",
@@ -610,6 +657,21 @@ export const messages = {
         encoded: "Đã mã hóa.",
         decoded: "Đã giải mã.",
         malformed: "Giá trị URL encoded không hợp lệ."
+      },
+      regex: {
+        pattern: "Pattern",
+        flags: "Flags",
+        sampleText: "Văn bản mẫu",
+        matches: "Kết quả khớp",
+        groups: "Groups",
+        noMatches: "Không tìm thấy match.",
+        invalid: "Biểu thức chính quy không hợp lệ.",
+        global: "Global",
+        ignoreCase: "Không phân biệt hoa thường",
+        multiline: "Nhiều dòng",
+        dotAll: "Dot all",
+        unicode: "Unicode",
+        sticky: "Sticky"
       },
       timestamp: {
         unix: "Unix timestamp",

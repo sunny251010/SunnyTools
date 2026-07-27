@@ -9,6 +9,7 @@ import { getActiveTools, getTools } from "../../data/tools";
 import { defaultLocale, localizedPath, type Locale } from "../../i18n/config";
 import { getMessages } from "../../i18n/messages";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { createCollectionPageSchema } from "../../utils/schema";
 
 interface Props {
   locale?: Locale;
@@ -26,6 +27,11 @@ const activeTools = getActiveTools(locale);
   description={toolsIndex.description}
   path={localizedPath("/tools", locale)}
   locale={locale}
+  structuredData={createCollectionPageSchema(
+    toolsIndex.title,
+    toolsIndex.description,
+    localizedPath("/tools", locale)
+  )}
 >
   <main class="flex-1">
     <Container class="py-10 md:py-14">

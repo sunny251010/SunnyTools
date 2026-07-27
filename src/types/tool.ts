@@ -19,6 +19,9 @@ export interface ToolCategory {
   name: string;
   slug: string;
   description: string;
+  guide: string;
+  useCases: string[];
+  tips: string[];
 }
 
 export interface NavigationItem {

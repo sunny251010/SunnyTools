@@ -155,8 +155,10 @@ Implemented tools:
 - UUID Generator
 - Random Number Generator
 - JSON Formatter
+- JSON Validator
 - Base64 Encoder/Decoder
 - URL Encoder/Decoder
+- Regex Tester
 - Timestamp Converter
 - Color Converter
 - Percentage Calculator

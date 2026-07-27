@@ -320,6 +320,32 @@ const contentBySlug: Record<string, LocalizedToolContent> = {
       ]
     }
   },
+  "json-validator": {
+    en: {
+      intro: "JSON Validator checks whether a JSON snippet can be parsed safely by JavaScript.",
+      howToUse: "Paste JSON into the input. The validation status updates and reports the first syntax issue it finds.",
+      howItWorks:
+        "The browser runs `JSON.parse` locally and derives line and column hints from the error position when possible.",
+      privacy: "JSON validation runs only in your browser.",
+      faqs: [
+        { question: "Does it format JSON too?", answer: "This page focuses on validation. Use JSON Formatter for pretty printing and minifying." },
+        { question: "Can it validate API responses?", answer: "Yes. Paste the response body as text." },
+        { question: "Is the JSON sent to a server?", answer: "No. Parsing happens locally." }
+      ]
+    },
+    vi: {
+      intro: "Công cụ Kiểm Tra JSON kiểm tra xem một đoạn JSON có thể parse an toàn bằng JavaScript hay không.",
+      howToUse: "Dán JSON vào input. Trạng thái kiểm tra sẽ cập nhật và báo lỗi cú pháp đầu tiên nếu có.",
+      howItWorks:
+        "Trình duyệt chạy `JSON.parse` cục bộ và suy ra gợi ý dòng/cột từ vị trí lỗi khi có thể.",
+      privacy: "Việc kiểm tra JSON chỉ chạy trong trình duyệt của bạn.",
+      faqs: [
+        { question: "Công cụ có định dạng JSON không?", answer: "Trang này tập trung vào kiểm tra hợp lệ. Dùng JSON Formatter để pretty print hoặc nén gọn." },
+        { question: "Có kiểm tra response API được không?", answer: "Có. Dán nội dung response dạng text vào." },
+        { question: "JSON có được gửi lên server không?", answer: "Không. Việc parse diễn ra cục bộ." }
+      ]
+    }
+  },
   "base64-encoder-decoder": {
     en: {
       intro: "Base64 Encoder/Decoder converts text to and from Base64.",
@@ -341,6 +367,32 @@ const contentBySlug: Record<string, LocalizedToolContent> = {
         { question: "Công cụ có hỗ trợ Unicode không?", answer: "Có. Công cụ dùng chuyển đổi UTF-8." },
         { question: "Base64 không hợp lệ thì sao?", answer: "Công cụ hiện lỗi thay vì bị crash." },
         { question: "Có sao chép output được không?", answer: "Có. Dùng nút Sao chép." }
+      ]
+    }
+  },
+  "regex-tester": {
+    en: {
+      intro: "Regex Tester lets you try JavaScript regular expressions against sample text.",
+      howToUse: "Enter a pattern, choose flags, paste sample text, and review highlighted matches plus captured groups.",
+      howItWorks:
+        "The tool creates a browser `RegExp` with your flags and iterates matches locally, protecting against empty-match loops.",
+      privacy: "Patterns and sample text stay on the page.",
+      faqs: [
+        { question: "Which regex flavor is supported?", answer: "It uses JavaScript regular expressions." },
+        { question: "Can it show capture groups?", answer: "Yes. Matched groups are listed for each match." },
+        { question: "Does it upload sample text?", answer: "No. Everything runs in the browser." }
+      ]
+    },
+    vi: {
+      intro: "Công cụ Kiểm Tra Regex cho phép thử biểu thức chính quy JavaScript trên văn bản mẫu.",
+      howToUse: "Nhập pattern, chọn flags, dán văn bản mẫu, rồi xem match được highlight và captured groups.",
+      howItWorks:
+        "Công cụ tạo `RegExp` trong trình duyệt với flags bạn chọn và duyệt kết quả khớp cục bộ, có bảo vệ vòng lặp với match rỗng.",
+      privacy: "Pattern và văn bản mẫu chỉ ở trên trang.",
+      faqs: [
+        { question: "Công cụ hỗ trợ kiểu regex nào?", answer: "Công cụ dùng biểu thức chính quy JavaScript." },
+        { question: "Có hiển thị capture group không?", answer: "Có. Các group khớp được liệt kê cho từng match." },
+        { question: "Văn bản mẫu có bị upload không?", answer: "Không. Mọi thứ chạy trong trình duyệt." }
       ]
     }
   },

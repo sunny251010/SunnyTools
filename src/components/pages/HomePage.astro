@@ -9,6 +9,7 @@ import { getActiveTools, getPopularTools, getTools } from "../../data/tools";
 import { defaultLocale, localizedPath, type Locale } from "../../i18n/config";
 import { getMessages } from "../../i18n/messages";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { createWebsiteSchema } from "../../utils/schema";
 import { withBasePath } from "../../utils/seo";
 
 interface Props {
@@ -23,7 +24,13 @@ const popularPreview = getPopularTools(locale).slice(0, 6);
 const categories = getCategories(locale);
 ---
 
-<BaseLayout title={home.title} description={home.description} path={localizedPath("/", locale)} locale={locale}>
+<BaseLayout
+  title={home.title}
+  description={home.description}
+  path={localizedPath("/", locale)}
+  locale={locale}
+  structuredData={createWebsiteSchema()}
+>
   <main class="flex-1">
     <section class="border-b border-slate-200 bg-white">
       <Container class="py-14 md:py-20">

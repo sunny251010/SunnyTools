@@ -63,8 +63,9 @@ Không link tool `planned` đến route chưa tồn tại.
 
 ## Structured Data
 
-Breadcrumb và FAQ nên giữ cấu trúc rõ ràng để sau này có thể sinh schema. Không nên hardcode
-JSON-LD riêng lẻ trên từng page; khi vào Phase 5 nên tạo helper/schema component dùng chung.
+Structured data dùng helper trong `src/utils/schema.ts` và component `src/components/seo/JsonLd.astro`.
+Tool page sinh `WebApplication`, `BreadcrumbList` và `FAQPage` từ data có cấu trúc. Category và tools
+index dùng `CollectionPage`. Không nên hardcode JSON-LD riêng lẻ trên từng page.
 
 ## Hình Ảnh
 

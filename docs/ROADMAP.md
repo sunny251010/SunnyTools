@@ -90,7 +90,8 @@ Kết quả đầu ra:
 
 Mục tiêu: Thêm các utility dành cho developer.
 
-Trạng thái: Đã có phiên bản đầu cho JSON, Base64, URL, Timestamp, Color và Percentage tools.
+Trạng thái: Đã có phiên bản đầu cho JSON Formatter, JSON Validator, Base64, URL, Regex, Timestamp,
+Color và Percentage tools.
 
 Công việc:
 
@@ -116,6 +117,10 @@ Kết quả đầu ra:
 Độ ưu tiên: Cao
 
 Mục tiêu: Cải thiện khả năng Google crawl, index và xếp hạng.
+
+Trạng thái: Đã có sitemap, robots.txt, JSON-LD dùng chung, FAQ schema cho tool page, related tools
+và category landing pages có nội dung hướng dẫn/use cases/tips. Bước tiếp theo là audit nội dung sâu
+hơn cho từng tool và đo thực tế sau khi deploy.
 
 Công việc:
 

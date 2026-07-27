@@ -5,11 +5,13 @@ import CaseConverterTool from "../tools/case-converter/CaseConverterTool.astro";
 import CharacterCounterTool from "../tools/character-counter/CharacterCounterTool.astro";
 import ColorConverterTool from "../tools/color-converter/ColorConverterTool.astro";
 import JsonFormatterTool from "../tools/json-formatter/JsonFormatterTool.astro";
+import JsonValidatorTool from "../tools/json-validator/JsonValidatorTool.astro";
 import LoremIpsumGeneratorTool from "../tools/lorem-ipsum-generator/LoremIpsumGeneratorTool.astro";
 import PasswordGeneratorTool from "../tools/password-generator/PasswordGeneratorTool.astro";
 import PercentageCalculatorTool from "../tools/percentage-calculator/PercentageCalculatorTool.astro";
 import QrCodeGeneratorTool from "../tools/qr-code-generator/QrCodeGeneratorTool.astro";
 import RandomNumberGeneratorTool from "../tools/random-number-generator/RandomNumberGeneratorTool.astro";
+import RegexTesterTool from "../tools/regex-tester/RegexTesterTool.astro";
 import RemoveDuplicateLinesTool from "../tools/remove-duplicate-lines/RemoveDuplicateLinesTool.astro";
 import SortLinesTool from "../tools/sort-lines/SortLinesTool.astro";
 import TextCompareTool from "../tools/text-compare/TextCompareTool.astro";
@@ -41,8 +43,10 @@ const toolComponents = {
   "uuid-generator": UuidGeneratorTool,
   "random-number-generator": RandomNumberGeneratorTool,
   "json-formatter": JsonFormatterTool,
+  "json-validator": JsonValidatorTool,
   "base64-encoder-decoder": Base64EncoderDecoderTool,
   "url-encoder-decoder": UrlEncoderDecoderTool,
+  "regex-tester": RegexTesterTool,
   "timestamp-converter": TimestampConverterTool,
   "color-converter": ColorConverterTool,
   "percentage-calculator": PercentageCalculatorTool
@@ -61,7 +65,7 @@ const relatedTools = getRelatedTools(tool, locale);
 const whatIsHeading = toolPage.whatIs.replace("{tool}", tool.name);
 ---
 
-<ToolLayout tool={tool} relatedTools={relatedTools} locale={locale}>
+<ToolLayout tool={tool} relatedTools={relatedTools} locale={locale} faqs={content.faqs}>
   <ToolComponent slot="tool" locale={locale} />
 
   <Fragment slot="content">

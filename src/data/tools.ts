@@ -279,6 +279,28 @@ const toolRecords: ToolRecord[] = [
     }
   },
   {
+    id: "json-validator",
+    slug: "json-validator",
+    categoryId: "developer-tools",
+    icon: "JV",
+    featured: true,
+    status: "active",
+    text: {
+      en: {
+        name: "JSON Validator",
+        shortDescription: "Validate JSON and inspect parsing errors with line and column hints.",
+        description: "Check JSON syntax locally before using snippets in APIs, configs, and apps.",
+        keywords: ["json validator", "validate json", "json syntax", "developer"]
+      },
+      vi: {
+        name: "Kiểm Tra JSON",
+        shortDescription: "Kiểm tra JSON và xem lỗi parse kèm gợi ý dòng/cột.",
+        description: "Kiểm tra cú pháp JSON cục bộ trước khi dùng snippet trong API, config và ứng dụng.",
+        keywords: ["kiểm tra json", "validate json", "cú pháp json", "lập trình"]
+      }
+    }
+  },
+  {
     id: "base64-encoder-decoder",
     slug: "base64-encoder-decoder",
     categoryId: "developer-tools",
@@ -317,6 +339,28 @@ const toolRecords: ToolRecord[] = [
         shortDescription: "Mã hóa và giải mã văn bản an toàn cho URL.",
         description: "Chuyển đổi URL component để debug link, API và tracking parameter.",
         keywords: ["url", "mã hóa", "giải mã", "percent encoding"]
+      }
+    }
+  },
+  {
+    id: "regex-tester",
+    slug: "regex-tester",
+    categoryId: "developer-tools",
+    icon: ".*",
+    popular: true,
+    status: "active",
+    text: {
+      en: {
+        name: "Regex Tester",
+        shortDescription: "Test JavaScript regular expressions and inspect matches.",
+        description: "Try regex patterns locally with flags, highlighted matches, and captured groups.",
+        keywords: ["regex", "regular expression", "pattern", "developer"]
+      },
+      vi: {
+        name: "Kiểm Tra Regex",
+        shortDescription: "Thử biểu thức chính quy JavaScript và xem các kết quả khớp.",
+        description: "Kiểm tra pattern regex cục bộ với flags, highlight match và captured groups.",
+        keywords: ["regex", "biểu thức chính quy", "pattern", "lập trình"]
       }
     }
   },

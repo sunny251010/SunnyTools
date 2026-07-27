@@ -1,8 +1,10 @@
 ---
 import Footer from "../components/layout/Footer.astro";
 import Header from "../components/layout/Header.astro";
+import JsonLd from "../components/seo/JsonLd.astro";
 import SEO from "../components/seo/SEO.astro";
 import { defaultLocale, getAlternateLinks, localeDetails, stripLocaleFromPath, type Locale } from "../i18n/config";
+import type { JsonLdData } from "../utils/schema";
 import { resolveAlternateLinks, withBasePath } from "../utils/seo";
 import "../styles/global.css";
 
@@ -14,6 +16,7 @@ interface Props {
   robots?: string;
   locale?: Locale;
   type?: "website" | "article";
+  structuredData?: JsonLdData | JsonLdData[];
 }
 
 const {
@@ -23,7 +26,8 @@ const {
   image,
   robots,
   locale = defaultLocale,
-  type
+  type,
+  structuredData
 } = Astro.props;
 const logicalPath = stripLocaleFromPath(path);
 const alternates = resolveAlternateLinks(getAlternateLinks(logicalPath));
@@ -46,7 +50,8 @@ const alternates = resolveAlternateLinks(getAlternateLinks(logicalPath));
       locale={locale}
       alternates={alternates}
       type={type}
-    />
+      />
+      <JsonLd data={structuredData} />
   </head>
   <body class="min-h-screen antialiased">
     <div class="flex min-h-screen flex-col">

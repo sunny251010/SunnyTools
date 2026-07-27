@@ -1,0 +1,221 @@
+---
+import { defaultLocale, type Locale } from "../../../i18n/config";
+import { getMessages } from "../../../i18n/messages";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const copy = getMessages(locale).toolUi;
+const flags = [
+  ["g", copy.regex.global],
+  ["i", copy.regex.ignoreCase],
+  ["m", copy.regex.multiline],
+  ["s", copy.regex.dotAll],
+  ["u", copy.regex.unicode],
+  ["y", copy.regex.sticky]
+];
+---
+
+<div class="space-y-5" data-regex-tester data-invalid={copy.regex.invalid} data-empty={copy.regex.noMatches} data-matches-label={copy.regex.matches}>
+  <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+    <label class="text-sm font-semibold text-ink">
+      {copy.regex.pattern}
+      <input
+        class="mt-2 h-11 w-full rounded-md border border-slate-300 bg-slate-50 px-3 font-mono text-sm text-ink focus:border-brand-teal focus:bg-white"
+        type="text"
+        placeholder="\\b\\w+\\b"
+        data-regex-pattern
+      />
+    </label>
+    <fieldset class="rounded-md border border-slate-200 p-3">
+      <legend class="px-1 text-sm font-semibold text-ink">{copy.regex.flags}</legend>
+      <div class="grid grid-cols-2 gap-2">
+        {
+          flags.map(([flag, label]) => (
+            <label class="flex items-center gap-2 text-sm font-medium text-slate-700">
+              <input class="h-4 w-4 accent-brand-teal" type="checkbox" value={flag} checked={flag === "g"} data-regex-flag />
+              {label}
+            </label>
+          ))
+        }
+      </div>
+    </fieldset>
+  </div>
+
+  <div>
+    <label for="regex-sample" class="mb-2 block text-sm font-semibold text-ink">{copy.regex.sampleText}</label>
+    <textarea
+      id="regex-sample"
+      class="min-h-64 w-full rounded-md border border-slate-300 bg-slate-50 p-4 font-mono text-sm leading-7 text-ink shadow-inner focus:border-brand-teal focus:bg-white"
+      data-regex-sample></textarea>
+  </div>
+
+  <div class="flex flex-wrap gap-3">
+    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-regex-run>
+      {copy.shared.convert}
+    </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-regex-clear>
+      {copy.shared.clear}
+    </button>
+  </div>
+
+  <p class="text-sm font-medium" role="status" data-regex-status></p>
+
+  <section class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
+    <div class="overflow-hidden rounded-md border border-slate-200 bg-white">
+      <div class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-ink">{copy.regex.matches}</div>
+      <div class="max-h-[32rem] overflow-auto whitespace-pre-wrap break-words p-4 font-mono text-sm leading-7 text-slate-800" data-regex-highlight></div>
+    </div>
+    <div class="overflow-hidden rounded-md border border-slate-200 bg-white">
+      <div class="border-b border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-ink">{copy.regex.groups}</div>
+      <div class="max-h-[32rem] overflow-auto p-4 text-sm leading-6 text-slate-700" data-regex-groups></div>
+    </div>
+  </section>
+</div>
+
+<script>
+  interface RegexMatch {
+    value: string;
+    index: number;
+    groups: string[];
+  }
+
+  const root = document.querySelector<HTMLElement>("[data-regex-tester]");
+  const patternInput = root?.querySelector<HTMLInputElement>("[data-regex-pattern]");
+  const sampleInput = root?.querySelector<HTMLTextAreaElement>("[data-regex-sample]");
+  const status = root?.querySelector<HTMLElement>("[data-regex-status]");
+  const highlight = root?.querySelector<HTMLElement>("[data-regex-highlight]");
+  const groups = root?.querySelector<HTMLElement>("[data-regex-groups]");
+  const invalid = root?.dataset.invalid ?? "Invalid regular expression.";
+  const noMatches = root?.dataset.empty ?? "No matches found.";
+  const matchesLabel = root?.dataset.matchesLabel ?? "Matches";
+
+  const getFlags = (): string =>
+    Array.from(root?.querySelectorAll<HTMLInputElement>("[data-regex-flag]:checked") ?? [])
+      .map((input) => input.value)
+      .join("");
+
+  const buildRegex = (): RegExp | undefined => {
+    if (!patternInput || !status) return undefined;
+
+    try {
+      return new RegExp(patternInput.value, getFlags());
+    } catch (error) {
+      status.className = "text-sm font-medium text-rose-700";
+      status.textContent = error instanceof Error ? error.message : invalid;
+      return undefined;
+    }
+  };
+
+  const collectMatches = (regex: RegExp, sample: string): RegexMatch[] => {
+    const matches: RegexMatch[] = [];
+
+    if (!regex.global && !regex.sticky) {
+      const match = regex.exec(sample);
+      return match ? [{ value: match[0], index: match.index, groups: match.slice(1) }] : [];
+    }
+
+    let match: RegExpExecArray | null;
+    regex.lastIndex = 0;
+
+    while ((match = regex.exec(sample))) {
+      matches.push({ value: match[0], index: match.index, groups: match.slice(1) });
+
+      if (match[0] === "") {
+        regex.lastIndex += 1;
+      }
+    }
+
+    return matches;
+  };
+
+  const renderHighlight = (sample: string, matches: RegexMatch[]): void => {
+    if (!highlight) return;
+
+    highlight.textContent = "";
+    let cursor = 0;
+
+    matches.forEach((match) => {
+      if (match.index > cursor) {
+        highlight.append(document.createTextNode(sample.slice(cursor, match.index)));
+      }
+
+      const mark = document.createElement("mark");
+      mark.className = "rounded bg-amber-200 px-0.5 text-ink";
+      mark.textContent = match.value || " ";
+      highlight.append(mark);
+      cursor = match.index + match.value.length;
+    });
+
+    if (cursor < sample.length) {
+      highlight.append(document.createTextNode(sample.slice(cursor)));
+    }
+  };
+
+  const renderGroups = (matches: RegexMatch[]): void => {
+    if (!groups) return;
+
+    groups.textContent = "";
+    if (matches.length === 0) {
+      groups.textContent = noMatches;
+      return;
+    }
+
+    matches.forEach((match, index) => {
+      const section = document.createElement("section");
+      section.className = "border-b border-slate-100 py-3 last:border-b-0";
+
+      const heading = document.createElement("h3");
+      heading.className = "font-semibold text-ink";
+      heading.textContent = `#${index + 1} @ ${match.index}: ${match.value || "(empty)"}`;
+      section.append(heading);
+
+      if (match.groups.length > 0) {
+        const list = document.createElement("ul");
+        list.className = "mt-2 space-y-1 font-mono text-xs";
+        match.groups.forEach((group, groupIndex) => {
+          const item = document.createElement("li");
+          item.textContent = `$${groupIndex + 1}: ${group ?? ""}`;
+          list.append(item);
+        });
+        section.append(list);
+      }
+
+      groups.append(section);
+    });
+  };
+
+  const testRegex = (): void => {
+    if (!patternInput || !sampleInput || !status || !highlight) return;
+
+    const regex = buildRegex();
+    if (!regex) {
+      highlight.textContent = sampleInput.value;
+      if (groups) groups.textContent = "";
+      return;
+    }
+
+    const matches = collectMatches(regex, sampleInput.value);
+    renderHighlight(sampleInput.value, matches);
+    renderGroups(matches);
+    status.className = `text-sm font-medium ${matches.length > 0 ? "text-emerald-700" : "text-slate-600"}`;
+    status.textContent = matches.length > 0 ? `${matches.length} ${matchesLabel.toLocaleLowerCase()}` : noMatches;
+  };
+
+  const clear = (): void => {
+    if (!patternInput || !sampleInput || !status || !highlight || !groups) return;
+    patternInput.value = "";
+    sampleInput.value = "";
+    status.textContent = "";
+    highlight.textContent = "";
+    groups.textContent = "";
+  };
+
+  root?.querySelector<HTMLButtonElement>("[data-regex-run]")?.addEventListener("click", testRegex);
+  root?.querySelector<HTMLButtonElement>("[data-regex-clear]")?.addEventListener("click", clear);
+  patternInput?.addEventListener("input", testRegex);
+  sampleInput?.addEventListener("input", testRegex);
+  root?.querySelectorAll<HTMLInputElement>("[data-regex-flag]").forEach((input) => input.addEventListener("change", testRegex));
+</script>
