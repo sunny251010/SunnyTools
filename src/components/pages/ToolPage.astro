@@ -10,6 +10,7 @@ import JsonToolsTool from "../tools/json-tools/JsonToolsTool.astro";
 import LineToolsTool from "../tools/line-tools/LineToolsTool.astro";
 import LoremIpsumGeneratorTool from "../tools/lorem-ipsum-generator/LoremIpsumGeneratorTool.astro";
 import MarkdownPreviewerTool from "../tools/markdown-previewer/MarkdownPreviewerTool.astro";
+import NumberBaseConverterTool from "../tools/number-base-converter/NumberBaseConverterTool.astro";
 import PasswordGeneratorTool from "../tools/password-generator/PasswordGeneratorTool.astro";
 import PercentageCalculatorTool from "../tools/percentage-calculator/PercentageCalculatorTool.astro";
 import QrCodeGeneratorTool from "../tools/qr-code-generator/QrCodeGeneratorTool.astro";
@@ -46,6 +47,7 @@ const toolComponents = {
   "uuid-generator": UuidGeneratorTool,
   "random-number-generator": RandomNumberGeneratorTool,
   "json-formatter": { component: JsonToolsTool, defaultMode: "format" },
+  "number-base-converter": NumberBaseConverterTool,
   "json-validator": { component: JsonToolsTool, defaultMode: "validate" },
   "base64-encoder-decoder": Base64EncoderDecoderTool,
   "url-encoder-decoder": UrlEncoderDecoderTool,
@@ -90,6 +92,22 @@ const whatIsHeading = toolPage.whatIs.replace("{tool}", tool.name);
 
     <h2>{toolPage.privacy}</h2>
     <p>{content.privacy}</p>
+
+    {
+      content.sections?.map((section) => (
+        <>
+          <h2>{section.title}</h2>
+          <p>{section.body}</p>
+          {
+            section.items && section.items.length > 0 && (
+              <ul>
+                {section.items.map((item) => <li>{item}</li>)}
+              </ul>
+            )
+          }
+        </>
+      ))
+    }
   </Fragment>
 
   <Fragment slot="faq">

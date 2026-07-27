@@ -1,0 +1,458 @@
+---
+import { defaultLocale, type Locale } from "../../../i18n/config";
+import { getMessages } from "../../../i18n/messages";
+
+interface Props {
+  locale?: Locale;
+}
+
+const { locale = defaultLocale } = Astro.props;
+const copy = getMessages(locale).toolUi;
+const numberBase = copy.numberBase;
+const baseOptions = [
+  { value: "auto", label: numberBase.autoDetect, inputOnly: true },
+  { value: "2", label: `${numberBase.binary} (2)` },
+  { value: "8", label: `${numberBase.octal} (8)` },
+  { value: "10", label: `${numberBase.decimal} (10)` },
+  { value: "16", label: `${numberBase.hexadecimal} (16)` },
+  { value: "custom", label: numberBase.customBase }
+];
+const popularBases = [
+  { base: 2, name: numberBase.binary },
+  { base: 8, name: numberBase.octal },
+  { base: 10, name: numberBase.decimal },
+  { base: 16, name: numberBase.hexadecimal }
+];
+---
+
+<div
+  class="space-y-6"
+  data-number-base-tool
+  data-copied={copy.shared.copied}
+  data-copied-all={copy.shared.copiedToClipboard}
+  data-converted={numberBase.converted}
+  data-cleared={numberBase.cleared}
+  data-example-loaded={numberBase.exampleLoaded}
+  data-downloaded={numberBase.downloaded}
+  data-swap-needs-result={numberBase.swapNeedsResult}
+  data-empty={numberBase.empty}
+  data-base-range={numberBase.baseRange}
+  data-fractional={numberBase.fractional}
+  data-sign-only={numberBase.signOnly}
+  data-invalid-sign={numberBase.invalidSign}
+  data-invalid-whitespace={numberBase.invalidWhitespace}
+  data-invalid-digit-binary={numberBase.invalidDigitBinary}
+  data-invalid-digit={numberBase.invalidDigit}
+  data-binary-label={`${numberBase.binary} (2)`}
+  data-octal-label={`${numberBase.octal} (8)`}
+  data-decimal-label={`${numberBase.decimal} (10)`}
+  data-hexadecimal-label={`${numberBase.hexadecimal} (16)`}
+>
+  <div class="rounded-md border border-teal-100 bg-teal-50 p-4 text-sm leading-6 text-teal-900">
+    {numberBase.privacy}
+  </div>
+
+  <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_260px_260px]">
+    <label class="block text-sm font-semibold text-ink" for="number-base-input">
+      {numberBase.inputValue}
+      <textarea
+        id="number-base-input"
+        class="mt-2 min-h-32 w-full rounded-md border border-slate-300 bg-slate-50 p-4 font-mono text-sm leading-6 text-ink shadow-inner focus:border-brand-teal focus:bg-white"
+        placeholder={numberBase.inputPlaceholder}
+        spellcheck="false"
+        data-number-base-input
+      ></textarea>
+    </label>
+
+    <div class="space-y-3">
+      <label class="block text-sm font-semibold text-ink" for="number-base-input-base">
+        {numberBase.inputBase}
+        <select
+          id="number-base-input-base"
+          class="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-ink shadow-sm focus:border-brand-teal"
+          data-number-base-input-select
+        >
+          {baseOptions.map((option) => <option value={option.value}>{option.label}</option>)}
+        </select>
+      </label>
+      <label class="block text-sm font-semibold text-ink" for="number-base-input-custom" data-number-base-input-custom-wrap hidden>
+        {numberBase.customBaseLabel}
+        <input
+          id="number-base-input-custom"
+          class="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 font-mono text-sm text-ink shadow-sm focus:border-brand-teal"
+          type="number"
+          min="2"
+          max="36"
+          value="10"
+          data-number-base-input-custom
+        />
+      </label>
+    </div>
+
+    <div class="space-y-3">
+      <label class="block text-sm font-semibold text-ink" for="number-base-output-base">
+        {numberBase.outputBase}
+        <select
+          id="number-base-output-base"
+          class="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-ink shadow-sm focus:border-brand-teal"
+          data-number-base-output-select
+        >
+          {baseOptions.filter((option) => !option.inputOnly).map((option) => <option value={option.value} selected={option.value === "16"}>{option.label}</option>)}
+        </select>
+      </label>
+      <label class="block text-sm font-semibold text-ink" for="number-base-output-custom" data-number-base-output-custom-wrap hidden>
+        {numberBase.customBaseLabel}
+        <input
+          id="number-base-output-custom"
+          class="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 font-mono text-sm text-ink shadow-sm focus:border-brand-teal"
+          type="number"
+          min="2"
+          max="36"
+          value="16"
+          data-number-base-output-custom
+        />
+      </label>
+    </div>
+  </div>
+
+  <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_260px]">
+    <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
+      <p class="text-sm font-semibold text-ink">{numberBase.mainResult}</p>
+      <div
+        class="mt-3 min-h-16 overflow-x-auto rounded-md border border-slate-200 bg-white p-3 font-mono text-sm leading-6 text-ink"
+        tabindex="0"
+        data-number-base-main-result
+      >
+        -
+      </div>
+    </div>
+
+    <div class="space-y-3">
+      <label class="block text-sm font-semibold text-ink" for="number-base-letter-case">
+        {numberBase.letterCase}
+        <select
+          id="number-base-letter-case"
+          class="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-ink shadow-sm focus:border-brand-teal"
+          data-number-base-letter-case
+        >
+          <option value="upper">{numberBase.uppercase}</option>
+          <option value="lower">{numberBase.lowercase}</option>
+        </select>
+      </label>
+      <label class="flex items-center gap-2 text-sm font-semibold text-ink">
+        <input
+          type="checkbox"
+          class="h-4 w-4 rounded border-slate-300 text-brand-teal focus:ring-brand-teal"
+          data-number-base-prefix-output
+        />
+        {numberBase.prefixOutput}
+      </label>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-3">
+    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2" data-number-base-convert>{copy.shared.convert}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2" data-number-base-swap>{numberBase.swap}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2" data-number-base-copy-main>{numberBase.copyResult}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2" data-number-base-download>{copy.shared.downloadTxt}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2" data-number-base-example>{copy.shared.loadExample}</button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2" data-number-base-clear>{copy.shared.clear}</button>
+  </div>
+
+  <p class="min-h-6 text-sm font-medium" role="status" aria-live="polite" data-number-base-status></p>
+
+  <section class="space-y-3" aria-labelledby="number-base-popular-heading">
+    <div class="flex flex-wrap items-center justify-between gap-3">
+      <h2 id="number-base-popular-heading" class="text-lg font-semibold text-ink">{numberBase.popularResults}</h2>
+      <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2" data-number-base-copy-all>{numberBase.copyAllResults}</button>
+    </div>
+
+    <div class="overflow-x-auto rounded-md border border-slate-200">
+      <table class="min-w-full divide-y divide-slate-200 text-sm">
+        <thead class="bg-slate-50 text-left text-xs font-semibold uppercase text-slate-500">
+          <tr>
+            <th scope="col" class="px-4 py-3">{numberBase.baseColumn}</th>
+            <th scope="col" class="px-4 py-3">{numberBase.nameColumn}</th>
+            <th scope="col" class="px-4 py-3">{numberBase.resultColumn}</th>
+            <th scope="col" class="px-4 py-3"><span class="sr-only">{copy.shared.copy}</span></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200 bg-white">
+          {
+            popularBases.map((item) => (
+              <tr data-number-base-row={item.base}>
+                <td class="px-4 py-3 font-mono font-semibold text-ink">{item.base}</td>
+                <td class="px-4 py-3 text-slate-700">{item.name}</td>
+                <td class="max-w-[22rem] px-4 py-3">
+                  <div class="overflow-x-auto whitespace-nowrap font-mono text-ink" tabindex="0" data-number-base-result={item.base}>-</div>
+                </td>
+                <td class="px-4 py-3 text-right">
+                  <button type="button" class="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2" data-number-base-copy-row={item.base}>
+                    {copy.shared.copy}
+                  </button>
+                </td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="rounded-md border border-slate-200 bg-white p-4">
+    <p class="text-sm font-semibold text-ink">{copy.shared.loadExample}</p>
+    <ul class="mt-2 grid gap-2 text-sm leading-6 text-slate-600 sm:grid-cols-2">
+      {numberBase.examples.map((example) => <li>{example}</li>)}
+    </ul>
+  </div>
+</div>
+
+<script>
+  import {
+    BaseParseError,
+    addStandardPrefix,
+    detectInputBase,
+    formatBaseInteger,
+    getAllowedDigitsForBase,
+    isSupportedBase,
+    parseBaseInteger
+  } from "../../../utils/numberBase";
+
+  interface LastConversion {
+    inputBase: number;
+    outputBase: number;
+    mainResult: string;
+    commonResults: Record<number, string>;
+  }
+
+  const root = document.querySelector<HTMLElement>("[data-number-base-tool]");
+  const input = root?.querySelector<HTMLTextAreaElement>("[data-number-base-input]");
+  const inputSelect = root?.querySelector<HTMLSelectElement>("[data-number-base-input-select]");
+  const outputSelect = root?.querySelector<HTMLSelectElement>("[data-number-base-output-select]");
+  const inputCustom = root?.querySelector<HTMLInputElement>("[data-number-base-input-custom]");
+  const outputCustom = root?.querySelector<HTMLInputElement>("[data-number-base-output-custom]");
+  const inputCustomWrap = root?.querySelector<HTMLElement>("[data-number-base-input-custom-wrap]");
+  const outputCustomWrap = root?.querySelector<HTMLElement>("[data-number-base-output-custom-wrap]");
+  const letterCase = root?.querySelector<HTMLSelectElement>("[data-number-base-letter-case]");
+  const prefixOutput = root?.querySelector<HTMLInputElement>("[data-number-base-prefix-output]");
+  const mainResult = root?.querySelector<HTMLElement>("[data-number-base-main-result]");
+  const status = root?.querySelector<HTMLElement>("[data-number-base-status]");
+  const commonBases = [2, 8, 10, 16];
+  const commonLabels = [
+    root?.dataset.binaryLabel ?? "Binary (2)",
+    root?.dataset.octalLabel ?? "Octal (8)",
+    root?.dataset.decimalLabel ?? "Decimal (10)",
+    root?.dataset.hexadecimalLabel ?? "Hexadecimal (16)"
+  ];
+  const examples = [
+    { input: "255", inputChoice: "10", outputChoice: "16" },
+    { input: "101010", inputChoice: "2", outputChoice: "10" },
+    { input: "7B", inputChoice: "16", outputChoice: "10" },
+    { input: "-64", inputChoice: "10", outputChoice: "2" }
+  ] as const;
+  let exampleIndex = 0;
+  let lastConversion: LastConversion | null = null;
+
+  const message = (key: string, fallback: string): string => root?.dataset[key] ?? fallback;
+
+  const setStatus = (text: string, type: "success" | "error" | "neutral" = "success"): void => {
+    if (!status) return;
+    const color = type === "error" ? "text-rose-700" : type === "neutral" ? "text-slate-600" : "text-emerald-700";
+    status.className = `min-h-6 text-sm font-medium ${color}`;
+    status.textContent = text;
+  };
+
+  const setCustomVisibility = (): void => {
+    if (inputCustomWrap && inputSelect) inputCustomWrap.hidden = inputSelect.value !== "custom";
+    if (outputCustomWrap && outputSelect) outputCustomWrap.hidden = outputSelect.value !== "custom";
+  };
+
+  const getSelectedBase = (select: HTMLSelectElement, customInput: HTMLInputElement | undefined): number => {
+    if (select.value !== "custom") {
+      return Number(select.value);
+    }
+
+    const customBase = Number(customInput?.value ?? "");
+    if (!isSupportedBase(customBase)) {
+      throw new BaseParseError("baseRange", "The base must be between 2 and 36.", { base: customBase });
+    }
+
+    return customBase;
+  };
+
+  const formatForDisplay = (value: bigint, base: number): string => {
+    let output = formatBaseInteger(value, base);
+    if (letterCase?.value === "lower") {
+      output = output.toLowerCase();
+    }
+
+    if (prefixOutput?.checked) {
+      output = addStandardPrefix(output, base);
+    }
+
+    return output;
+  };
+
+  const setResultForBase = (base: number, value: string): void => {
+    const target = root?.querySelector<HTMLElement>(`[data-number-base-result="${base}"]`);
+    if (target) target.textContent = value;
+  };
+
+  const clearResults = (): void => {
+    if (mainResult) mainResult.textContent = "-";
+    commonBases.forEach((base) => setResultForBase(base, "-"));
+    lastConversion = null;
+  };
+
+  const describeError = (error: unknown): string => {
+    if (!(error instanceof BaseParseError)) {
+      return message("invalidDigit", "Invalid input.");
+    }
+
+    if (error.code === "empty") return message("empty", "Enter a number to convert.");
+    if (error.code === "baseRange") return message("baseRange", "The base must be between 2 and 36.");
+    if (error.code === "fractional") return message("fractional", "Fractional values are not supported yet. Please enter an integer.");
+    if (error.code === "signOnly") return message("signOnly", "Enter digits after the minus sign.");
+    if (error.code === "invalidSign") return message("invalidSign", "The minus sign can only appear once at the start of the number.");
+    if (error.code === "invalidWhitespace") {
+      return message("invalidWhitespace", "Spaces inside the number are not supported. Remove the spaces and try again.");
+    }
+
+    const digit = error.character ?? "";
+    const base = String(error.base ?? "");
+    const digits = error.allowedDigits ?? (error.base ? getAllowedDigitsForBase(error.base) : "");
+    const template =
+      error.base === 2
+        ? message("invalidDigitBinary", "The digit \"{digit}\" is not valid in base 2. Binary numbers can only contain 0 and 1.")
+        : message("invalidDigit", "The digit \"{digit}\" is not valid in base {base}. Allowed digits: {digits}.");
+
+    return template.replace("{digit}", digit).replace("{base}", base).replace("{digits}", digits);
+  };
+
+  const convert = (): void => {
+    if (!input || !inputSelect || !outputSelect || !mainResult) return;
+
+    try {
+      const detected = inputSelect.value === "auto" ? detectInputBase(input.value) : null;
+      const inputBase = detected?.base ?? getSelectedBase(inputSelect, inputCustom ?? undefined);
+      const valueToParse = detected?.normalizedValue ?? input.value;
+      const outputBase = getSelectedBase(outputSelect, outputCustom ?? undefined);
+      const parsed = parseBaseInteger(valueToParse, inputBase);
+      const main = formatForDisplay(parsed, outputBase);
+      const commonResults = Object.fromEntries(
+        commonBases.map((base) => [base, formatForDisplay(parsed, base)])
+      ) as Record<number, string>;
+
+      mainResult.textContent = main;
+      commonBases.forEach((base) => setResultForBase(base, commonResults[base]));
+      lastConversion = { inputBase, outputBase, mainResult: main, commonResults };
+      setStatus(message("converted", "Number converted."), "success");
+    } catch (error) {
+      clearResults();
+      setStatus(describeError(error), "error");
+    }
+  };
+
+  const setSelectToBase = (
+    select: HTMLSelectElement | undefined,
+    customInput: HTMLInputElement | undefined,
+    base: number
+  ): void => {
+    if (!select) return;
+    if ([2, 8, 10, 16].includes(base)) {
+      select.value = String(base);
+    } else {
+      select.value = "custom";
+      if (customInput) customInput.value = String(base);
+    }
+    setCustomVisibility();
+  };
+
+  const copyText = async (value: string): Promise<void> => {
+    await navigator.clipboard.writeText(value);
+    setStatus(message("copied", "Copied."), "success");
+  };
+
+  const copyAll = async (): Promise<void> => {
+    if (!lastConversion) return;
+    const text = commonBases
+      .map((base, index) => `${commonLabels[index]}: ${lastConversion?.commonResults[base] ?? ""}`)
+      .join("\n");
+    await navigator.clipboard.writeText(text);
+    setStatus(message("copiedAll", "Copied to clipboard."), "success");
+  };
+
+  const downloadTxt = (): void => {
+    if (!lastConversion || !input) return;
+    const text = [
+      `Input base (${lastConversion.inputBase}): ${input.value.trim()}`,
+      `Output base (${lastConversion.outputBase}): ${lastConversion.mainResult}`,
+      "",
+      ...commonBases.map((base, index) => `${commonLabels[index]}: ${lastConversion?.commonResults[base] ?? ""}`)
+    ].join("\n");
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
+    link.download = "number-base-conversion.txt";
+    link.click();
+    URL.revokeObjectURL(link.href);
+    setStatus(message("downloaded", "TXT downloaded."), "success");
+  };
+
+  root?.querySelector<HTMLButtonElement>("[data-number-base-convert]")?.addEventListener("click", convert);
+  root?.querySelector<HTMLButtonElement>("[data-number-base-copy-main]")?.addEventListener("click", () => {
+    if (lastConversion) void copyText(lastConversion.mainResult);
+  });
+  root?.querySelector<HTMLButtonElement>("[data-number-base-copy-all]")?.addEventListener("click", () => {
+    void copyAll();
+  });
+  root?.querySelector<HTMLButtonElement>("[data-number-base-download]")?.addEventListener("click", downloadTxt);
+  root?.querySelector<HTMLButtonElement>("[data-number-base-swap]")?.addEventListener("click", () => {
+    if (!lastConversion || !input) {
+      setStatus(message("swapNeedsResult", "Convert first before swapping with the current result."), "error");
+      return;
+    }
+
+    input.value = lastConversion.mainResult;
+    setSelectToBase(inputSelect ?? undefined, inputCustom ?? undefined, lastConversion.outputBase);
+    setSelectToBase(outputSelect ?? undefined, outputCustom ?? undefined, lastConversion.inputBase);
+    convert();
+  });
+  root?.querySelector<HTMLButtonElement>("[data-number-base-example]")?.addEventListener("click", () => {
+    if (!input || !inputSelect || !outputSelect) return;
+    const example = examples[exampleIndex % examples.length];
+    exampleIndex += 1;
+    input.value = example.input;
+    inputSelect.value = example.inputChoice;
+    outputSelect.value = example.outputChoice;
+    setCustomVisibility();
+    convert();
+    setStatus(message("exampleLoaded", "Example loaded."), "success");
+  });
+  root?.querySelector<HTMLButtonElement>("[data-number-base-clear]")?.addEventListener("click", () => {
+    if (input) input.value = "";
+    clearResults();
+    setStatus(message("cleared", "Cleared."), "neutral");
+  });
+  root?.querySelectorAll<HTMLButtonElement>("[data-number-base-copy-row]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const base = Number(button.dataset.numberBaseCopyRow);
+      const value = lastConversion?.commonResults[base];
+      if (value) void copyText(value);
+    });
+  });
+
+  inputSelect?.addEventListener("change", () => {
+    setCustomVisibility();
+  });
+  outputSelect?.addEventListener("change", () => {
+    setCustomVisibility();
+  });
+  letterCase?.addEventListener("change", () => {
+    if (lastConversion) convert();
+  });
+  prefixOutput?.addEventListener("change", () => {
+    if (lastConversion) convert();
+  });
+
+  setCustomVisibility();
+</script>

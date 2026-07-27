@@ -7,13 +7,13 @@ Status: updated after the tool consolidation refactor.
 
 | Metric | Current value |
 | --- | --- |
-| Active tool routes | 50 tool routes: 25 English + 25 Vietnamese |
-| Listed primary tools | 21 cards/tools shown in Home, All Tools, category pages, search/filter, and Related Tools |
+| Active tool routes | 52 tool routes: 26 English + 26 Vietnamese |
+| Listed primary tools | 22 cards/tools shown in Home, All Tools, category pages, search/filter, and Related Tools |
 | Hidden secondary routes | 4 tools hidden from listings but still active and built |
-| Total sitemap URLs | 72 URLs |
+| Total sitemap URLs | 74 URLs |
 | Categories | 5 |
-| English pages | 36 URLs |
-| Vietnamese pages | 36 URLs |
+| English pages | 37 URLs |
+| Vietnamese pages | 37 URLs |
 | Runtime dependencies | `astro`, `qrcode` |
 | Build result | `npm run check`, `npm run lint`, and `npm run build` passed |
 
@@ -76,23 +76,24 @@ These routes do not appear as separate cards in Home, All Tools, category pages,
 | 9 | UUID Generator | `/tools/uuid-generator` | Generator Tools | Unchanged. |
 | 10 | Random Number Generator | `/tools/random-number-generator` | Generator Tools | Unchanged. |
 | 11 | JSON Formatter & Validator | `/tools/json-formatter` | Developer Tools | Consolidates format, minify, validate, summary. |
-| 12 | Base64 Encoder/Decoder | `/tools/base64-encoder-decoder` | Developer Tools | Explicitly kept separate from URL Encoder/Decoder. |
-| 13 | URL Encoder/Decoder | `/tools/url-encoder-decoder` | Developer Tools | Explicitly kept separate from Base64 Encoder/Decoder. |
-| 14 | Regex Tester | `/tools/regex-tester` | Developer Tools | Unchanged. |
-| 15 | Markdown Previewer | `/tools/markdown-previewer` | Developer Tools | Unchanged. |
-| 16 | HTML Formatter | `/tools/html-formatter` | Developer Tools | Unchanged. |
-| 17 | CSS Minifier | `/tools/css-minifier` | Developer Tools | Unchanged. |
-| 18 | JavaScript Minifier | `/tools/javascript-minifier` | Developer Tools | Unchanged. |
-| 19 | Unix Timestamp Converter | `/tools/unix-timestamp-converter` | Developer Tools | Primary timestamp card. |
-| 20 | Color Converter | `/tools/color-converter` | Conversion Tools | Unchanged. |
-| 21 | Percentage Calculator | `/tools/percentage-calculator` | Calculator Tools | Unchanged. |
+| 12 | Number Base Converter | `/tools/number-base-converter` | Developer Tools | Converts integer bases 2-36 in one combined tool with BigInt precision. |
+| 13 | Base64 Encoder/Decoder | `/tools/base64-encoder-decoder` | Developer Tools | Explicitly kept separate from URL Encoder/Decoder. |
+| 14 | URL Encoder/Decoder | `/tools/url-encoder-decoder` | Developer Tools | Explicitly kept separate from Base64 Encoder/Decoder. |
+| 15 | Regex Tester | `/tools/regex-tester` | Developer Tools | Unchanged. |
+| 16 | Markdown Previewer | `/tools/markdown-previewer` | Developer Tools | Unchanged. |
+| 17 | HTML Formatter | `/tools/html-formatter` | Developer Tools | Unchanged. |
+| 18 | CSS Minifier | `/tools/css-minifier` | Developer Tools | Unchanged. |
+| 19 | JavaScript Minifier | `/tools/javascript-minifier` | Developer Tools | Unchanged. |
+| 20 | Unix Timestamp Converter | `/tools/unix-timestamp-converter` | Developer Tools | Primary timestamp card. |
+| 21 | Color Converter | `/tools/color-converter` | Conversion Tools | Unchanged. |
+| 22 | Percentage Calculator | `/tools/percentage-calculator` | Calculator Tools | Unchanged. |
 
 ## Category Counts After Refactor
 
 | Category | Listed count |
 | --- | --- |
 | Text Tools | 5 |
-| Developer Tools | 9 |
+| Developer Tools | 10 |
 | Generator Tools | 5 |
 | Conversion Tools | 1 |
 | Calculator Tools | 1 |
@@ -127,6 +128,7 @@ These files no longer contain their own duplicated logic. They only render the s
 | `src/utils/lines.ts` | Shared line splitting, duplicate removal, and sorting logic. |
 | `src/utils/json.ts` | Shared JSON parse, format, summary, and line/column position helpers. |
 | `src/utils/browser.ts` | Shared `copyText()` and `downloadText()` browser helpers. |
+| `src/utils/numberBase.ts` | BigInt-safe integer parsing and formatting for bases 2-36, including prefix handling and digit validation. |
 
 ## SEO and FAQ
 
@@ -136,6 +138,7 @@ These files no longer contain their own duplicated logic. They only render the s
 - FAQ schema remains generated from the same `ToolLayout.astro` + `src/utils/schema.ts` flow, so visible FAQ content and FAQPage schema stay aligned.
 - No route redirects were added.
 - No new `/tools/text-counter`, `/tools/line-tools`, or `/tools/json-tools` URL was created.
+- Number Base Converter was added as one combined route only: `/tools/number-base-converter` and `/vi/tools/number-base-converter`. No decimal-to-binary, binary-to-decimal, hex-to-decimal, or octal-to-binary subroutes were created.
 
 ## Explicit Non-Merge Decision
 
@@ -152,21 +155,24 @@ Commands run:
 
 - `npm.cmd run check` - passed with 0 errors, 0 warnings, 0 hints.
 - `npm.cmd run lint` - passed.
-- `npm.cmd run build` - passed; 72 pages built.
+- `npm.cmd run build` - passed; 74 pages built.
 
 Manual/static checks performed on `dist`:
 
-- Confirmed all 16 requested EN/VI primary and secondary routes exist.
-- Confirmed all 16 requested EN/VI primary and secondary routes return HTTP 200 on the local dev server.
-- Confirmed sitemap still has 72 URLs.
+- Confirmed the Number Base Converter EN/VI routes exist.
+- Confirmed `/tools/number-base-converter` and `/vi/tools/number-base-converter` return HTTP 200 on the local dev server.
+- Confirmed sitemap has 74 URLs and includes both Number Base Converter routes.
 - Confirmed the 8 secondary tool URLs remain in sitemap.
 - Confirmed All Tools no longer links secondary cards for Character Counter, Sort Lines, JSON Validator, or Timestamp Converter.
-- Confirmed Home displays 21 active/listed tools.
-- Confirmed category counts reflect listed tools: 5 Text, 9 Developer, 5 Generator, 1 Conversion, 1 Calculator.
+- Confirmed Home displays 22 active/listed tools.
+- Confirmed category counts reflect listed tools: 5 Text, 10 Developer, 5 Generator, 1 Conversion, 1 Calculator.
 - Confirmed secondary route pages still include canonical/hreflang/FAQ schema output through the existing layout system.
+- Confirmed Number Base Converter includes canonical, hreflang, WebApplication schema, BreadcrumbList schema, and FAQPage schema.
+- Confirmed Number Base Converter utility edge cases pass for `0`, `1`, `-1`, `255`, `-255`, base 2/8/16/36 input, `0b`, `0o`, `0x`, invalid digits, invalid signs, fractional input, base 1/37, inner whitespace, and a value larger than `9007199254740991`.
 
 ## Remaining Notes
 
-- The project still has 25 active tool route records because old URLs are intentionally preserved.
-- Listed primary tools are now 21, down from 25.
+- The project now has 26 active tool route records because old URLs are intentionally preserved and Number Base Converter was added.
+- Listed primary tools are now 22.
+- Number Base Converter intentionally supports integers only; fractional values are rejected with a clear message.
 - No backend, database, API, dependency installation, redirect, or framework change was added.

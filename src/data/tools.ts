@@ -304,6 +304,47 @@ const toolRecords: ToolRecord[] = [
     }
   },
   {
+    id: "number-base-converter",
+    slug: "number-base-converter",
+    categoryId: "developer-tools",
+    icon: "2-36",
+    featured: true,
+    popular: true,
+    status: "active",
+    text: {
+      en: {
+        name: "Number Base Converter",
+        shortDescription: "Convert integers between binary, octal, decimal, hexadecimal, and custom bases.",
+        description:
+          "Convert integers between base 2 and base 36 with browser-local BigInt precision, including binary, octal, decimal, hexadecimal, prefixes, negative numbers, and very large values.",
+        keywords: [
+          "number base converter",
+          "binary converter",
+          "decimal to binary",
+          "binary to decimal",
+          "decimal to hexadecimal",
+          "hex to decimal",
+          "octal converter",
+          "base 2 to base 36 converter"
+        ]
+      },
+      vi: {
+        name: "Chuyển Đổi Hệ Cơ Số",
+        shortDescription: "Đổi số nguyên giữa nhị phân, bát phân, thập phân, thập lục phân và hệ tùy chỉnh.",
+        description:
+          "Chuyển đổi số nguyên giữa hệ 2 đến hệ 36 bằng BigInt ngay trong trình duyệt, hỗ trợ nhị phân, bát phân, thập phân, thập lục phân, prefix, số âm và số rất lớn.",
+        keywords: [
+          "chuyển đổi hệ cơ số",
+          "đổi số thập phân sang nhị phân",
+          "đổi nhị phân sang thập phân",
+          "đổi hệ 10 sang hệ 2",
+          "đổi hệ 16 sang hệ 10",
+          "chuyển đổi nhị phân thập phân bát phân thập lục phân"
+        ]
+      }
+    }
+  },
+  {
     id: "json-validator",
     slug: "json-validator",
     categoryId: "developer-tools",

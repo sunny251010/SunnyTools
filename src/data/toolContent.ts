@@ -6,6 +6,11 @@ export interface ToolContent {
   howToUse: string;
   howItWorks: string;
   privacy: string;
+  sections?: {
+    title: string;
+    body: string;
+    items?: string[];
+  }[];
   faqs: FAQItem[];
 }
 
@@ -343,6 +348,210 @@ const contentBySlug: Record<string, LocalizedToolContent> = {
         { question: "Có định dạng và kiểm tra JSON trong cùng một nơi không?", answer: "Có. Dùng Định dạng để dễ đọc, Nén gọn để giảm dung lượng và Kiểm tra để xem trạng thái cùng chi tiết." },
         { question: "Có báo vị trí JSON sai không?", answer: "Khi trình duyệt cung cấp vị trí lỗi, công cụ sẽ ước tính dòng và cột." },
         { question: "JSON có bị upload không?", answer: "Không. Việc parse, định dạng, nén gọn và kiểm tra đều chạy cục bộ." }
+      ]
+    }
+  },
+  "number-base-converter": {
+    en: {
+      intro:
+        "Number Base Converter converts whole numbers between binary, octal, decimal, hexadecimal, and custom bases from 2 to 36.",
+      howToUse:
+        "Enter an integer, choose the input base or Auto Detect for 0b, 0o, and 0x prefixes, choose an output base, then press Convert. The main result and the common base table can be copied separately.",
+      howItWorks:
+        "The converter validates each digit for the selected base, parses the integer into a BigInt without using JavaScript Number for the entered value, and formats that exact BigInt into the requested base.",
+      privacy:
+        "Your input is processed locally in your browser and is not uploaded to a server.",
+      sections: [
+        {
+          title: "What is a number base?",
+          body:
+            "A number base defines which digits can be used and how much each digit position is worth. Base 10 is the everyday decimal system, while computers often use base 2 and base 16 because they map cleanly to bits and bytes."
+        },
+        {
+          title: "Binary, octal, decimal, and hexadecimal",
+          body:
+            "Binary uses only 0 and 1. Octal uses 0 through 7. Decimal uses 0 through 9. Hexadecimal uses 0-9 and A-F, so it is common in programming, memory addresses, color codes, binary data, and debugging."
+        },
+        {
+          title: "Custom bases from 2 to 36",
+          body:
+            "For bases above 10, letters represent digit values: A is 10, B is 11, and Z is 35. Input accepts uppercase or lowercase letters, and results can be shown in uppercase or lowercase."
+        },
+        {
+          title: "Conversion examples",
+          body:
+            "Use the examples to check familiar conversions before converting your own values.",
+          items: [
+            "Decimal 255 becomes binary 11111111, octal 377, and hexadecimal FF.",
+            "Binary 101010 becomes decimal 42.",
+            "Hexadecimal 7B becomes decimal 123.",
+            "Decimal -64 becomes binary -1000000."
+          ]
+        },
+        {
+          title: "Common use cases",
+          body:
+            "Base conversion is useful when reading low-level data or moving between human-friendly and machine-friendly representations.",
+          items: [
+            "Convert decimal values to binary for bit masks and flags.",
+            "Convert hexadecimal values to decimal while debugging API payloads or logs.",
+            "Convert color or memory-related hex values into a format that is easier to inspect.",
+            "Check custom base values for coding challenges, tests, and data encoding exercises."
+          ]
+        },
+        {
+          title: "Precision with very large integers",
+          body:
+            "The tool uses BigInt and a manual parser, so integers larger than 9007199254740991 are not rounded by JavaScript Number. Fractional values such as 10.5 are intentionally rejected in this version."
+        }
+      ],
+      faqs: [
+        {
+          question: "What is Number Base Converter used for?",
+          answer:
+            "It converts whole numbers between base 2, base 8, base 10, base 16, and custom bases from 2 to 36."
+        },
+        {
+          question: "How do I convert decimal to binary?",
+          answer:
+            "Enter the decimal number, choose Decimal (10) as the input base, choose Binary (2) as the output base, and press Convert."
+        },
+        {
+          question: "How do I convert binary to decimal?",
+          answer:
+            "Enter a value that contains only 0 and 1, choose Binary (2) as the input base, choose Decimal (10), and convert."
+        },
+        {
+          question: "Which bases are supported?",
+          answer:
+            "The tool supports binary, octal, decimal, hexadecimal, and any custom base from 2 through 36."
+        },
+        {
+          question: "Does it support negative numbers?",
+          answer:
+            "Yes. Put one minus sign at the beginning, such as -255 or -FF. A minus sign in any other position is rejected."
+        },
+        {
+          question: "Does it support very large numbers?",
+          answer:
+            "Yes. It uses BigInt and parses digits manually so large integers are converted exactly instead of being rounded by Number."
+        },
+        {
+          question: "Why is a digit invalid in the selected base?",
+          answer:
+            "Each base only allows digits below that base. For example, base 2 allows only 0 and 1, while base 16 allows 0-9 and A-F."
+        },
+        {
+          question: "Is my data sent to a server?",
+          answer:
+            "No. Conversion, validation, copying, and TXT generation happen locally in your browser."
+        },
+        {
+          question: "Does it support fractional values?",
+          answer:
+            "Not yet. Values with a decimal point or comma are rejected so the tool does not silently round or truncate them."
+        }
+      ]
+    },
+    vi: {
+      intro:
+        "Công cụ Chuyển Đổi Hệ Cơ Số đổi số nguyên giữa nhị phân, bát phân, thập phân, thập lục phân và hệ tùy chỉnh từ 2 đến 36.",
+      howToUse:
+        "Nhập một số nguyên, chọn hệ đầu vào hoặc Tự nhận diện cho prefix 0b, 0o và 0x, chọn hệ đầu ra rồi bấm Chuyển đổi. Kết quả chính và bảng các hệ phổ biến có thể sao chép riêng.",
+      howItWorks:
+        "Công cụ kiểm tra từng chữ số theo hệ đã chọn, parse số nguyên thành BigInt mà không dùng JavaScript Number cho giá trị đã nhập, rồi định dạng BigInt chính xác đó sang hệ đầu ra.",
+      privacy:
+        "Dữ liệu được xử lý trực tiếp trong trình duyệt và không được tải lên máy chủ.",
+      sections: [
+        {
+          title: "Hệ cơ số là gì?",
+          body:
+            "Hệ cơ số quy định các chữ số được phép dùng và giá trị của từng vị trí chữ số. Hệ 10 là hệ thập phân quen thuộc, còn máy tính thường dùng hệ 2 và hệ 16 vì chúng gắn trực tiếp với bit và byte."
+        },
+        {
+          title: "Nhị phân, bát phân, thập phân và thập lục phân",
+          body:
+            "Nhị phân chỉ dùng 0 và 1. Bát phân dùng 0 đến 7. Thập phân dùng 0 đến 9. Thập lục phân dùng 0-9 và A-F, nên thường xuất hiện trong lập trình, địa chỉ bộ nhớ, mã màu, dữ liệu nhị phân và debugging."
+        },
+        {
+          title: "Hệ tùy chỉnh từ 2 đến 36",
+          body:
+            "Với hệ lớn hơn 10, chữ cái đại diện cho giá trị chữ số: A là 10, B là 11 và Z là 35. Input chấp nhận chữ hoa hoặc chữ thường, còn kết quả có thể hiển thị chữ hoa hoặc chữ thường."
+        },
+        {
+          title: "Ví dụ chuyển đổi",
+          body:
+            "Bạn có thể dùng ví dụ để kiểm tra các phép đổi quen thuộc trước khi nhập giá trị riêng.",
+          items: [
+            "Thập phân 255 thành nhị phân 11111111, bát phân 377 và thập lục phân FF.",
+            "Nhị phân 101010 thành thập phân 42.",
+            "Thập lục phân 7B thành thập phân 123.",
+            "Thập phân -64 thành nhị phân -1000000."
+          ]
+        },
+        {
+          title: "Trường hợp sử dụng phổ biến",
+          body:
+            "Chuyển đổi hệ cơ số hữu ích khi đọc dữ liệu cấp thấp hoặc chuyển qua lại giữa cách biểu diễn dễ đọc cho người và máy.",
+          items: [
+            "Đổi số thập phân sang nhị phân khi làm việc với bit mask và flag.",
+            "Đổi hệ 16 sang hệ 10 khi debug payload API hoặc log.",
+            "Kiểm tra giá trị hex liên quan đến màu sắc, bộ nhớ hoặc dữ liệu nhị phân.",
+            "Đổi hệ tùy chỉnh cho bài tập lập trình, test và bài toán mã hóa dữ liệu."
+          ]
+        },
+        {
+          title: "Độ chính xác với số nguyên rất lớn",
+          body:
+            "Công cụ dùng BigInt và bộ parse thủ công, nên các số nguyên lớn hơn 9007199254740991 không bị JavaScript Number làm tròn. Các giá trị có phần thập phân như 10.5 được từ chối rõ ràng trong phiên bản này."
+        }
+      ],
+      faqs: [
+        {
+          question: "Công cụ Chuyển Đổi Hệ Cơ Số dùng để làm gì?",
+          answer:
+            "Công cụ dùng để đổi số nguyên giữa hệ 2, hệ 8, hệ 10, hệ 16 và hệ tùy chỉnh từ 2 đến 36."
+        },
+        {
+          question: "Làm thế nào để đổi decimal sang binary?",
+          answer:
+            "Nhập số thập phân, chọn Thập phân (10) làm hệ đầu vào, chọn Nhị phân (2) làm hệ đầu ra rồi bấm Chuyển đổi."
+        },
+        {
+          question: "Làm thế nào để đổi binary sang decimal?",
+          answer:
+            "Nhập giá trị chỉ gồm 0 và 1, chọn Nhị phân (2) làm hệ đầu vào, chọn Thập phân (10) rồi chuyển đổi."
+        },
+        {
+          question: "Công cụ hỗ trợ những hệ cơ số nào?",
+          answer:
+            "Công cụ hỗ trợ nhị phân, bát phân, thập phân, thập lục phân và mọi hệ tùy chỉnh từ 2 đến 36."
+        },
+        {
+          question: "Công cụ có hỗ trợ số âm không?",
+          answer:
+            "Có. Đặt một dấu âm ở đầu số, ví dụ -255 hoặc -FF. Dấu âm ở vị trí khác sẽ bị báo lỗi."
+        },
+        {
+          question: "Công cụ có hỗ trợ số rất lớn không?",
+          answer:
+            "Có. Công cụ dùng BigInt và parse từng chữ số thủ công để số nguyên lớn được chuyển đổi chính xác, không bị Number làm tròn."
+        },
+        {
+          question: "Vì sao một ký tự không hợp lệ trong hệ cơ số đã chọn?",
+          answer:
+            "Mỗi hệ chỉ cho phép các chữ số nhỏ hơn hệ đó. Ví dụ hệ 2 chỉ cho phép 0 và 1, còn hệ 16 cho phép 0-9 và A-F."
+        },
+        {
+          question: "Dữ liệu có được gửi lên server không?",
+          answer:
+            "Không. Việc chuyển đổi, kiểm tra, sao chép và tạo file TXT đều chạy cục bộ trong trình duyệt."
+        },
+        {
+          question: "Công cụ có hỗ trợ phần thập phân không?",
+          answer:
+            "Chưa. Giá trị có dấu chấm hoặc dấu phẩy sẽ bị từ chối để công cụ không âm thầm làm tròn hoặc cắt bỏ phần lẻ."
+        }
       ]
     }
   },
