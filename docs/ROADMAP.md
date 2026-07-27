@@ -174,6 +174,10 @@ Kết quả đầu ra:
 
 Mục tiêu: Đo lường người dùng và cải thiện hiệu năng.
 
+Trạng thái: Google Analytics 4 đã được kết nối qua `PUBLIC_GA_ID`. Bước tiếp theo là bổ sung event
+tracking cho tool/search, thiết lập performance budget và audit Lighthouse/Core Web Vitals sau khi
+deploy.
+
 Công việc:
 
 - Google Analytics hoặc Plausible.

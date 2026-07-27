@@ -134,7 +134,7 @@ export const messages = {
         sections: [
           {
             title: "Analytics and advertising",
-            body: "Analytics and Google AdSense are not connected in this phase. If they are added later, this page should be updated before production launch."
+            body: "SunnyTools uses Google Analytics 4 to understand page views and general site usage. Tool input is still processed locally in the browser. Google AdSense is not connected yet."
           },
           {
             title: "Contact",
@@ -484,7 +484,7 @@ export const messages = {
         sections: [
           {
             title: "Analytics và quảng cáo",
-            body: "Analytics và Google AdSense chưa được kết nối trong giai đoạn này. Nếu thêm sau này, trang này cần được cập nhật trước khi launch production."
+            body: "SunnyTools dùng Google Analytics 4 để hiểu lượt xem trang và mức sử dụng chung của website. Input trong các công cụ vẫn được xử lý cục bộ trong trình duyệt. Google AdSense hiện chưa được kết nối."
           },
           {
             title: "Liên hệ",
