@@ -1,0 +1,282 @@
+---
+import { defaultLocale, type Locale } from "../../../i18n/config";
+import { getMessages } from "../../../i18n/messages";
+
+interface Props {
+  locale?: Locale;
+  defaultMode?: "format" | "validate";
+}
+
+const { locale = defaultLocale, defaultMode = "format" } = Astro.props;
+const copy = getMessages(locale).toolUi;
+---
+
+<div
+  class="space-y-5"
+  data-json-tools
+  data-default-mode={defaultMode}
+  data-valid={copy.json.valid}
+  data-invalid={copy.json.invalid}
+  data-empty={copy.jsonValidator.empty}
+  data-copied={copy.shared.copied}
+  data-formatted={copy.jsonTools.formatted}
+  data-minified={copy.jsonTools.minified}
+  data-line={copy.jsonValidator.line}
+  data-column={copy.jsonValidator.column}
+>
+  <div class="inline-flex w-full flex-wrap gap-2 rounded-md bg-slate-100 p-1 sm:w-auto" role="tablist" aria-label={copy.jsonTools.mode}>
+    <button type="button" class="rounded-md px-3 py-2 text-sm font-semibold" data-json-mode="format" role="tab">
+      {copy.json.format}
+    </button>
+    <button type="button" class="rounded-md px-3 py-2 text-sm font-semibold" data-json-action="minify">
+      {copy.json.minify}
+    </button>
+    <button type="button" class="rounded-md px-3 py-2 text-sm font-semibold" data-json-mode="validate" role="tab">
+      {copy.jsonValidator.validate}
+    </button>
+  </div>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div>
+      <label for="json-tools-input" class="mb-2 block text-sm font-semibold text-ink">{copy.json.input}</label>
+      <textarea
+        id="json-tools-input"
+        class="min-h-80 w-full rounded-md border border-slate-300 bg-slate-50 p-4 font-mono text-sm leading-6 text-ink shadow-inner focus:border-brand-teal focus:bg-white"
+        placeholder='{"hello":"world"}'
+        data-json-input></textarea>
+    </div>
+    <div>
+      <label for="json-tools-output" class="mb-2 block text-sm font-semibold text-ink">{copy.shared.output}</label>
+      <textarea
+        id="json-tools-output"
+        class="min-h-80 w-full rounded-md border border-slate-300 bg-white p-4 font-mono text-sm leading-6 text-ink shadow-inner"
+        readonly
+        data-json-output></textarea>
+    </div>
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-json-format-panel>
+    <label class="text-sm font-semibold text-ink">
+      {copy.jsonTools.indent}
+      <select class="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3" data-json-indent>
+        <option value="2">2 spaces</option>
+        <option value="4">4 spaces</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="grid gap-3 sm:grid-cols-3" data-json-size-panel hidden>
+    <div class="rounded-md border border-slate-200 bg-slate-50 p-3">
+      <p class="text-xs font-semibold uppercase text-slate-500">{copy.minifier.before}</p>
+      <p class="mt-1 text-2xl font-semibold text-ink" data-json-before>0 B</p>
+    </div>
+    <div class="rounded-md border border-slate-200 bg-slate-50 p-3">
+      <p class="text-xs font-semibold uppercase text-slate-500">{copy.minifier.after}</p>
+      <p class="mt-1 text-2xl font-semibold text-ink" data-json-after>0 B</p>
+    </div>
+    <div class="rounded-md border border-slate-200 bg-slate-50 p-3">
+      <p class="text-xs font-semibold uppercase text-slate-500">{copy.minifier.saved}</p>
+      <p class="mt-1 text-2xl font-semibold text-ink" data-json-saved>0%</p>
+    </div>
+  </div>
+
+  <section class="grid gap-4 md:grid-cols-[minmax(0,1fr)_320px]">
+    <div class="rounded-md border border-slate-200 bg-white p-4">
+      <h2 class="text-base font-semibold text-ink">{copy.jsonValidator.status}</h2>
+      <p class="mt-3 text-sm font-medium" role="status" data-json-status></p>
+      <p class="mt-2 font-mono text-sm leading-6 text-slate-700" data-json-error></p>
+    </div>
+    <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
+      <h2 class="text-base font-semibold text-ink">{copy.jsonValidator.details}</h2>
+      <dl class="mt-3 space-y-2 text-sm">
+        <div class="flex justify-between gap-4">
+          <dt class="text-slate-600">{copy.jsonValidator.rootType}</dt>
+          <dd class="font-semibold text-ink" data-json-type>-</dd>
+        </div>
+        <div class="flex justify-between gap-4">
+          <dt class="text-slate-600">{copy.jsonValidator.itemCount}</dt>
+          <dd class="font-semibold text-ink" data-json-count>-</dd>
+        </div>
+        <div class="flex justify-between gap-4">
+          <dt class="text-slate-600">{copy.jsonValidator.characterCount}</dt>
+          <dd class="font-semibold text-ink" data-json-chars>0</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <div class="flex flex-wrap gap-3">
+    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-json-run>
+      {copy.shared.convert}
+    </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-json-copy>
+      {copy.shared.copy}
+    </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-json-download>
+      {copy.jsonTools.downloadJson}
+    </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-json-example>
+      {copy.shared.loadExample}
+    </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-json-clear>
+      {copy.shared.clear}
+    </button>
+  </div>
+</div>
+
+<script>
+  import { copyText, downloadText } from "../../../utils/browser";
+  import { formatJson, getJsonSummary, parseJson } from "../../../utils/json";
+
+  type Mode = "format" | "minify" | "validate";
+
+  const root = document.querySelector<HTMLElement>("[data-json-tools]");
+  const input = root?.querySelector<HTMLTextAreaElement>("[data-json-input]");
+  const output = root?.querySelector<HTMLTextAreaElement>("[data-json-output]");
+  const status = root?.querySelector<HTMLElement>("[data-json-status]");
+  const errorText = root?.querySelector<HTMLElement>("[data-json-error]");
+  const typeText = root?.querySelector<HTMLElement>("[data-json-type]");
+  const countText = root?.querySelector<HTMLElement>("[data-json-count]");
+  const charsText = root?.querySelector<HTMLElement>("[data-json-chars]");
+  const formatPanel = root?.querySelector<HTMLElement>("[data-json-format-panel]");
+  const sizePanel = root?.querySelector<HTMLElement>("[data-json-size-panel]");
+  const indentInput = root?.querySelector<HTMLSelectElement>("[data-json-indent]");
+  const beforeText = root?.querySelector<HTMLElement>("[data-json-before]");
+  const afterText = root?.querySelector<HTMLElement>("[data-json-after]");
+  const savedText = root?.querySelector<HTMLElement>("[data-json-saved]");
+  const valid = root?.dataset.valid ?? "Valid JSON.";
+  const invalid = root?.dataset.invalid ?? "Invalid JSON.";
+  const empty = root?.dataset.empty ?? "Paste JSON to validate.";
+  const copied = root?.dataset.copied ?? "Copied.";
+  const formatted = root?.dataset.formatted ?? "JSON formatted.";
+  const minified = root?.dataset.minified ?? "JSON minified.";
+  const lineLabel = root?.dataset.line ?? "Line";
+  const columnLabel = root?.dataset.column ?? "Column";
+  let mode: Mode = root?.dataset.defaultMode === "validate" ? "validate" : "format";
+
+  const size = (value: string): number => new Blob([value]).size;
+
+  const setStatus = (message: string, kind: "success" | "error" | "neutral"): void => {
+    if (!status) return;
+    const color = kind === "success" ? "text-emerald-700" : kind === "error" ? "text-rose-700" : "text-slate-600";
+    status.className = `mt-3 text-sm font-medium ${color}`;
+    status.textContent = message;
+  };
+
+  const updateSummary = (parsed: unknown | undefined, source: string): void => {
+    if (!typeText || !countText || !charsText) return;
+    charsText.textContent = String(source.length);
+
+    if (parsed === undefined) {
+      typeText.textContent = "-";
+      countText.textContent = "-";
+      return;
+    }
+
+    const summary = getJsonSummary(parsed, source);
+    typeText.textContent = summary.rootType;
+    countText.textContent = summary.itemCount;
+    charsText.textContent = String(summary.characterCount);
+  };
+
+  const updateSizeStats = (before: string, after: string): void => {
+    if (!beforeText || !afterText || !savedText) return;
+    const beforeSize = size(before);
+    const afterSize = size(after);
+    beforeText.textContent = `${beforeSize} B`;
+    afterText.textContent = `${afterSize} B`;
+    savedText.textContent = `${beforeSize > 0 ? Math.max(0, Math.round(((beforeSize - afterSize) / beforeSize) * 100)) : 0}%`;
+  };
+
+  const run = (): void => {
+    if (!input || !output || !errorText) return;
+    const source = input.value;
+
+    if (source.trim().length === 0) {
+      output.value = "";
+      errorText.textContent = "";
+      setStatus(empty, "neutral");
+      updateSummary(undefined, source);
+      updateSizeStats("", "");
+      return;
+    }
+
+    const result = parseJson(source);
+    if (!result.ok) {
+      output.value = "";
+      const hint = result.position ? ` ${lineLabel} ${result.position.line}, ${columnLabel} ${result.position.column}.` : "";
+      errorText.textContent = `${result.message ?? invalid}.${hint}`;
+      setStatus(invalid, "error");
+      updateSummary(undefined, source);
+      updateSizeStats(source, "");
+      return;
+    }
+
+    errorText.textContent = "";
+    updateSummary(result.value, source);
+
+    if (mode === "validate") {
+      output.value = "";
+      setStatus(valid, "success");
+      updateSizeStats(source, "");
+      return;
+    }
+
+    const transformed = formatJson(result.value, mode === "minify" ? 0 : Number(indentInput?.value) || 2);
+    output.value = transformed;
+    setStatus(mode === "minify" ? minified : formatted, "success");
+    updateSizeStats(source, transformed);
+  };
+
+  const setMode = (nextMode: Mode): void => {
+    mode = nextMode;
+    if (formatPanel) formatPanel.hidden = mode !== "format";
+    if (sizePanel) sizePanel.hidden = mode === "validate";
+    root?.querySelectorAll<HTMLButtonElement>("[data-json-mode]").forEach((button) => {
+      const active = button.dataset.jsonMode === mode;
+      button.setAttribute("aria-selected", String(active));
+      button.className = active
+        ? "rounded-md bg-white px-3 py-2 text-sm font-semibold text-brand-teal shadow-sm"
+        : "rounded-md px-3 py-2 text-sm font-semibold text-slate-600 hover:text-brand-teal";
+    });
+    const minifyButton = root?.querySelector<HTMLButtonElement>("[data-json-action='minify']");
+    if (minifyButton) {
+      minifyButton.className =
+        mode === "minify"
+          ? "rounded-md bg-white px-3 py-2 text-sm font-semibold text-brand-teal shadow-sm"
+          : "rounded-md px-3 py-2 text-sm font-semibold text-slate-600 hover:text-brand-teal";
+    }
+    run();
+  };
+
+  root?.querySelectorAll<HTMLButtonElement>("[data-json-mode]").forEach((button) => {
+    button.addEventListener("click", () => setMode(button.dataset.jsonMode === "validate" ? "validate" : "format"));
+  });
+  root?.querySelector<HTMLButtonElement>("[data-json-action='minify']")?.addEventListener("click", () => setMode("minify"));
+  root?.querySelector<HTMLButtonElement>("[data-json-run]")?.addEventListener("click", run);
+  root?.querySelector<HTMLButtonElement>("[data-json-copy]")?.addEventListener("click", async () => {
+    if (!output || !status) return;
+    await copyText(output.value);
+    setStatus(copied, "success");
+  });
+  root?.querySelector<HTMLButtonElement>("[data-json-download]")?.addEventListener("click", () => {
+    if (output?.value) downloadText(mode === "minify" ? "data.min.json" : "data.json", output.value, "application/json");
+  });
+  root?.querySelector<HTMLButtonElement>("[data-json-example]")?.addEventListener("click", () => {
+    if (!input) return;
+    input.value = '{"name":"Sunny Tools","features":["format","minify","validate"],"private":true}';
+    run();
+  });
+  root?.querySelector<HTMLButtonElement>("[data-json-clear]")?.addEventListener("click", () => {
+    if (!input || !output || !errorText) return;
+    input.value = "";
+    output.value = "";
+    errorText.textContent = "";
+    setStatus("", "neutral");
+    updateSummary(undefined, "");
+    updateSizeStats("", "");
+  });
+  input?.addEventListener("input", run);
+  indentInput?.addEventListener("change", run);
+  setMode(mode);
+</script>

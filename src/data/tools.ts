@@ -10,6 +10,7 @@ interface ToolRecord {
   icon?: string;
   featured?: boolean;
   popular?: boolean;
+  listed?: boolean;
   status: ToolStatus;
   text: Record<Locale, ToolText>;
 }
@@ -19,24 +20,24 @@ const toolRecords: ToolRecord[] = [
     id: "word-counter",
     slug: "word-counter",
     categoryId: "text-tools",
-    icon: "WC",
+    icon: "TXT",
     featured: true,
     popular: true,
     status: "active",
     text: {
       en: {
-        name: "Word Counter",
-        shortDescription: "Count words, characters, sentences, paragraphs, and reading time.",
+        name: "Text Counter",
+        shortDescription: "Count words, characters, lines, reading time, and character limits.",
         description:
-          "A private browser-based word counter for quick writing, editing, and content checks.",
-        keywords: ["word count", "character count", "reading time", "writing"]
+          "A private browser-based text counter for word counts, character counts, lines, limits, and reading time.",
+        keywords: ["text counter", "word count", "character count", "reading time", "character limit"]
       },
       vi: {
-        name: "Đếm Từ",
-        shortDescription: "Đếm số từ, ký tự, câu, đoạn văn và thời gian đọc.",
+        name: "Bộ Đếm Văn Bản",
+        shortDescription: "Đếm từ, ký tự, dòng, thời gian đọc và giới hạn ký tự.",
         description:
-          "Công cụ đếm từ riêng tư chạy trên trình duyệt cho việc viết, biên tập và kiểm tra nội dung.",
-        keywords: ["đếm từ", "đếm ký tự", "thời gian đọc", "viết nội dung"]
+          "Bộ đếm văn bản riêng tư chạy trên trình duyệt cho số từ, số ký tự, số dòng, giới hạn ký tự và thời gian đọc.",
+        keywords: ["đếm văn bản", "đếm từ", "đếm ký tự", "thời gian đọc", "giới hạn ký tự"]
       }
     }
   },
@@ -47,6 +48,7 @@ const toolRecords: ToolRecord[] = [
     icon: "CC",
     featured: true,
     popular: true,
+    listed: false,
     status: "active",
     text: {
       en: {
@@ -89,20 +91,20 @@ const toolRecords: ToolRecord[] = [
     id: "remove-duplicate-lines",
     slug: "remove-duplicate-lines",
     categoryId: "text-tools",
-    icon: "RD",
+    icon: "LT",
     status: "active",
     text: {
       en: {
-        name: "Remove Duplicate Lines",
-        shortDescription: "Remove repeated lines while keeping the first occurrence.",
-        description: "Clean lists, keywords, logs, and pasted text by removing duplicate lines locally.",
-        keywords: ["duplicate lines", "unique lines", "dedupe", "text cleanup"]
+        name: "Line Tools",
+        shortDescription: "Remove duplicate lines, sort lists, and clean multiline text.",
+        description: "Clean multiline text locally by removing duplicates, sorting lines, trimming whitespace, and skipping empty lines.",
+        keywords: ["line tools", "remove duplicate lines", "sort lines", "unique lines", "list cleanup"]
       },
       vi: {
-        name: "Xóa Dòng Trùng Lặp",
-        shortDescription: "Xóa các dòng bị lặp và giữ lại lần xuất hiện đầu tiên.",
-        description: "Làm sạch danh sách, từ khóa, log và văn bản đã dán bằng cách xóa dòng trùng lặp cục bộ.",
-        keywords: ["dòng trùng", "dòng duy nhất", "lọc trùng", "làm sạch văn bản"]
+        name: "Công Cụ Xử Lý Dòng",
+        shortDescription: "Xóa dòng trùng, sắp xếp danh sách và làm sạch văn bản nhiều dòng.",
+        description: "Làm sạch văn bản nhiều dòng ngay trong trình duyệt bằng cách xóa dòng trùng, sắp xếp dòng, cắt khoảng trắng và bỏ dòng trống.",
+        keywords: ["công cụ xử lý dòng", "xóa dòng trùng", "sắp xếp dòng", "dòng duy nhất", "làm sạch danh sách"]
       }
     }
   },
@@ -133,6 +135,7 @@ const toolRecords: ToolRecord[] = [
     slug: "sort-lines",
     categoryId: "text-tools",
     icon: "AZ",
+    listed: false,
     status: "active",
     text: {
       en: {
@@ -282,21 +285,21 @@ const toolRecords: ToolRecord[] = [
     id: "json-formatter",
     slug: "json-formatter",
     categoryId: "developer-tools",
-    icon: "{}",
+    icon: "JV",
     popular: true,
     status: "active",
     text: {
       en: {
-        name: "JSON Formatter",
-        shortDescription: "Format, inspect, and clean JSON snippets.",
-        description: "Pretty print JSON and make structured data easier to read.",
-        keywords: ["json", "formatter", "pretty print", "developer"]
+        name: "JSON Formatter & Validator",
+        shortDescription: "Format, minify, validate, and inspect JSON snippets.",
+        description: "Format, minify, validate, and inspect JSON locally before using snippets in APIs, configs, and apps.",
+        keywords: ["json formatter", "json validator", "format json", "validate json", "minify json"]
       },
       vi: {
-        name: "Định Dạng JSON",
-        shortDescription: "Định dạng, kiểm tra và làm gọn đoạn JSON.",
-        description: "Pretty print JSON để dữ liệu có cấu trúc dễ đọc hơn.",
-        keywords: ["json", "định dạng json", "pretty print", "lập trình"]
+        name: "Định Dạng Và Kiểm Tra JSON",
+        shortDescription: "Định dạng, nén gọn, kiểm tra và phân tích JSON.",
+        description: "Định dạng, nén gọn, kiểm tra và phân tích JSON cục bộ trước khi dùng trong API, config và ứng dụng.",
+        keywords: ["định dạng json", "kiểm tra json", "format json", "validate json", "nén json"]
       }
     }
   },
@@ -306,6 +309,7 @@ const toolRecords: ToolRecord[] = [
     categoryId: "developer-tools",
     icon: "JV",
     featured: true,
+    listed: false,
     status: "active",
     text: {
       en: {
@@ -497,6 +501,7 @@ const toolRecords: ToolRecord[] = [
     slug: "timestamp-converter",
     categoryId: "conversion-tools",
     icon: "TS",
+    listed: false,
     status: "active",
     text: {
       en: {
@@ -567,6 +572,7 @@ const toTool = (tool: ToolRecord, locale: Locale): Tool => {
     icon: tool.icon,
     featured: tool.featured,
     popular: tool.popular,
+    listed: tool.listed ?? true,
     status: tool.status,
     ...text
   };
@@ -577,17 +583,25 @@ export const getTools = (locale: Locale = defaultLocale): Tool[] =>
 
 export const tools = getTools();
 export const activeTools = tools.filter((tool) => tool.status === "active");
-export const featuredTools = tools.filter((tool) => tool.featured);
-export const popularTools = tools.filter((tool) => tool.popular);
+export const listedTools = tools.filter((tool) => tool.listed);
+export const activeListedTools = activeTools.filter((tool) => tool.listed);
+export const featuredTools = listedTools.filter((tool) => tool.featured);
+export const popularTools = listedTools.filter((tool) => tool.popular);
 
 export const getActiveTools = (locale: Locale = defaultLocale): Tool[] =>
   getTools(locale).filter((tool) => tool.status === "active");
 
+export const getListedTools = (locale: Locale = defaultLocale): Tool[] =>
+  getTools(locale).filter((tool) => tool.listed);
+
+export const getActiveListedTools = (locale: Locale = defaultLocale): Tool[] =>
+  getActiveTools(locale).filter((tool) => tool.listed);
+
 export const getFeaturedTools = (locale: Locale = defaultLocale): Tool[] =>
-  getTools(locale).filter((tool) => tool.featured);
+  getListedTools(locale).filter((tool) => tool.featured);
 
 export const getPopularTools = (locale: Locale = defaultLocale): Tool[] =>
-  getTools(locale).filter((tool) => tool.popular);
+  getListedTools(locale).filter((tool) => tool.popular);
 
 export const getToolBySlug = (slug: string, locale: Locale = defaultLocale): Tool | undefined =>
   toolRecords
@@ -595,6 +609,6 @@ export const getToolBySlug = (slug: string, locale: Locale = defaultLocale): Too
     .map((tool) => toTool(tool, locale))[0];
 
 export const getRelatedTools = (tool: Tool, locale: Locale = defaultLocale, limit = 3): Tool[] =>
-  getTools(locale)
+  getListedTools(locale)
     .filter((candidate) => candidate.id !== tool.id && candidate.categoryId === tool.categoryId)
     .slice(0, limit);

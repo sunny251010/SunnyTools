@@ -12,6 +12,7 @@ export interface Tool {
   featured?: boolean;
   popular?: boolean;
   status: ToolStatus;
+  listed: boolean;
 }
 
 export interface ToolCategory {

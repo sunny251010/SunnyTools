@@ -1,92 +1,12 @@
 ---
 import { defaultLocale, type Locale } from "../../../i18n/config";
-import { getMessages } from "../../../i18n/messages";
+import TextCounterTool from "../text-counter/TextCounterTool.astro";
 
 interface Props {
   locale?: Locale;
 }
 
 const { locale = defaultLocale } = Astro.props;
-const copy = getMessages(locale).toolUi;
-
-const stats = [
-  ["characters", copy.wordCounter.characters],
-  ["noSpaces", copy.characterCounter.withoutSpaces],
-  ["words", copy.wordCounter.words],
-  ["lines", copy.characterCounter.lines],
-  ["remaining", copy.characterCounter.remaining],
-  ["usage", copy.characterCounter.usage]
-];
 ---
 
-<div class="space-y-5" data-character-counter data-no-limit={copy.characterCounter.noLimit}>
-  <div class="grid gap-4 lg:grid-cols-[1fr_180px]">
-    <div>
-      <label for="character-counter-input" class="mb-2 block text-sm font-semibold text-ink">
-        {copy.shared.textInput}
-      </label>
-      <textarea
-        id="character-counter-input"
-        class="min-h-72 w-full rounded-md border border-slate-300 bg-slate-50 p-4 text-base leading-7 text-ink shadow-inner focus:border-brand-teal focus:bg-white"
-        placeholder={copy.characterCounter.placeholder}
-        data-character-input></textarea>
-    </div>
-    <div>
-      <label for="character-limit" class="mb-2 block text-sm font-semibold text-ink">
-        {copy.characterCounter.characterLimit}
-      </label>
-      <input
-        id="character-limit"
-        type="number"
-        min="1"
-        value="160"
-        class="h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-ink"
-        data-character-limit
-      />
-    </div>
-  </div>
-
-  <dl class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-    {
-      stats.map(([key, label]) => (
-        <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
-          <dt class="text-sm font-medium text-slate-600">{label}</dt>
-          <dd class="mt-2 text-2xl font-semibold text-ink" data-character-stat={key}>0</dd>
-        </div>
-      ))
-    }
-  </dl>
-</div>
-
-<script>
-  const root = document.querySelector<HTMLElement>("[data-character-counter]");
-  const input = root?.querySelector<HTMLTextAreaElement>("[data-character-input]");
-  const limitInput = root?.querySelector<HTMLInputElement>("[data-character-limit]");
-  const noLimit = root?.dataset.noLimit ?? "No limit";
-
-  const setValue = (key: string, value: string): void => {
-    const target = root?.querySelector<HTMLElement>(`[data-character-stat="${key}"]`);
-    if (target) target.textContent = value;
-  };
-
-  const update = (): void => {
-    if (!input || !limitInput) return;
-
-    const text = input.value;
-    const limit = Number(limitInput.value) || 0;
-    const words = (text.trim().match(/[\p{L}\p{N}]+(?:['-][\p{L}\p{N}]+)*/gu) ?? []).length;
-    const lines = text ? text.split(/\r\n|\r|\n/).length : 0;
-    const usage = limit > 0 ? Math.round((text.length / limit) * 100) : 0;
-
-    setValue("characters", String(text.length));
-    setValue("noSpaces", String(text.replace(/\s/g, "").length));
-    setValue("words", String(words));
-    setValue("lines", String(lines));
-    setValue("remaining", limit > 0 ? String(limit - text.length) : noLimit);
-    setValue("usage", limit > 0 ? `${usage}%` : noLimit);
-  };
-
-  input?.addEventListener("input", update);
-  limitInput?.addEventListener("input", update);
-  update();
-</script>
+<TextCounterTool locale={locale} defaultMode="characters" />

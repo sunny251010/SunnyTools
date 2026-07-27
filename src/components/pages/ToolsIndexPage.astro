@@ -5,7 +5,7 @@ import SectionTitle from "../common/SectionTitle.astro";
 import ToolGrid from "../tools/ToolGrid.astro";
 import ToolSearch from "../tools/ToolSearch.astro";
 import { getCategories } from "../../data/categories";
-import { getActiveTools, getTools } from "../../data/tools";
+import { getActiveListedTools, getListedTools } from "../../data/tools";
 import { defaultLocale, localizedPath, type Locale } from "../../i18n/config";
 import { getMessages } from "../../i18n/messages";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -18,8 +18,8 @@ interface Props {
 const { locale = defaultLocale } = Astro.props;
 const { toolsIndex } = getMessages(locale);
 const categories = getCategories(locale);
-const tools = getTools(locale);
-const activeTools = getActiveTools(locale);
+const tools = getListedTools(locale);
+const activeTools = getActiveListedTools(locale);
 ---
 
 <BaseLayout

@@ -1,0 +1,200 @@
+---
+import { getTextStats } from "../../../utils/text";
+import { defaultLocale, type Locale } from "../../../i18n/config";
+import { getMessages } from "../../../i18n/messages";
+
+interface Props {
+  locale?: Locale;
+  defaultMode?: "all" | "characters";
+}
+
+const { locale = defaultLocale, defaultMode = "all" } = Astro.props;
+const copy = getMessages(locale).toolUi;
+const initialStats = getTextStats("");
+const baseStats = [
+  { key: "wordCount", label: copy.wordCounter.words, value: initialStats.wordCount },
+  { key: "characterCount", label: copy.wordCounter.characters, value: initialStats.characterCount },
+  {
+    key: "characterCountNoSpaces",
+    label: copy.wordCounter.charactersNoSpaces,
+    value: initialStats.characterCountNoSpaces
+  },
+  { key: "lineCount", label: copy.characterCounter.lines, value: initialStats.lineCount },
+  { key: "sentenceCount", label: copy.wordCounter.sentences, value: initialStats.sentenceCount },
+  { key: "paragraphCount", label: copy.wordCounter.paragraphs, value: initialStats.paragraphCount },
+  { key: "readingTimeMinutes", label: copy.wordCounter.readingTime, value: initialStats.readingTimeMinutes },
+  { key: "remaining", label: copy.characterCounter.remaining, value: copy.characterCounter.noLimit },
+  { key: "usage", label: copy.characterCounter.usage, value: copy.characterCounter.noLimit }
+];
+const stats =
+  defaultMode === "characters"
+    ? [
+        ...baseStats.filter((item) =>
+          ["characterCount", "characterCountNoSpaces", "remaining", "usage", "lineCount"].includes(item.key)
+        ),
+        ...baseStats.filter(
+          (item) =>
+            !["characterCount", "characterCountNoSpaces", "remaining", "usage", "lineCount"].includes(item.key)
+        )
+      ]
+    : baseStats;
+---
+
+<div
+  class="space-y-5"
+  data-text-counter
+  data-minute={copy.wordCounter.minute}
+  data-minutes={copy.wordCounter.minutes}
+  data-copied={copy.shared.copiedToClipboard}
+  data-copy-failed={copy.wordCounter.copyFailed}
+  data-no-limit={copy.characterCounter.noLimit}
+>
+  <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px]">
+    <div>
+      <label for="text-counter-input" class="mb-2 block text-sm font-semibold text-ink">
+        {copy.shared.textInput}
+      </label>
+      <textarea
+        id="text-counter-input"
+        class="min-h-72 w-full rounded-md border border-slate-300 bg-slate-50 p-4 text-base leading-7 text-ink shadow-inner focus:border-brand-teal focus:bg-white"
+        placeholder={defaultMode === "characters" ? copy.characterCounter.placeholder : copy.wordCounter.placeholder}
+        data-text-counter-input></textarea>
+    </div>
+    <label for="text-character-limit" class="text-sm font-semibold text-ink">
+      {copy.characterCounter.characterLimit}
+      <input
+        id="text-character-limit"
+        type="number"
+        min="1"
+        value="160"
+        class="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3 text-sm text-ink focus:border-brand-teal"
+        data-text-character-limit
+      />
+    </label>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-3">
+    <button
+      type="button"
+      class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800"
+      data-text-counter-copy
+    >
+      {copy.shared.copy}
+    </button>
+    <button
+      type="button"
+      class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal"
+      data-text-counter-example
+    >
+      {copy.shared.loadExample}
+    </button>
+    <button
+      type="button"
+      class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal"
+      data-text-counter-clear
+    >
+      {copy.shared.clear}
+    </button>
+    <span
+      class="rounded-md bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700"
+      role="status"
+      data-text-counter-toast
+      hidden
+    >
+      {copy.shared.copiedToClipboard}
+    </span>
+  </div>
+
+  <dl class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    {
+      stats.map((item) => (
+        <div class="rounded-md border border-slate-200 bg-slate-50 p-4">
+          <dt class="text-sm font-medium text-slate-600">{item.label}</dt>
+          <dd class="mt-2 text-2xl font-semibold text-ink" data-text-stat-key={item.key}>
+            {item.value}
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+</div>
+
+<script>
+  import { copyText } from "../../../utils/browser";
+  import { getTextStats } from "../../../utils/text";
+
+  const root = document.querySelector<HTMLElement>("[data-text-counter]");
+  const input = root?.querySelector<HTMLTextAreaElement>("[data-text-counter-input]");
+  const limitInput = root?.querySelector<HTMLInputElement>("[data-text-character-limit]");
+  const copyButton = root?.querySelector<HTMLButtonElement>("[data-text-counter-copy]");
+  const exampleButton = root?.querySelector<HTMLButtonElement>("[data-text-counter-example]");
+  const clearButton = root?.querySelector<HTMLButtonElement>("[data-text-counter-clear]");
+  const toast = root?.querySelector<HTMLElement>("[data-text-counter-toast]");
+  const minute = root?.dataset.minute ?? "min";
+  const minutes = root?.dataset.minutes ?? "mins";
+  const copied = root?.dataset.copied ?? "Copied to clipboard.";
+  const copyFailed = root?.dataset.copyFailed ?? "Copy failed. Select the text manually.";
+  const noLimit = root?.dataset.noLimit ?? "No limit";
+  let toastTimer: number | undefined;
+
+  const setStat = (key: string, value: string | number): void => {
+    const target = root?.querySelector<HTMLElement>(`[data-text-stat-key="${key}"]`);
+    if (target) target.textContent = String(value);
+  };
+
+  const showToast = (message: string): void => {
+    if (!toast) return;
+    toast.textContent = message;
+    toast.hidden = false;
+    window.clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(() => {
+      toast.hidden = true;
+    }, 1800);
+  };
+
+  const updateStats = (): void => {
+    if (!input || !limitInput) return;
+
+    const stats = getTextStats(input.value);
+    const limit = Number(limitInput.value) || 0;
+    const usage = limit > 0 ? Math.round((stats.characterCount / limit) * 100) : 0;
+
+    setStat("wordCount", stats.wordCount);
+    setStat("characterCount", stats.characterCount);
+    setStat("characterCountNoSpaces", stats.characterCountNoSpaces);
+    setStat("lineCount", stats.lineCount);
+    setStat("sentenceCount", stats.sentenceCount);
+    setStat("paragraphCount", stats.paragraphCount);
+    setStat(
+      "readingTimeMinutes",
+      `${stats.readingTimeMinutes} ${stats.readingTimeMinutes === 1 ? minute : minutes}`
+    );
+    setStat("remaining", limit > 0 ? String(limit - stats.characterCount) : noLimit);
+    setStat("usage", limit > 0 ? `${usage}%` : noLimit);
+  };
+
+  input?.addEventListener("input", updateStats);
+  limitInput?.addEventListener("input", updateStats);
+  copyButton?.addEventListener("click", async () => {
+    if (!input) return;
+    try {
+      await copyText(input.value);
+      showToast(copied);
+    } catch {
+      showToast(copyFailed);
+    }
+  });
+  exampleButton?.addEventListener("click", () => {
+    if (!input) return;
+    input.value =
+      "Sunny Tools helps writers and developers count text, clean content, and keep private drafts in the browser.\n\nTry Vietnamese text too: Cong cu nay ho tro noi dung nhieu dong.";
+    updateStats();
+  });
+  clearButton?.addEventListener("click", () => {
+    if (!input) return;
+    input.value = "";
+    input.focus();
+    updateStats();
+  });
+  updateStats();
+</script>

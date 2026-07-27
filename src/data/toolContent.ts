@@ -15,28 +15,28 @@ const contentBySlug: Record<string, LocalizedToolContent> = {
   "word-counter": {
     en: {
       intro:
-        "Word Counter measures text length, structure, and estimated reading time as you type.",
-      howToUse: "Paste or type text into the textarea. The stats update instantly.",
+        "Text Counter measures words, characters, lines, structure, character-limit usage, and estimated reading time as you type.",
+      howToUse: "Paste or type text, optionally set a character limit, then copy, clear, or load an example. Every statistic updates instantly.",
       howItWorks:
-        "Words are matched from letters and numbers, characters include every typed character, and reading time uses a 200 words per minute baseline.",
+        "Words are matched from Unicode letters and numbers, characters include every typed character, line breaks are counted across Windows and Unix text, and reading time uses a 200 words per minute baseline.",
       privacy: "The text is processed locally in your browser and is not sent to a server.",
       faqs: [
         { question: "Does it upload my text?", answer: "No. The calculation runs locally." },
-        { question: "Can it count pasted content?", answer: "Yes. Paste text and the stats update immediately." },
-        { question: "Why is reading time an estimate?", answer: "It uses a common 200 WPM baseline." }
+        { question: "Can it count characters and words together?", answer: "Yes. The same panel shows words, characters, no-space characters, lines, sentences, paragraphs, and reading time." },
+        { question: "Can I track a character limit?", answer: "Yes. Set a limit to see remaining characters and percentage used." }
       ]
     },
     vi: {
       intro:
-        "Công cụ Đếm Từ đo độ dài văn bản, cấu trúc nội dung và ước tính thời gian đọc trong khi bạn nhập.",
-      howToUse: "Dán hoặc nhập văn bản vào ô nhập. Các thống kê sẽ cập nhật ngay lập tức.",
+        "Bộ Đếm Văn Bản đo số từ, ký tự, dòng, cấu trúc nội dung, mức dùng giới hạn ký tự và thời gian đọc trong khi bạn nhập.",
+      howToUse: "Dán hoặc nhập văn bản, tùy chọn đặt giới hạn ký tự, rồi sao chép, xóa hoặc tải ví dụ. Mọi thống kê cập nhật tức thì.",
       howItWorks:
-        "Từ được nhận diện từ chữ cái và chữ số, ký tự bao gồm mọi ký tự đã nhập, và thời gian đọc dùng mốc 200 từ mỗi phút.",
+        "Từ được nhận diện từ chữ cái và chữ số Unicode, ký tự bao gồm mọi ký tự đã nhập, xuống dòng Windows và Unix đều được tính, còn thời gian đọc dùng mốc 200 từ mỗi phút.",
       privacy: "Văn bản được xử lý cục bộ trong trình duyệt của bạn và không được gửi lên máy chủ.",
       faqs: [
         { question: "Công cụ có tải văn bản của tôi lên không?", answer: "Không. Việc tính toán chạy cục bộ trên trình duyệt." },
-        { question: "Có đếm nội dung dán vào được không?", answer: "Có. Dán văn bản vào và thống kê sẽ cập nhật ngay." },
-        { question: "Vì sao thời gian đọc chỉ là ước tính?", answer: "Công cụ dùng mốc phổ biến 200 từ mỗi phút." }
+        { question: "Có đếm từ và ký tự cùng lúc không?", answer: "Có. Cùng một giao diện hiển thị số từ, ký tự, ký tự không tính khoảng trắng, dòng, câu, đoạn và thời gian đọc." },
+        { question: "Có theo dõi giới hạn ký tự được không?", answer: "Có. Đặt giới hạn để xem số ký tự còn lại và phần trăm đã dùng." }
       ]
     }
   },
@@ -94,27 +94,27 @@ const contentBySlug: Record<string, LocalizedToolContent> = {
   },
   "remove-duplicate-lines": {
     en: {
-      intro: "Remove Duplicate Lines cleans repeated lines from pasted lists, keyword sets, logs, and notes.",
-      howToUse: "Paste text, choose whether to trim lines or match case, then copy the unique result.",
+      intro: "Line Tools cleans multiline text by removing duplicate lines or sorting lists from the same browser-only workspace.",
+      howToUse: "Paste lines, choose Remove Duplicates or Sort Lines, adjust the mode options, then copy or download the result.",
       howItWorks:
-        "The browser reads each line in order, builds a local set of seen values, and keeps the first matching line.",
+        "The browser normalizes line endings, applies trimming and empty-line options, then either keeps first unique lines or sorts by text, number, or line length.",
       privacy: "Your text is processed locally and is never uploaded.",
       faqs: [
-        { question: "Does it preserve order?", answer: "Yes. The first occurrence keeps its original position." },
-        { question: "Can it ignore capitalization?", answer: "Yes. Turn off case-sensitive matching." },
-        { question: "Can empty lines be removed?", answer: "Yes. Use the skip empty lines option." }
+        { question: "Can it still remove duplicates only?", answer: "Yes. The Remove Duplicates mode keeps the first occurrence and reports how many lines were removed." },
+        { question: "Can it sort numbers and line length?", answer: "Yes. Sort Lines supports text, numeric, and line-length sorting in ascending or descending order." },
+        { question: "Does switching mode delete my input?", answer: "No. The same input stays in place when you switch between modes." }
       ]
     },
     vi: {
-      intro: "Công cụ Xóa Dòng Trùng Lặp làm sạch các dòng bị lặp trong danh sách, bộ từ khóa, log và ghi chú đã dán.",
-      howToUse: "Dán văn bản, chọn có cắt khoảng trắng hoặc phân biệt hoa thường hay không, sau đó sao chép kết quả duy nhất.",
+      intro: "Công Cụ Xử Lý Dòng làm sạch văn bản nhiều dòng bằng cách xóa dòng trùng hoặc sắp xếp danh sách trong cùng một giao diện.",
+      howToUse: "Dán các dòng, chọn Xóa dòng trùng hoặc Sắp xếp dòng, chỉnh tùy chọn của chế độ rồi sao chép hoặc tải kết quả.",
       howItWorks:
-        "Trình duyệt đọc từng dòng theo thứ tự, tạo tập giá trị đã gặp cục bộ và giữ lại dòng khớp đầu tiên.",
+        "Trình duyệt chuẩn hóa xuống dòng, áp dụng tùy chọn cắt khoảng trắng và bỏ dòng trống, sau đó giữ dòng duy nhất đầu tiên hoặc sắp xếp theo văn bản, số hay độ dài dòng.",
       privacy: "Văn bản của bạn được xử lý cục bộ và không bao giờ được upload.",
       faqs: [
-        { question: "Công cụ có giữ nguyên thứ tự không?", answer: "Có. Lần xuất hiện đầu tiên giữ nguyên vị trí ban đầu." },
-        { question: "Có thể bỏ qua chữ hoa/thường không?", answer: "Có. Tắt tùy chọn phân biệt hoa thường." },
-        { question: "Có thể xóa dòng trống không?", answer: "Có. Bật tùy chọn bỏ qua dòng trống." }
+        { question: "Vẫn có thể chỉ xóa dòng trùng không?", answer: "Có. Chế độ Xóa dòng trùng giữ lần xuất hiện đầu tiên và báo số dòng đã xóa." },
+        { question: "Có sắp xếp số và độ dài dòng không?", answer: "Có. Chế độ Sắp xếp dòng hỗ trợ văn bản, số và độ dài dòng theo chiều tăng hoặc giảm." },
+        { question: "Đổi chế độ có mất input không?", answer: "Không. Input được giữ nguyên khi chuyển giữa các chế độ." }
       ]
     }
   },
@@ -324,25 +324,25 @@ const contentBySlug: Record<string, LocalizedToolContent> = {
   },
   "json-formatter": {
     en: {
-      intro: "JSON Formatter formats, minifies, and validates JSON snippets.",
-      howToUse: "Paste JSON, choose Format or Minify, and copy the result.",
-      howItWorks: "The tool parses JSON with `JSON.parse` and outputs it with `JSON.stringify`.",
+      intro: "JSON Formatter & Validator formats, minifies, validates, and summarizes JSON snippets in one browser-only workspace.",
+      howToUse: "Paste JSON, choose Format, Minify, or Validate, then copy or download valid output. The input stays in place when you switch modes.",
+      howItWorks: "The tool parses JSON with `JSON.parse`, formats or minifies with `JSON.stringify`, and derives validation details such as root type, item count, character count, and line/column hints.",
       privacy: "JSON input stays in your browser.",
       faqs: [
-        { question: "Does it validate JSON?", answer: "Yes. Invalid JSON shows an error message." },
-        { question: "Can it minify JSON?", answer: "Yes. Use the Minify button." },
-        { question: "Is JSON uploaded?", answer: "No. Parsing happens locally." }
+        { question: "Can it format and validate in one place?", answer: "Yes. Use Format for readable JSON, Minify for compact JSON, and Validate for status and details." },
+        { question: "Does it show where JSON is invalid?", answer: "When the browser provides an error position, the tool estimates the line and column." },
+        { question: "Is JSON uploaded?", answer: "No. Parsing, formatting, minifying, and validation happen locally." }
       ]
     },
     vi: {
-      intro: "Công cụ Định Dạng JSON giúp định dạng, nén gọn và kiểm tra đoạn JSON.",
-      howToUse: "Dán JSON, chọn Định dạng hoặc Nén gọn, sau đó sao chép kết quả.",
-      howItWorks: "Công cụ parse JSON bằng `JSON.parse` và xuất kết quả bằng `JSON.stringify`.",
+      intro: "Định Dạng Và Kiểm Tra JSON giúp định dạng, nén gọn, kiểm tra và tóm tắt đoạn JSON trong một giao diện chạy trên trình duyệt.",
+      howToUse: "Dán JSON, chọn Định dạng, Nén gọn hoặc Kiểm tra, rồi sao chép hoặc tải output hợp lệ. Input được giữ nguyên khi đổi chế độ.",
+      howItWorks: "Công cụ parse JSON bằng `JSON.parse`, định dạng hoặc nén bằng `JSON.stringify`, đồng thời tạo chi tiết kiểm tra như kiểu gốc, số mục, số ký tự và gợi ý dòng/cột.",
       privacy: "Input JSON ở lại trong trình duyệt của bạn.",
       faqs: [
-        { question: "Công cụ có kiểm tra JSON không?", answer: "Có. JSON không hợp lệ sẽ hiện thông báo lỗi." },
-        { question: "Có nén gọn JSON được không?", answer: "Có. Dùng nút Nén gọn." },
-        { question: "JSON có bị upload không?", answer: "Không. Việc parse chạy cục bộ." }
+        { question: "Có định dạng và kiểm tra JSON trong cùng một nơi không?", answer: "Có. Dùng Định dạng để dễ đọc, Nén gọn để giảm dung lượng và Kiểm tra để xem trạng thái cùng chi tiết." },
+        { question: "Có báo vị trí JSON sai không?", answer: "Khi trình duyệt cung cấp vị trí lỗi, công cụ sẽ ước tính dòng và cột." },
+        { question: "JSON có bị upload không?", answer: "Không. Việc parse, định dạng, nén gọn và kiểm tra đều chạy cục bộ." }
       ]
     }
   },
@@ -529,7 +529,7 @@ const contentBySlug: Record<string, LocalizedToolContent> = {
   "unix-timestamp-converter": {
     en: {
       intro: "Unix Timestamp Converter converts epoch seconds or milliseconds into readable dates and back.",
-      howToUse: "Enter a Unix timestamp or date-time value, convert in either direction, and copy individual outputs.",
+      howToUse: "Enter Unix seconds, Unix milliseconds, or a date-time value, convert in either direction, use current time or an example, and copy individual outputs.",
       howItWorks:
         "The browser creates JavaScript Date values, auto-detects common seconds or milliseconds input, and displays UTC, local, ISO, and Unix formats.",
       privacy: "Date conversion is local and no values are stored.",
@@ -541,7 +541,7 @@ const contentBySlug: Record<string, LocalizedToolContent> = {
     },
     vi: {
       intro: "Công cụ Chuyển Đổi Unix Timestamp chuyển epoch giây hoặc mili giây thành ngày giờ dễ đọc và ngược lại.",
-      howToUse: "Nhập Unix timestamp hoặc giá trị ngày giờ, chuyển đổi hai chiều và sao chép từng output.",
+      howToUse: "Nhập Unix giây, Unix mili giây hoặc giá trị ngày giờ, chuyển đổi hai chiều, dùng thời gian hiện tại hoặc ví dụ, rồi sao chép từng output.",
       howItWorks:
         "Trình duyệt tạo JavaScript Date, tự nhận diện input giây hoặc mili giây phổ biến, rồi hiển thị UTC, local, ISO và Unix.",
       privacy: "Việc chuyển đổi ngày giờ diễn ra cục bộ và không lưu giá trị.",

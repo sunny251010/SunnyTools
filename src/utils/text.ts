@@ -4,6 +4,7 @@ export interface TextStats {
   characterCountNoSpaces: number;
   sentenceCount: number;
   paragraphCount: number;
+  lineCount: number;
   readingTimeMinutes: number;
 }
 
@@ -24,6 +25,7 @@ export const getTextStats = (text: string): TextStats => {
     characterCountNoSpaces: text.replace(/\s/g, "").length,
     sentenceCount: trimmedText ? sentenceMatches.length : 0,
     paragraphCount: trimmedText ? paragraphs.length : 0,
+    lineCount: text.length > 0 ? text.split(/\r\n|\r|\n/).length : 0,
     readingTimeMinutes: words.length ? Math.max(1, Math.ceil(words.length / 200)) : 0
   };
 };

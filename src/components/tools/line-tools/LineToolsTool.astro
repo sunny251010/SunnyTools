@@ -1,0 +1,242 @@
+---
+import { defaultLocale, type Locale } from "../../../i18n/config";
+import { getMessages } from "../../../i18n/messages";
+
+interface Props {
+  locale?: Locale;
+  defaultMode?: "remove-duplicates" | "sort";
+}
+
+const { locale = defaultLocale, defaultMode = "remove-duplicates" } = Astro.props;
+const copy = getMessages(locale).toolUi;
+---
+
+<div
+  class="space-y-5"
+  data-line-tools
+  data-default-mode={defaultMode}
+  data-copied={copy.shared.copied}
+  data-remove-status={copy.duplicateLines.processed}
+  data-sort-status={copy.sortLines.sorted}
+>
+  <div class="inline-flex w-full flex-wrap gap-2 rounded-md bg-slate-100 p-1 sm:w-auto" role="tablist" aria-label={copy.lineTools.mode}>
+    <button
+      type="button"
+      class="rounded-md px-3 py-2 text-sm font-semibold"
+      data-line-mode="remove-duplicates"
+      role="tab"
+    >
+      {copy.lineTools.removeDuplicates}
+    </button>
+    <button type="button" class="rounded-md px-3 py-2 text-sm font-semibold" data-line-mode="sort" role="tab">
+      {copy.lineTools.sortLines}
+    </button>
+  </div>
+
+  <div class="grid gap-4 lg:grid-cols-2">
+    <div>
+      <label for="line-tools-input" class="mb-2 block text-sm font-semibold text-ink">{copy.shared.input}</label>
+      <textarea
+        id="line-tools-input"
+        class="min-h-72 w-full rounded-md border border-slate-300 bg-slate-50 p-4 font-mono text-sm leading-7 text-ink shadow-inner focus:border-brand-teal focus:bg-white"
+        data-line-input></textarea>
+    </div>
+    <div>
+      <label for="line-tools-output" class="mb-2 block text-sm font-semibold text-ink">{copy.shared.output}</label>
+      <textarea
+        id="line-tools-output"
+        class="min-h-72 w-full rounded-md border border-slate-300 bg-white p-4 font-mono text-sm leading-7 text-ink shadow-inner"
+        readonly
+        data-line-output></textarea>
+    </div>
+  </div>
+
+  <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-line-remove-panel>
+    <label class="flex items-end gap-2 text-sm font-semibold text-ink">
+      <input class="mb-3 h-4 w-4 accent-brand-teal" type="checkbox" checked data-line-remove-trim />
+      {copy.duplicateLines.trimLines}
+    </label>
+    <label class="flex items-end gap-2 text-sm font-semibold text-ink">
+      <input class="mb-3 h-4 w-4 accent-brand-teal" type="checkbox" checked data-line-remove-case />
+      {copy.duplicateLines.caseSensitive}
+    </label>
+    <label class="flex items-end gap-2 text-sm font-semibold text-ink">
+      <input class="mb-3 h-4 w-4 accent-brand-teal" type="checkbox" data-line-remove-empty />
+      {copy.duplicateLines.skipEmpty}
+    </label>
+  </section>
+
+  <section class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-line-sort-panel hidden>
+    <label class="text-sm font-semibold text-ink">
+      {copy.sortLines.sortType}
+      <select class="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3" data-line-sort-type>
+        <option value="text">{copy.sortLines.text}</option>
+        <option value="numeric">{copy.sortLines.numeric}</option>
+        <option value="length">{copy.sortLines.length}</option>
+      </select>
+    </label>
+    <label class="text-sm font-semibold text-ink">
+      {copy.sortLines.direction}
+      <select class="mt-2 h-11 w-full rounded-md border border-slate-300 bg-white px-3" data-line-sort-direction>
+        <option value="asc">{copy.sortLines.ascending}</option>
+        <option value="desc">{copy.sortLines.descending}</option>
+      </select>
+    </label>
+    <label class="flex items-end gap-2 text-sm font-semibold text-ink">
+      <input class="mb-3 h-4 w-4 accent-brand-teal" type="checkbox" checked data-line-sort-trim />
+      {copy.sortLines.trimLines}
+    </label>
+    <label class="flex items-end gap-2 text-sm font-semibold text-ink">
+      <input class="mb-3 h-4 w-4 accent-brand-teal" type="checkbox" data-line-sort-case />
+      {copy.duplicateLines.caseSensitive}
+    </label>
+    <label class="flex items-end gap-2 text-sm font-semibold text-ink">
+      <input class="mb-3 h-4 w-4 accent-brand-teal" type="checkbox" data-line-sort-empty />
+      {copy.sortLines.skipEmpty}
+    </label>
+    <label class="flex items-end gap-2 text-sm font-semibold text-ink">
+      <input class="mb-3 h-4 w-4 accent-brand-teal" type="checkbox" data-line-sort-unique />
+      {copy.sortLines.uniqueOnly}
+    </label>
+  </section>
+
+  <div class="grid gap-3 sm:grid-cols-3">
+    <div class="rounded-md border border-slate-200 bg-slate-50 p-3">
+      <p class="text-xs font-semibold uppercase text-slate-500">{copy.duplicateLines.inputLines}</p>
+      <p class="mt-1 text-2xl font-semibold text-ink" data-line-input-count>0</p>
+    </div>
+    <div class="rounded-md border border-slate-200 bg-slate-50 p-3">
+      <p class="text-xs font-semibold uppercase text-slate-500">{copy.lineTools.outputLines}</p>
+      <p class="mt-1 text-2xl font-semibold text-ink" data-line-output-count>0</p>
+    </div>
+    <div class="rounded-md border border-slate-200 bg-slate-50 p-3">
+      <p class="text-xs font-semibold uppercase text-slate-500">{copy.lineTools.linesRemoved}</p>
+      <p class="mt-1 text-2xl font-semibold text-ink" data-line-removed-count>0</p>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-3">
+    <button type="button" class="rounded-md bg-brand-teal px-4 py-2 text-sm font-semibold text-white hover:bg-teal-800" data-line-run>
+      {copy.shared.convert}
+    </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-line-copy>
+      {copy.shared.copy}
+    </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-line-download>
+      {copy.shared.downloadTxt}
+    </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-line-example>
+      {copy.shared.loadExample}
+    </button>
+    <button type="button" class="rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:border-teal-200 hover:text-brand-teal" data-line-clear>
+      {copy.shared.clear}
+    </button>
+  </div>
+  <p class="text-sm font-medium text-emerald-700" role="status" data-line-status></p>
+</div>
+
+<script>
+  import { copyText, downloadText } from "../../../utils/browser";
+  import { removeDuplicateLines, sortLines, type LineResult, type LineSortDirection, type LineSortType } from "../../../utils/lines";
+
+  type Mode = "remove-duplicates" | "sort";
+
+  const root = document.querySelector<HTMLElement>("[data-line-tools]");
+  const input = root?.querySelector<HTMLTextAreaElement>("[data-line-input]");
+  const output = root?.querySelector<HTMLTextAreaElement>("[data-line-output]");
+  const removePanel = root?.querySelector<HTMLElement>("[data-line-remove-panel]");
+  const sortPanel = root?.querySelector<HTMLElement>("[data-line-sort-panel]");
+  const status = root?.querySelector<HTMLElement>("[data-line-status]");
+  const inputCount = root?.querySelector<HTMLElement>("[data-line-input-count]");
+  const outputCount = root?.querySelector<HTMLElement>("[data-line-output-count]");
+  const removedCount = root?.querySelector<HTMLElement>("[data-line-removed-count]");
+  const copied = root?.dataset.copied ?? "Copied.";
+  const removeStatus = root?.dataset.removeStatus ?? "Duplicates removed.";
+  const sortStatus = root?.dataset.sortStatus ?? "Lines sorted.";
+  let mode: Mode = root?.dataset.defaultMode === "sort" ? "sort" : "remove-duplicates";
+
+  const getChecked = (selector: string): boolean =>
+    Boolean(root?.querySelector<HTMLInputElement>(selector)?.checked);
+
+  const setStats = (result: LineResult): void => {
+    if (inputCount) inputCount.textContent = String(result.inputCount);
+    if (outputCount) outputCount.textContent = String(result.outputCount);
+    if (removedCount) removedCount.textContent = String(result.removedCount);
+  };
+
+  const run = (): void => {
+    if (!input || !output || !status) return;
+
+    const result =
+      mode === "sort"
+        ? sortLines(input.value, {
+            trim: getChecked("[data-line-sort-trim]"),
+            skipEmpty: getChecked("[data-line-sort-empty]"),
+            caseSensitive: getChecked("[data-line-sort-case]"),
+            unique: getChecked("[data-line-sort-unique]"),
+            type:
+              (root?.querySelector<HTMLSelectElement>("[data-line-sort-type]")?.value as LineSortType) ?? "text",
+            direction:
+              (root?.querySelector<HTMLSelectElement>("[data-line-sort-direction]")?.value as LineSortDirection) ??
+              "asc"
+          })
+        : removeDuplicateLines(input.value, {
+            trim: getChecked("[data-line-remove-trim]"),
+            skipEmpty: getChecked("[data-line-remove-empty]"),
+            caseSensitive: getChecked("[data-line-remove-case]")
+          });
+
+    output.value = result.lines.join("\n");
+    setStats(result);
+    status.className = "text-sm font-medium text-emerald-700";
+    status.textContent = mode === "sort" ? sortStatus : removeStatus;
+  };
+
+  const setMode = (nextMode: Mode): void => {
+    mode = nextMode;
+    if (removePanel) removePanel.hidden = mode !== "remove-duplicates";
+    if (sortPanel) sortPanel.hidden = mode !== "sort";
+    root?.querySelectorAll<HTMLButtonElement>("[data-line-mode]").forEach((button) => {
+      const active = button.dataset.lineMode === mode;
+      button.setAttribute("aria-selected", String(active));
+      button.className = active
+        ? "rounded-md bg-white px-3 py-2 text-sm font-semibold text-brand-teal shadow-sm"
+        : "rounded-md px-3 py-2 text-sm font-semibold text-slate-600 hover:text-brand-teal";
+    });
+    run();
+  };
+
+  root?.querySelectorAll<HTMLButtonElement>("[data-line-mode]").forEach((button) => {
+    button.addEventListener("click", () => setMode(button.dataset.lineMode === "sort" ? "sort" : "remove-duplicates"));
+  });
+  root?.querySelector<HTMLButtonElement>("[data-line-run]")?.addEventListener("click", run);
+  root?.querySelector<HTMLButtonElement>("[data-line-copy]")?.addEventListener("click", async () => {
+    if (!output || !status) return;
+    await copyText(output.value);
+    status.className = "text-sm font-medium text-emerald-700";
+    status.textContent = copied;
+  });
+  root?.querySelector<HTMLButtonElement>("[data-line-download]")?.addEventListener("click", () => {
+    if (output?.value) downloadText(mode === "sort" ? "sorted-lines.txt" : "unique-lines.txt", output.value);
+  });
+  root?.querySelector<HTMLButtonElement>("[data-line-example]")?.addEventListener("click", () => {
+    if (!input) return;
+    input.value =
+      mode === "sort"
+        ? "Banana\napple\n42\n7\nstrawberry\nApple"
+        : "apple\nbanana\nApple\nbanana\norange\n apple ";
+    run();
+  });
+  root?.querySelector<HTMLButtonElement>("[data-line-clear]")?.addEventListener("click", () => {
+    if (!input || !output || !status) return;
+    input.value = "";
+    output.value = "";
+    setStats({ lines: [], inputCount: 0, outputCount: 0, removedCount: 0 });
+    status.textContent = "";
+  });
+  root?.querySelectorAll<HTMLInputElement | HTMLSelectElement>("input, select").forEach((control) => {
+    control.addEventListener("change", run);
+  });
+  input?.addEventListener("input", run);
+  setMode(mode);
+</script>

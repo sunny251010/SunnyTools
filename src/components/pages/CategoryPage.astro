@@ -3,7 +3,7 @@ import Breadcrumbs from "../common/Breadcrumbs.astro";
 import Container from "../common/Container.astro";
 import SectionTitle from "../common/SectionTitle.astro";
 import ToolGrid from "../tools/ToolGrid.astro";
-import { getTools } from "../../data/tools";
+import { getListedTools } from "../../data/tools";
 import { defaultLocale, localizedPath, type Locale } from "../../i18n/config";
 import { getMessages } from "../../i18n/messages";
 import BaseLayout from "../../layouts/BaseLayout.astro";
@@ -17,7 +17,7 @@ interface Props {
 
 const { category, locale = defaultLocale } = Astro.props;
 const { categoryPage, nav } = getMessages(locale);
-const tools = getTools(locale);
+const tools = getListedTools(locale);
 const categoryTools = tools.filter((tool) => tool.categoryId === category.id);
 const description =
   locale === "en"

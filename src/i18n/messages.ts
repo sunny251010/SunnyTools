@@ -56,7 +56,7 @@ export const messages = {
       popularEyebrow: "Popular",
       popularTitle: "Popular tools",
       popularDescription:
-        "Start with the tools people reach for most often, including the first production-ready Word Counter.",
+        "Start with the tools people reach for most often, including the browser-ready Text Counter.",
       categoriesEyebrow: "Categories",
       categoriesTitle: "Browse by category",
       categoriesDescription:
@@ -246,6 +246,13 @@ export const messages = {
         uniqueOnly: "Unique only",
         sorted: "Lines sorted."
       },
+      lineTools: {
+        mode: "Line tool mode",
+        removeDuplicates: "Remove duplicates",
+        sortLines: "Sort lines",
+        outputLines: "Output lines",
+        linesRemoved: "Lines removed"
+      },
       textCompare: {
         original: "Original text",
         changed: "Changed text",
@@ -341,6 +348,13 @@ export const messages = {
         rootType: "Root type",
         itemCount: "Items",
         characterCount: "Characters"
+      },
+      jsonTools: {
+        mode: "JSON mode",
+        indent: "Indent",
+        downloadJson: "Download JSON",
+        formatted: "JSON formatted.",
+        minified: "JSON minified."
       },
       base64: {
         placeholder: "Input text or Base64",
@@ -456,7 +470,7 @@ export const messages = {
       popularEyebrow: "Phổ biến",
       popularTitle: "Công cụ phổ biến",
       popularDescription:
-        "Bắt đầu với những công cụ được dùng nhiều nhất, bao gồm Word Counter đã sẵn sàng cho bản production.",
+        "Bắt đầu với những công cụ được dùng nhiều nhất, bao gồm Bộ Đếm Văn Bản đã sẵn sàng chạy trên trình duyệt.",
       categoriesEyebrow: "Danh mục",
       categoriesTitle: "Duyệt theo danh mục",
       categoriesDescription:
@@ -646,6 +660,13 @@ export const messages = {
         uniqueOnly: "Chỉ giữ dòng duy nhất",
         sorted: "Đã sắp xếp dòng."
       },
+      lineTools: {
+        mode: "Chế độ xử lý dòng",
+        removeDuplicates: "Xóa dòng trùng",
+        sortLines: "Sắp xếp dòng",
+        outputLines: "Dòng kết quả",
+        linesRemoved: "Dòng đã xóa"
+      },
       textCompare: {
         original: "Văn bản gốc",
         changed: "Văn bản đã đổi",
@@ -741,6 +762,13 @@ export const messages = {
         rootType: "Kiểu gốc",
         itemCount: "Mục",
         characterCount: "Ký tự"
+      },
+      jsonTools: {
+        mode: "Chế độ JSON",
+        indent: "Thụt lề",
+        downloadJson: "Tải JSON",
+        formatted: "Đã định dạng JSON.",
+        minified: "Đã nén gọn JSON."
       },
       base64: {
         placeholder: "Nhập văn bản hoặc Base64",
