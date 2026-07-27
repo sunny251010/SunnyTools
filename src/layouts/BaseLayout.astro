@@ -29,6 +29,8 @@ const {
   type,
   structuredData
 } = Astro.props;
+
+const gaId = import.meta.env.PUBLIC_GA_ID;
 const logicalPath = stripLocaleFromPath(path);
 const alternates = resolveAlternateLinks(getAlternateLinks(logicalPath));
 ---
@@ -52,6 +54,20 @@ const alternates = resolveAlternateLinks(getAlternateLinks(logicalPath));
       type={type}
       />
       <JsonLd data={structuredData} />
+
+      <!-- Google Analytics -->
+      {gaId && (
+        <>
+          <script async src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`}></script>
+          <script is:inline define:vars={{ gaId }}>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', gaId);
+          </script>
+        </>
+      )}
+
   </head>
   <body class="min-h-screen antialiased">
     <div class="flex min-h-screen flex-col">
